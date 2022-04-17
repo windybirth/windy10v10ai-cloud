@@ -22,8 +22,10 @@ functions.http('getMember', (req, res) => {
     319701690,
     142964279,
     125049949,
+    353885092,
     // 测试
-    916506173,
+    916506173, // Arararara
+    1059791959, // rerorerore
   ]
   res.send(JSON.stringify(members));
 });
