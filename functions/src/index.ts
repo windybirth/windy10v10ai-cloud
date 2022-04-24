@@ -1,47 +1,40 @@
 import * as functions from "firebase-functions";
 import * as express from "express";
-import * as admin from "firebase-admin";
+import {getMembersSteamId, getMemberSteamIdAll} from "./member";
+
 // Start writing Firebase Functions
 // https://firebase.google.com/docs/functions/typescript
-const app = express();
+const app: express.Express = express();
 
-admin.initializeApp();
+app.get("/api", (request, response) => {
+  console.log("Clinet query is");
+  console.log(request.query);
 
-app.get("/api", (req, res) => {
-  res.json({message: "API-GET-SUCCESS"});
+  const ipAddress = request.headers["x-forwarded-for"] ||
+    request.connection.remoteAddress;
+  console.log(`Clinet IP is ${ipAddress}`);
+  response.json({message: "API-GET-SUCCESS"});
 });
 
 app.get("/api/members", (request, response) => {
-  const members = [
-    // 开发贡献者
-    136407523, 1194383041, 143575444, 314757913, 385130282,
-    // 初始会员
-    108208968,
-    128984820,
-    136668998,
-    107451500,
-    141315077,
-    303743871,
-    117417953,
-    319701690,
-    142964279,
-    125049949,
-    353885092,
-    150252080,
-    120921523,
-    355472172,
-    445801587,
-    308320923,
-    176061240,
-    190540884,
-    1009673688,
-    342865365,
-    379664769,
-    // 测试
-    916506173, // Arararara
-    1059791959, // rerorerore
-  ];
+  const members = getMembersSteamId();
   response.json(members);
+});
+
+app.get("/api/members/all", async (request, response) => {
+  const members = await getMemberSteamIdAll();
+  console.log("Clinet query is");
+  console.log(request.query);
+  const ipAddress = request.headers["x-forwarded-for"] ||
+    request.connection.remoteAddress;
+  console.log(`Clinet IP is ${ipAddress}`);
+  response.json(members);
+});
+
+app.post("/api/member", (request, response) => {
+  // saveMemberSteamId(request.body.steamId);
+  // response success
+  response.json({message: "API-POST-SUCCESS"});
 });
 
 export const api = functions.https.onRequest(app);
