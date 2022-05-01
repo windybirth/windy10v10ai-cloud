@@ -86,6 +86,7 @@ export async function getMemberSteamIdAll():Promise<Member[]> {
   members.push(new Member(141548767, new Date("2022-06-01T00:00:00")));
   members.push(new Member(338188516, new Date("2022-06-01T00:00:00")));
   members.push(new Member(121514138, new Date("2022-06-01T00:00:00")));
+  members.push(new Member(180389221, new Date("2022-08-02T00:00:00")));
   // 测试
   members.push(new Member(916506173, new Date("2022-05-01T00:00:00")));
   members.push(new Member(1059791959));
