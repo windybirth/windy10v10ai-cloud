@@ -52,11 +52,12 @@ export async function getMemberSteamIdAll():Promise<Member[]> {
   // 永久会员
   members.push(new Member(136668998));
   members.push(new Member(128984820));
+  members.push(new Member(133043280));
   // 会员
   members.push(new Member(108208968, new Date("2022-07-20T00:00:00")));
   members.push(new Member(107451500, new Date("2022-05-20T00:00:00")));
   members.push(new Member(141315077, new Date("2022-07-20T00:00:00")));
-  members.push(new Member(303743871, new Date("2022-05-20T00:00:00")));
+  members.push(new Member(303743871, new Date("2022-08-20T00:00:00")));
   members.push(new Member(117417953, new Date("2023-04-20T00:00:00")));
   members.push(new Member(319701690, new Date("2022-05-20T00:00:00")));
   members.push(new Member(142964279, new Date("2022-07-20T00:00:00")));
@@ -87,8 +88,20 @@ export async function getMemberSteamIdAll():Promise<Member[]> {
   members.push(new Member(338188516, new Date("2022-06-01T00:00:00")));
   members.push(new Member(121514138, new Date("2022-06-01T00:00:00")));
   members.push(new Member(180389221, new Date("2022-08-02T00:00:00")));
+  members.push(new Member(251171524, new Date("2022-06-01T00:00:00")));
+  members.push(new Member(215738002, new Date("2022-06-02T00:00:00")));
+  members.push(new Member(275500980, new Date("2022-06-02T00:00:00")));
+  members.push(new Member(235845422, new Date("2022-11-04T00:00:00")));
+  members.push(new Member(908271686, new Date("2022-06-02T00:00:00")));
+  members.push(new Member(918581722, new Date("2022-08-03T00:00:00")));
+  members.push(new Member(306190449, new Date("2022-06-02T00:00:00")));
+  members.push(new Member(179404686, new Date("2022-06-02T00:00:00")));
+  members.push(new Member(374719134, new Date("2022-06-02T00:00:00")));
+  members.push(new Member(907056028, new Date("2022-11-06T00:00:00")));
+  members.push(new Member(864363572, new Date("2022-06-04T00:00:00")));
+  members.push(new Member(136940046, new Date("2022-06-05T00:00:00")));
   // 测试
-  members.push(new Member(916506173, new Date("2022-05-01T00:00:00")));
+  members.push(new Member(916506173, new Date("2022-06-01T00:00:00")));
   members.push(new Member(1059791959));
   return members;
 }
