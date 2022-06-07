@@ -7,7 +7,7 @@
     "serve": "npm run build:watch | firebase emulators:start --only functions,hosting,database",
     "shell": "npm run build && firebase functions:shell",
     "start": "npm run shell",
-    "deploy": "firebase deploy --only functions,hosting",
+    "deploy": "firebase deploy --only functions:api",
     "logs": "firebase functions:log"
   },
   "engines": {
