@@ -114,7 +114,6 @@ export async function getMemberSteamIdAll():Promise<MemberInfo[]> {
   members.push(new MemberInfo(314320021, new Date("2022-07-07T00:00:00")));
   members.push(new MemberInfo(118184749, new Date("2022-07-07T00:00:00")));
   members.push(new MemberInfo(131495959, new Date("2022-10-07T00:00:00")));
-  members.push(new MemberInfo(292827485, new Date("2022-07-07T00:00:00")));
   members.push(new MemberInfo(924336952, new Date("2022-07-08T00:00:00")));
   members.push(new MemberInfo(59388035, new Date("2022-07-08T00:00:00")));
   members.push(new MemberInfo(187818172, new Date("2022-07-08T00:00:00")));
@@ -153,6 +152,7 @@ export async function getMemberSteamIdAll():Promise<MemberInfo[]> {
   members.push(new MemberInfo(110663197, new Date("2022-08-07T00:00:00")));
   members.push(new MemberInfo(109270703, new Date("2022-08-07T00:00:00")));
   members.push(new MemberInfo(78534313, new Date("2022-08-07T00:00:00")));
+  members.push(new MemberInfo(292827485, new Date("2022-08-09T00:00:00")));
   // patreon
   members.push(new MemberInfo(67723423, new Date("2022-09-01T00:00:00")));
   members.push(new MemberInfo(1318433532, new Date("2022-09-01T00:00:00")));
@@ -238,7 +238,6 @@ export function initMemberSteamId():void {
   members.push(new Member(314320021, new Date("2022-07-07T00:00:00")));
   members.push(new Member(118184749, new Date("2022-07-07T00:00:00")));
   members.push(new Member(131495959, new Date("2022-10-07T00:00:00")));
-  members.push(new Member(292827485, new Date("2022-07-07T00:00:00")));
   members.push(new Member(924336952, new Date("2022-07-08T00:00:00")));
   members.push(new Member(59388035, new Date("2022-07-08T00:00:00")));
   members.push(new Member(187818172, new Date("2022-07-08T00:00:00")));
@@ -277,6 +276,7 @@ export function initMemberSteamId():void {
   members.push(new Member(110663197, new Date("2022-08-07T00:00:00")));
   members.push(new Member(109270703, new Date("2022-08-07T00:00:00")));
   members.push(new Member(78534313, new Date("2022-08-07T00:00:00")));
+  members.push(new Member(292827485, new Date("2022-08-09T00:00:00")));
   // patreon
   members.push(new Member(67723423, new Date("2022-09-01T00:00:00")));
   members.push(new Member(1318433532, new Date("2022-09-01T00:00:00")));
