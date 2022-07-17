@@ -7,6 +7,7 @@ import * as member from "./member";
 const app: express.Express = express();
 const windyExpress: express.Express = express();
 
+// 返回所有会员信息
 app.get("/api", (request, response) => {
   console.log("Clinet query is");
   console.log(request.query);
@@ -17,10 +18,6 @@ app.get("/api", (request, response) => {
   response.json({message: "API-GET-SUCCESS"});
 });
 
-app.get("/api/members", (request, response) => {
-  const members = member.getMembersSteamId();
-  response.json(members);
-});
 
 app.get("/api/members/all", async (request, response) => {
   const members = await member.getMemberSteamIdAll();
@@ -32,6 +29,19 @@ app.get("/api/members/all", async (request, response) => {
   response.json(members);
 });
 
+// 返回指定steamIDs会员信息列表
+app.get("/api/members", (request, response) => {
+  const members = member.getMembersSteamId();
+  response.json(members);
+});
+
+// 返回指定steamIDs玩家信息列表 TODO
+app.get("/api/players", (request, response) => {
+  const members = member.getMembersSteamId();
+  response.json(members);
+});
+
+// 管理用API，仅限管理员有权限访问
 export const api = functions.https.onRequest(app);
 
 windyExpress.get("/init", (request, response) => {
