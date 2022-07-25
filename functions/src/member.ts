@@ -161,6 +161,7 @@ export async function getMemberSteamIdAll():Promise<MemberInfo[]> {
   members.push(new MemberInfo(241893614, new Date("2022-08-25T00:00:00")));
   members.push(new MemberInfo(156694017, new Date("2022-10-25T00:00:00")));
   members.push(new MemberInfo(213346065, new Date("2023-01-31T00:00:00")));
+  members.push(new MemberInfo(208755952, new Date("2022-08-26T00:00:00")));
   // patreon
   members.push(new MemberInfo(67723423, new Date("2022-09-01T00:00:00")));
   members.push(new MemberInfo(1318433532, new Date("2022-09-01T00:00:00")));
@@ -292,6 +293,7 @@ export function initMemberSteamId():void {
   members.push(new Member(241893614, new Date("2022-08-25T00:00:00")));
   members.push(new Member(156694017, new Date("2022-10-25T00:00:00")));
   members.push(new Member(213346065, new Date("2023-01-31T00:00:00")));
+  members.push(new Member(208755952, new Date("2022-08-26T00:00:00")));
   // patreon
   members.push(new Member(67723423, new Date("2022-09-01T00:00:00")));
   members.push(new Member(1318433532, new Date("2022-09-01T00:00:00")));
