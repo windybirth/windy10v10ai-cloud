@@ -55,6 +55,7 @@ export async function getMemberSteamIdAll():Promise<MemberInfo[]> {
   members.push(new MemberInfo(128984820));
   members.push(new MemberInfo(133043280));
   members.push(new MemberInfo(124111398));
+  members.push(new MemberInfo(120921523));
   // 会员
   members.push(new MemberInfo(108208968, new Date("2022-07-20T00:00:00")));
   members.push(new MemberInfo(107451500, new Date("2022-05-20T00:00:00")));
@@ -156,7 +157,6 @@ export async function getMemberSteamIdAll():Promise<MemberInfo[]> {
   members.push(new MemberInfo(127685098, new Date("2022-08-22T00:00:00")));
   members.push(new MemberInfo(213875775, new Date("2022-08-24T00:00:00")));
   members.push(new MemberInfo(226209386, new Date("2022-08-24T00:00:00")));
-  members.push(new MemberInfo(120921523, new Date("2023-01-31T00:00:00")));
   members.push(new MemberInfo(143837979, new Date("2022-08-25T00:00:00")));
   members.push(new MemberInfo(241893614, new Date("2022-08-25T00:00:00")));
   members.push(new MemberInfo(156694017, new Date("2022-10-25T00:00:00")));
@@ -199,6 +199,7 @@ export function initMemberSteamId():void {
   members.push(new Member(128984820));
   members.push(new Member(133043280));
   members.push(new Member(124111398));
+  members.push(new Member(120921523));
   // 会员
   members.push(new Member(108208968, new Date("2022-07-20T00:00:00")));
   members.push(new Member(107451500, new Date("2022-05-20T00:00:00")));
@@ -300,7 +301,6 @@ export function initMemberSteamId():void {
   members.push(new Member(127685098, new Date("2022-08-22T00:00:00")));
   members.push(new Member(213875775, new Date("2022-08-24T00:00:00")));
   members.push(new Member(226209386, new Date("2022-08-24T00:00:00")));
-  members.push(new Member(120921523, new Date("2023-01-31T00:00:00")));
   members.push(new Member(143837979, new Date("2022-08-25T00:00:00")));
   members.push(new Member(241893614, new Date("2022-08-25T00:00:00")));
   members.push(new Member(156694017, new Date("2022-10-25T00:00:00")));
