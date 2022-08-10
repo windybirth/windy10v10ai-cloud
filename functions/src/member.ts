@@ -56,6 +56,8 @@ export async function getMemberSteamIdAll():Promise<MemberInfo[]> {
   members.push(new MemberInfo(133043280));
   members.push(new MemberInfo(124111398));
   members.push(new MemberInfo(120921523));
+  members.push(new MemberInfo(146837505));
+  members.push(new MemberInfo(136385488));
   // 会员
   members.push(new MemberInfo(108208968, new Date("2022-07-20T00:00:00")));
   members.push(new MemberInfo(107451500, new Date("2022-05-20T00:00:00")));
@@ -179,6 +181,8 @@ export async function getMemberSteamIdAll():Promise<MemberInfo[]> {
   members.push(new MemberInfo(86767074, new Date("2022-09-09T00:00:00")));
   members.push(new MemberInfo(73059502, new Date("2022-11-11T00:00:00")));
   members.push(new MemberInfo(932992019, new Date("2022-09-10T00:00:00")));
+  members.push(new MemberInfo(141805019, new Date("2022-09-10T00:00:00")));
+  members.push(new MemberInfo(140763807, new Date("2022-09-10T00:00:00")));
   // patreon
   members.push(new MemberInfo(67723423, new Date("2022-10-01T00:00:00")));
   members.push(new MemberInfo(1318433532, new Date("2022-10-01T00:00:00")));
@@ -206,6 +210,8 @@ export function initMemberSteamId():void {
   members.push(new Member(133043280));
   members.push(new Member(124111398));
   members.push(new Member(120921523));
+  members.push(new Member(146837505));
+  members.push(new Member(136385488));
   // 会员
   members.push(new Member(108208968, new Date("2022-07-20T00:00:00")));
   members.push(new Member(107451500, new Date("2022-05-20T00:00:00")));
@@ -329,6 +335,8 @@ export function initMemberSteamId():void {
   members.push(new Member(86767074, new Date("2022-09-09T00:00:00")));
   members.push(new Member(73059502, new Date("2022-11-11T00:00:00")));
   members.push(new Member(932992019, new Date("2022-09-10T00:00:00")));
+  members.push(new Member(141805019, new Date("2022-09-10T00:00:00")));
+  members.push(new Member(140763807, new Date("2022-09-10T00:00:00")));
   // patreon
   members.push(new Member(67723423, new Date("2022-10-01T00:00:00")));
   members.push(new Member(1318433532, new Date("2022-10-01T00:00:00")));
