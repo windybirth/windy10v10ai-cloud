@@ -12,7 +12,7 @@ const promiseApplicationReady = NestFactory.create(
 ).then((app) => app.init());
 
 export const api = functions
-  .region('asia-northeast1')
+  .region('us-central1')
   .https.onRequest(async (...args) => {
     await promiseApplicationReady;
     server(...args);
