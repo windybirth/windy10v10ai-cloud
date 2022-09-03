@@ -6,6 +6,6 @@ export class AppService {
     return 'Hello World!';
   }
   getApiHello(): string {
-    return 'Hello API World!';
+    return '[{"steamId": 136407523,"enable": true,"expireDateString": "2099-12-31"}]';
   }
 }
