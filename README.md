@@ -5,5 +5,6 @@
 - Firebase Hosting
 - Firebase Functions
 
-Run local `firebase emulators:start`
-Deploy `firebase deploy --only hosting,functions`
+Run local `(cd cloud && npm run start)`
+
+Deploy `(cd cloud && npm run deploy)`
