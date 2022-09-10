@@ -11,7 +11,7 @@ import { MembersService } from './members.service';
 import { CreateMemberDto } from './dto/create-member.dto';
 import { UpdateMemberDto } from './dto/update-member.dto';
 
-@Controller('members')
+@Controller('/api/members')
 export class MembersController {
   constructor(private readonly membersService: MembersService) {}
 
@@ -20,7 +20,8 @@ export class MembersController {
     return this.membersService.create(createMemberDto);
   }
 
-  @Get()
+  // @Get()
+  @Get('/all')
   findAll() {
     return this.membersService.findAll();
   }

@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Query } from '@nestjs/common';
+import { Controller, Get, Query } from '@nestjs/common';
 import { AppService } from './app.service';
 
 @Controller()
@@ -12,11 +12,6 @@ export class AppController {
 
   @Get('/api')
   getApi(): string {
-    return this.appService.getApiHello();
-  }
-  @Get('/api/members/all')
-  getApiMemberAll(@Query() param): string {
-    console.log(param);
     return this.appService.getApiHello();
   }
 }
