@@ -1,11 +1,27 @@
 import { Injectable } from '@nestjs/common';
 import { CreateMemberDto } from './dto/create-member.dto';
 import { UpdateMemberDto } from './dto/update-member.dto';
+import { Member } from './entities/member.entity';
+import * as admin from 'firebase-admin';
 
 @Injectable()
 export class MembersService {
   create(createMemberDto: CreateMemberDto) {
     return 'This action adds a new member';
+  }
+
+  saveMember(member: Member): void {
+    const db = admin.database();
+    console.log('Save member:', member);
+    db.ref('members/' + member.steamId).update(member);
+  }
+
+  createAll() {
+    this.saveMember({
+      steamId: 108208968,
+      expireDate: new Date('2022-07-20T00:00:00'),
+    });
+    return `This action create all members with init data`;
   }
 
   findAll() {

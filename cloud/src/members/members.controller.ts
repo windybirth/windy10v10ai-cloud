@@ -6,6 +6,8 @@ import {
   Patch,
   Param,
   Delete,
+  UnauthorizedException,
+  Query,
 } from '@nestjs/common';
 import { MembersService } from './members.service';
 import { CreateMemberDto } from './dto/create-member.dto';
@@ -18,6 +20,15 @@ export class MembersController {
   @Post()
   create(@Body() createMemberDto: CreateMemberDto) {
     return this.membersService.create(createMemberDto);
+  }
+
+  @Post('/all')
+  createAll(@Query('token') token: string) {
+    console.log(token);
+    if (token !== 'initAllMemberInfo') {
+      throw new UnauthorizedException();
+    }
+    return this.membersService.createAll();
   }
 
   // @Get()
