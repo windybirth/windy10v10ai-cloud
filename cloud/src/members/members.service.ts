@@ -25,7 +25,12 @@ export class MembersService {
   }
 
   findAll() {
-    return `This action returns all members`;
+    const db = admin.database();
+    const ref = db.ref('members');
+    return ref.once('value', (v) => {
+      console.log(v.val());
+    });
+    // return `This action returns all members`;
   }
 
   findOne(id: number) {
@@ -36,7 +41,7 @@ export class MembersService {
     return `This action updates a #${id} member`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} member`;
-  }
+  // remove(id: number) {
+  //   return `This action removes a #${id} member`;
+  // }
 }

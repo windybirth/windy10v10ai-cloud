@@ -47,8 +47,8 @@ export class MembersController {
     return this.membersService.update(+id, updateMemberDto);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.membersService.remove(+id);
-  }
+  // @Delete(':id')
+  // remove(@Param('id') id: string) {
+  //   return this.membersService.remove(+id);
+  // }
 }
