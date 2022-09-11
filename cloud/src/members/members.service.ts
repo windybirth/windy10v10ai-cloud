@@ -3,6 +3,7 @@ import { CreateMemberDto } from './dto/create-member.dto';
 import { UpdateMemberDto } from './dto/update-member.dto';
 import { Member } from './entities/member.entity';
 import * as admin from 'firebase-admin';
+import { MemberDto } from './dto/member.dto';
 
 @Injectable()
 export class MembersService {
@@ -21,16 +22,32 @@ export class MembersService {
       steamId: 108208968,
       expireDate: new Date('2022-07-20T00:00:00'),
     });
+    this.saveMember({
+      steamId: 1194383041,
+      expireDate: new Date('2022-07-20T00:00:00'),
+    });
     return `This action create all members with init data`;
   }
 
-  findAll() {
+  async findAll(): Promise<MemberDto[]> {
     const db = admin.database();
     const ref = db.ref('members');
-    return ref.once('value', (v) => {
-      console.log(v.val());
+
+    const memberSnapshot = await ref.once('value');
+    const response: MemberDto[] = [];
+
+    const oneDataAgo: Date = new Date();
+    oneDataAgo.setDate(oneDataAgo.getDate() - 1);
+    memberSnapshot.forEach((data) => {
+      const value = data.val();
+      const steamId = value.steamId;
+      // 有效期次日UTC 00:00后 过期
+      const enable = new Date(value.expireDate) > oneDataAgo;
+      const expireDateString = value.expireDate.split('T')[0];
+
+      response.push({ steamId, enable, expireDateString });
     });
-    // return `This action returns all members`;
+    return response;
   }
 
   findOne(id: number) {
