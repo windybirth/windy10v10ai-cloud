@@ -4,5 +4,7 @@
     ],
     "editor.codeActionsOnSave": {
         "source.fixAll.eslint": true
-    }
+    },
+    "git.autofetch": true,
+    "debug.javascript.autoAttachFilter": "smart"
 }

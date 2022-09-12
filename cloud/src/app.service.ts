@@ -3,9 +3,9 @@ import { Injectable } from '@nestjs/common';
 @Injectable()
 export class AppService {
   getHello(): string {
-    return 'Hello World!';
+    return 'Hello, this is the root of Function!';
   }
   getApiHello(): string {
-    return '[{"steamId": 136407523,"enable": true,"expireDateString": "2099-12-31"}]';
+    return 'Hello, this is the API root of Hosting!';
   }
 }

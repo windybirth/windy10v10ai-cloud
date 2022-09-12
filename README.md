@@ -1,16 +1,36 @@
 # windy10v10ai-cloud
- Save windy 10v10ai data in cloud.
+Save windy 10v10ai data in cloud.
+
+## Built With
+- Firebase 
+  - Hosting
+  - Functions
+  - Realtime Database
+- NextJS
 
 ## Get Start
+
+### Install
 ```
 npm install -g firebase-tools
 (cd cloud && npm install)
 ```
 
-## Firebase
-- Firebase Hosting
-- Firebase Functions
+### Run on local
+```
+(cd cloud && npm run start)
+```
+### Local end points
+ - Firebase Hosting: http://localhost:5000/api/
+ - Firebase Emulator: http://localhost:4000/
+ - Function (Not used): http://localhost:5001/windy10v10ai/us-central1/api/
 
-Run local `(cd cloud && npm run start)`
+**_NOTE: Debug only works while access to NestJS directly on http://localhost:3000/_**
 
-Deploy `(cd cloud && npm run deploy)`
+
+
+### Deploy
+```
+(cd cloud && npm run deploy)
+```
+ 
