@@ -3,6 +3,7 @@ import { CreateMemberDto } from './dto/create-member.dto';
 import { UpdateMemberDto } from './dto/update-member.dto';
 import { Member } from './entities/member.entity';
 import * as admin from 'firebase-admin';
+import { database } from 'firebase-admin';
 import { MemberDto } from './dto/member.dto';
 
 @Injectable()
@@ -12,7 +13,7 @@ export class MembersService {
   }
 
   saveMember(member: Member): void {
-    const db = admin.database();
+    const db = database();
     console.log('Save member:', member);
     db.ref('members/' + member.steamId).update(member);
   }
@@ -251,7 +252,7 @@ export class MembersService {
   }
 
   async findAll(): Promise<MemberDto[]> {
-    const db = admin.database();
+    const db = database();
     const ref = db.ref('members');
 
     const memberSnapshot = await ref.once('value');
