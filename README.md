@@ -11,6 +11,9 @@ Save windy 10v10ai data in cloud.
 ## Get Start
 
 ### Install
+Need
+- NodeJs 16
+- java
 ```
 npm install -g firebase-tools
 (cd cloud && npm install)
