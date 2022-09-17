@@ -1,16 +1,17 @@
 import {
+  Body,
   Controller,
   Get,
-  Post,
-  Body,
-  Patch,
   Param,
-  UnauthorizedException,
+  Patch,
+  Post,
   Query,
+  UnauthorizedException,
 } from '@nestjs/common';
-import { MembersService } from './members.service';
+
 import { CreateMemberDto } from './dto/create-member.dto';
 import { UpdateMemberDto } from './dto/update-member.dto';
+import { MembersService } from './members.service';
 
 @Controller('/api/members')
 export class MembersController {
