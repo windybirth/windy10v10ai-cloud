@@ -15,6 +15,7 @@ export class MembersService {
   saveMember(member: Member): void {
     const db = database();
     console.log('Save member:', member);
+
     db.ref('members/' + member.steamId).update(member);
   }
 

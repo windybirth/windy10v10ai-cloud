@@ -28,6 +28,7 @@ export class MembersController {
     if (token !== 'initAllMemberInfo') {
       throw new UnauthorizedException();
     }
+
     return this.membersService.createAll();
   }
 
