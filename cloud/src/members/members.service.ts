@@ -264,17 +264,46 @@ export class MembersService {
     memberSnapshot.forEach((data) => {
       const value = data.val();
       const steamId = value.steamId;
-      // 有效期次日UTC 00:00后 过期
-      const enable = new Date(value.expireDate) > oneDataAgo;
-      const expireDateString = value.expireDate.split('T')[0];
-
-      response.push({ steamId, enable, expireDateString });
+      const expireDate = new Date(value.expireDate);
+      const member: Member = { steamId, expireDate };
+      response.push(new MemberDto(member));
     });
+
     return response;
   }
 
   findOne(id: number) {
     return `This action returns a #${id} member`;
+  }
+
+  async findByIds(steamId: number[]): Promise<MemberDto[]> {
+    const memberList: MemberDto[] = [];
+
+    for (const id of steamId) {
+      await database()
+        .ref('members/' + `${id}`)
+        .once('value')
+        .then(function (snapshot) {
+          const value = snapshot.val();
+          if (value) {
+            const member: Member = {
+              steamId: value.steamId,
+              expireDate: new Date(value.expireDate),
+            };
+            memberList.push(new MemberDto(member));
+          }
+        });
+    }
+    // 参考
+    // // Find all dinosaurs whose height is exactly 25 meters.
+    // const refequalTo = await database().ref('members');
+    // refequalTo.orderByChild('steamId').equalTo(ids[0]).once('value', function (snapshot) {
+    //   const newPost = snapshot.val();
+    //   console.log('newPost: ' + snapshot.key);
+    //   console.log('steamId: ' + newPost.steamId);
+    //   console.log('expireDateString ' + newPost.expireDateString);
+    // });
+    return memberList;
   }
 
   // {"steamId":123123123,"expireDate":"2022-12-02T00:00:00.000Z"}

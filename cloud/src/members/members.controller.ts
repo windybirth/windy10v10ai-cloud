@@ -3,6 +3,7 @@ import {
   Controller,
   Get,
   Param,
+  ParseArrayPipe,
   Patch,
   Post,
   Query,
@@ -24,7 +25,6 @@ export class MembersController {
 
   @Post('/all')
   createAll(@Query('token') token: string) {
-    console.log(token);
     if (token !== 'initAllMemberInfo') {
       throw new UnauthorizedException();
     }
@@ -34,13 +34,26 @@ export class MembersController {
 
   // @Get()
   @Get('/all')
-  findAll() {
-    return this.membersService.findAll();
+  findAll(
+    @Query('steamId', new ParseArrayPipe({ items: Number, separator: ',' }))
+    steamId: number[],
+  ) {
+    return this.membersService.findByIds(steamId);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.membersService.findOne(+id);
+  // @Get(':ids')
+  // findOne(@Param('ids') ids: number) {
+  //   console.log('Get:id' + ids);
+  //   return `Get:id ${ids}`;
+  //   // return this.membersService.findOne(+id);
+  // }
+
+  @Get()
+  findByIds(
+    @Query('steamId', new ParseArrayPipe({ items: Number, separator: ',' }))
+    steamId: number[],
+  ) {
+    return this.membersService.findByIds(steamId);
   }
 
   @Patch(':id')
