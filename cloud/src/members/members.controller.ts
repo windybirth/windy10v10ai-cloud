@@ -18,11 +18,20 @@ import { MembersService } from './members.service';
 export class MembersController {
   constructor(private readonly membersService: MembersService) {}
 
+  // 开通会员
   @Post()
-  create(@Body() createMemberDto: CreateMemberDto) {
+  create(
+    @Body() createMemberDto: CreateMemberDto,
+    @Query('token') token: string,
+  ) {
+    // TODO validation
+    if (token !== '385jldu4i3jk;d') {
+      throw new UnauthorizedException();
+    }
     return this.membersService.create(createMemberDto);
   }
 
+  // 初期化会员数据，仅供测试
   @Post('/all')
   createAll(@Query('token') token: string) {
     if (token !== 'initAllMemberInfo') {

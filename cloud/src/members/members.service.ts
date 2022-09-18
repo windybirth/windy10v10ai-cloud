@@ -8,14 +8,30 @@ import { Member } from './entities/member.entity';
 
 @Injectable()
 export class MembersService {
+  //#region firestore db access
+  //#endregion
+
   create(createMemberDto: CreateMemberDto) {
+    // FIXME: move 31 to prop file
+    const daysPerMonth = 31;
+    const steamId = createMemberDto.steamId;
+    // TODO find steam id
+    // steam id not exist
+    const expireDate = new Date();
+    expireDate.setUTCDate(
+      expireDate.getUTCDate() + createMemberDto.month * daysPerMonth,
+    );
+    expireDate.setUTCHours(0, 0, 0, 0);
+    // TODO steam id exist
+    // If expired, set same as new.
+    // else month base on last expireDate
+
+    this.saveMember({ steamId, expireDate });
     return 'This action adds a new member';
   }
 
   saveMember(member: Member): void {
     const db = database();
-    console.log('Save member:', member);
-
     db.ref('members/' + member.steamId).update(member);
   }
 
