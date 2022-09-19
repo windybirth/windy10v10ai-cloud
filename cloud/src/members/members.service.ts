@@ -1,56 +1,90 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { database } from 'firebase-admin';
-import { Timestamp, getFirestore } from 'firebase-admin/firestore';
-import { NotFoundError } from 'rxjs';
+import {
+  DocumentData,
+  QueryDocumentSnapshot,
+  Timestamp,
+  getFirestore,
+} from 'firebase-admin/firestore';
 
 import { CreateMemberDto } from './dto/create-member.dto';
 import { MemberDto } from './dto/member.dto';
-import { UpdateMemberDto } from './dto/update-member.dto';
 import { Member } from './entities/member.entity';
 
 @Injectable()
 export class MembersService {
-  // Firestore data converter
   //#region firestore db access
+
+  // Firestore data converter
+  memberConverter = {
+    toFirestore(member: Member): DocumentData {
+      return {
+        steamId: member.steamId,
+        expireDate: member.expireDate,
+      };
+    },
+    fromFirestore(snapshot: QueryDocumentSnapshot): Member {
+      const data = snapshot.data();
+      return new Member(data.steamId, (data.expireDate as Timestamp).toDate());
+    },
+  };
+
   async save(member: Member): Promise<void> {
     const db = getFirestore();
-    const memberRef = db.collection('members').doc('' + member.steamId);
-    await memberRef.set({
-      steamId: member.steamId,
-      expireDate: member.expireDate,
-    });
+    const memberRef = db
+      .collection('members')
+      .withConverter(this.memberConverter)
+      .doc('' + member.steamId);
+    await memberRef.set(member);
   }
+
   async findOne(steamId: number): Promise<MemberDto> {
     const db = getFirestore();
-    const memberRef = db.collection('members').doc('' + steamId);
-    const doc = await memberRef.get();
-    if (doc.exists) {
-      const data = doc.data();
-      return new MemberDto(
-        new Member(data.steamId, (data.expireDate as Timestamp).toDate()),
-      );
+    const memberSnapshot = await db
+      .collection('members')
+      .withConverter(this.memberConverter)
+      .doc('' + steamId)
+      .get();
+    const member = memberSnapshot.data();
+    if (member) {
+      return new MemberDto(member);
     } else {
       throw new NotFoundException();
     }
   }
-  //#endregion
 
   async findAllFirebase(): Promise<MemberDto[]> {
     const response: MemberDto[] = [];
 
     const db = getFirestore();
-    const memberRef = db.collection('members');
-    const snapshot = await memberRef.get();
-    snapshot.forEach((doc) => {
-      const data = doc.data();
-      response.push(
-        new MemberDto(
-          new Member(data.steamId, (data.expireDate as Timestamp).toDate()),
-        ),
-      );
+    const memberSnapshot = await db
+      .collection('members')
+      .withConverter(this.memberConverter)
+      .get();
+    memberSnapshot.forEach((doc) => {
+      const member = doc.data();
+      response.push(new MemberDto(member));
     });
     return response;
   }
+
+  // steamIds maxlength 10
+  async findBySteamIds(steamIds: number[]): Promise<MemberDto[]> {
+    const response: MemberDto[] = [];
+
+    const db = getFirestore();
+    const memberSnapshot = await db
+      .collection('members')
+      .where('steamId', 'in', steamIds)
+      .withConverter(this.memberConverter)
+      .get();
+    memberSnapshot.forEach((doc) => {
+      const member = doc.data();
+      response.push(new MemberDto(member));
+    });
+    return response;
+  }
+  //#endregion
 
   create(createMemberDto: CreateMemberDto) {
     // FIXME: move 31 to prop file
@@ -92,11 +126,6 @@ export class MembersService {
     return 'migration success';
   }
 
-  saveMember(member: Member): void {
-    const db = database();
-    db.ref('members/' + member.steamId).update(member);
-  }
-
   createAll() {
     const members: Member[] = [];
     // 开发贡献者
@@ -116,31 +145,14 @@ export class MembersService {
     members.push(new Member(146837505));
     members.push(new Member(136385488));
     members.push(new Member(907056028));
-    // 会员
-    members.push(new Member(108208968, new Date('2022-07-20T00:00:00')));
-    members.push(new Member(107451500, new Date('2022-05-20T00:00:00')));
-    members.push(new Member(141315077, new Date('2022-10-05T00:00:00')));
-    members.push(new Member(117417953, new Date('2023-04-20T00:00:00')));
-    members.push(new Member(319701690, new Date('2022-05-20T00:00:00')));
-    members.push(new Member(142964279, new Date('2022-07-20T00:00:00')));
-    members.push(new Member(125049949, new Date('2022-06-20T00:00:00')));
-    members.push(new Member(150252080, new Date('2025-04-20T00:00:00')));
-    members.push(new Member(355472172, new Date('2022-05-23T00:00:00')));
-    members.push(new Member(445801587, new Date('2022-05-23T00:00:00')));
-    members.push(new Member(308320923, new Date('2022-05-23T00:00:00')));
-    members.push(new Member(190540884, new Date('2022-05-24T00:00:00')));
-    members.push(new Member(1009673688, new Date('2022-05-24T00:00:00')));
-    // patreon
-    members.push(new Member(67723423, new Date('2022-10-01T00:00:00')));
-    members.push(new Member(86539525, new Date('2022-10-01T00:00:00')));
     // 到期
     members.push(new Member(1318433532, new Date('2022-08-31T00:00:00')));
-    // 测试
-    members.push(new Member(916506173, new Date('2022-08-01T00:00:00')));
+    // 未来
+    members.push(new Member(916506173, new Date('2025-08-01T00:00:00')));
     members.forEach((member) => {
-      this.saveMember(member);
+      this.save(member);
     });
-    return `This action create all members with init data`;
+    return `This action create test members with init data`;
   }
 
   async findAll(): Promise<MemberDto[]> {
@@ -163,42 +175,38 @@ export class MembersService {
     return response;
   }
 
-  async findByIds(steamId: number[]): Promise<MemberDto[]> {
-    const memberList: MemberDto[] = [];
+  // async findByIds(steamId: number[]): Promise<MemberDto[]> {
+  //   const memberList: MemberDto[] = [];
 
-    for (const id of steamId) {
-      await database()
-        .ref('members/' + `${id}`)
-        .once('value')
-        .then(function (snapshot) {
-          const value = snapshot.val();
-          if (value) {
-            const member: Member = {
-              steamId: value.steamId,
-              expireDate: new Date(value.expireDate),
-            };
-            memberList.push(new MemberDto(member));
-          }
-        });
-    }
-    // 参考
-    // // Find all dinosaurs whose height is exactly 25 meters.
-    // const refequalTo = await database().ref('members');
-    // refequalTo.orderByChild('steamId').equalTo(ids[0]).once('value', function (snapshot) {
-    //   const newPost = snapshot.val();
-    //   console.log('newPost: ' + snapshot.key);
-    //   console.log('steamId: ' + newPost.steamId);
-    //   console.log('expireDateString ' + newPost.expireDateString);
-    // });
-    return memberList;
-  }
+  //   for (const id of steamId) {
+  //     await database()
+  //       .ref('members/' + `${id}`)
+  //       .once('value')
+  //       .then(function (snapshot) {
+  //         const value = snapshot.val();
+  //         if (value) {
+  //           const member: Member = {
+  //             steamId: value.steamId,
+  //             expireDate: new Date(value.expireDate),
+  //           };
+  //           memberList.push(new MemberDto(member));
+  //         }
+  //       });
+  //   }
+  //   // 参考
+  //   // // Find all dinosaurs whose height is exactly 25 meters.
+  //   // const refequalTo = await database().ref('members');
+  //   // refequalTo.orderByChild('steamId').equalTo(ids[0]).once('value', function (snapshot) {
+  //   //   const newPost = snapshot.val();
+  //   //   console.log('newPost: ' + snapshot.key);
+  //   //   console.log('steamId: ' + newPost.steamId);
+  //   //   console.log('expireDateString ' + newPost.expireDateString);
+  //   // });
+  //   return memberList;
+  // }
 
-  // {"steamId":123123123,"expireDate":"2022-12-02T00:00:00.000Z"}
-  update(id: number, updateMemberDto: UpdateMemberDto) {
-    return `This action updates a #${id} member`;
-  }
-
-  // remove(id: number) {
-  //   return `This action removes a #${id} member`;
+  // update(id: number, updateMemberDto: UpdateMemberDto) {
+  //   // TODO
+  //   return `This action updates a #${id} member with ${updateMemberDto.month}`;
   // }
 }

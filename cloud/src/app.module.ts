@@ -12,7 +12,8 @@ const ENV = process.env.NODE_ENV;
   imports: [
     MembersModule,
     ConfigModule.forRoot({
-      envFilePath: !ENV ? '.env' : `.env.${ENV}`,
+      envFilePath: `envs/${ENV}.env`,
+      isGlobal: true,
     }),
   ],
   controllers: [AppController],
@@ -22,15 +23,13 @@ export class AppModule {
   constructor() {
     // Initialize the firebase admin app
     if (ENV === 'develop') {
-      const app = initializeApp({
-        storageBucket: process.env.STORAGE_BUCKET,
+      initializeApp({
+        storageBucket: 'windy10v10ai.appspot.com',
         databaseURL: 'http://127.0.0.1:9000/?ns=windy10v10ai-default-rtdb',
         projectId: 'windy10v10ai',
       });
-      console.log(app);
     } else {
-      const app = initializeApp();
+      initializeApp();
     }
-    console.log('[NestJs] firebase admin initialized.');
   }
 }

@@ -1,23 +1,26 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Get,
   Param,
   ParseArrayPipe,
   ParseIntPipe,
-  Patch,
   Post,
   Query,
   UnauthorizedException,
 } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 
 import { CreateMemberDto } from './dto/create-member.dto';
-import { UpdateMemberDto } from './dto/update-member.dto';
 import { MembersService } from './members.service';
 
 @Controller('/api/members')
 export class MembersController {
-  constructor(private readonly membersService: MembersService) {}
+  constructor(
+    private readonly membersService: MembersService,
+    private readonly configService: ConfigService,
+  ) {}
 
   // 开通会员
   @Post()
@@ -25,17 +28,16 @@ export class MembersController {
     @Body() createMemberDto: CreateMemberDto,
     @Query('token') token: string,
   ) {
-    // TODO validation
-    if (token !== '385jldu4i3jk;d') {
+    if (token !== this.configService.get<string>('ADMIN_TOKEN')) {
       throw new UnauthorizedException();
     }
     return this.membersService.create(createMemberDto);
   }
 
-  // 初期化会员数据，仅供测试
+  // 初期化会员数据进入Firestore，仅供测试
   @Post('/all')
   createAll(@Query('token') token: string) {
-    if (token !== 'initAllMemberInfo') {
+    if (token !== this.configService.get<string>('ADMIN_TOKEN')) {
       throw new UnauthorizedException();
     }
 
@@ -45,7 +47,7 @@ export class MembersController {
   // 数据迁移 RealtimeDB to Firestore
   @Post('/migration')
   migration(@Query('token') token: string) {
-    if (token !== 'migrationAllMemberInfo') {
+    if (token !== this.configService.get<string>('ADMIN_TOKEN')) {
       throw new UnauthorizedException();
     }
 
@@ -75,20 +77,19 @@ export class MembersController {
   }
 
   @Get()
-  findByIds(
+  findBySteamIds(
     @Query('steamId', new ParseArrayPipe({ items: Number, separator: ',' }))
-    steamId: number[],
+    steamIds: number[],
   ) {
-    return this.membersService.findByIds(steamId);
+    // FIXME use validation like @ArrayMaxSize(10)
+    if (steamIds.length > 10) {
+      throw new BadRequestException();
+    }
+    return this.membersService.findBySteamIds(steamIds);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateMemberDto: UpdateMemberDto) {
-    return this.membersService.update(+id, updateMemberDto);
-  }
-
-  // @Delete(':id')
-  // remove(@Param('id') id: string) {
-  //   return this.membersService.remove(+id);
+  // @Patch(':id')
+  // update(@Param('id') id: string, @Body() updateMemberDto: UpdateMemberDto) {
+  //   return this.membersService.update(+id, updateMemberDto);
   // }
 }
