@@ -10,12 +10,7 @@ export class MemberDto {
     // 有效期次日UTC 00:00后 过期
     const oneDataAgo: Date = new Date();
     oneDataAgo.setDate(oneDataAgo.getDate() - 1);
-    this.enable = new Date(member.expireDate) > oneDataAgo;
-    this.expireDateString =
-      member.expireDate.getUTCFullYear().toString() +
-      '-' +
-      member.expireDate.getUTCMonth().toString() +
-      '-' +
-      member.expireDate.getUTCDay().toString();
+    this.enable = member.expireDate > oneDataAgo;
+    this.expireDateString = member.expireDate.toISOString().split('T')[0];
   }
 }
