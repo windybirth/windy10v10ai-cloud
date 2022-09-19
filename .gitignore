@@ -126,3 +126,4 @@ dist
 .yarn/install-state.gz
 .pnp.*
 .firebase/hosting.cHVibGlj.cache
+cloud/application_default_credentials.json

@@ -1,6 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { database } from 'firebase-admin';
-import { getFirestore } from 'firebase-admin/firestore';
+import { Timestamp, getFirestore } from 'firebase-admin/firestore';
+import { NotFoundError } from 'rxjs';
 
 import { CreateMemberDto } from './dto/create-member.dto';
 import { MemberDto } from './dto/member.dto';
@@ -9,19 +10,28 @@ import { Member } from './entities/member.entity';
 
 @Injectable()
 export class MembersService {
+  // Firestore data converter
   //#region firestore db access
   async save(member: Member): Promise<void> {
     const db = getFirestore();
-    const docRef = db.collection('members').doc();
-    await docRef.set({
+    const memberRef = db.collection('members').doc('' + member.steamId);
+    await memberRef.set({
       steamId: member.steamId,
       expireDate: member.expireDate,
     });
   }
-  find(steamId: number): Member {
+  async find(steamId: number): Promise<MemberDto> {
     const db = getFirestore();
-    // TODO https://firebase.google.com/docs/firestore/manage-data/add-data
-    return new Member(steamId, new Date());
+    const memberRef = db.collection('members').doc('' + steamId);
+    const doc = await memberRef.get();
+    if (doc.exists) {
+      const data = doc.data();
+      return new MemberDto(
+        new Member(data.steamId, (data.expireDate as Timestamp).toDate()),
+      );
+    } else {
+      throw new NotFoundException();
+    }
   }
   //#endregion
 
