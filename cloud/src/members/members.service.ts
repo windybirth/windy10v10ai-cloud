@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { database } from 'firebase-admin';
+import { getFirestore } from 'firebase-admin/firestore';
 
 import { CreateMemberDto } from './dto/create-member.dto';
 import { MemberDto } from './dto/member.dto';
@@ -9,6 +10,19 @@ import { Member } from './entities/member.entity';
 @Injectable()
 export class MembersService {
   //#region firestore db access
+  async save(member: Member): Promise<void> {
+    const db = getFirestore();
+    const docRef = db.collection('members').doc();
+    await docRef.set({
+      steamId: member.steamId,
+      expireDate: member.expireDate,
+    });
+  }
+  find(steamId: number): Member {
+    const db = getFirestore();
+    // TODO https://firebase.google.com/docs/firestore/manage-data/add-data
+    return new Member(steamId, new Date());
+  }
   //#endregion
 
   create(createMemberDto: CreateMemberDto) {
@@ -26,7 +40,7 @@ export class MembersService {
     // If expired, set same as new.
     // else month base on last expireDate
 
-    this.saveMember({ steamId, expireDate });
+    this.save({ steamId, expireDate });
     return 'This action adds a new member';
   }
 
