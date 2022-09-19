@@ -31,6 +31,5 @@ export class AppModule {
     } else {
       initializeApp();
     }
-    console.log('[NestJs] firebase admin initialized.');
   }
 }

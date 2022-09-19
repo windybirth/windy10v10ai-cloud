@@ -35,7 +35,7 @@ export class MembersController {
     return this.membersService.create(createMemberDto);
   }
 
-  // 初期化会员数据，仅供测试
+  // 初期化会员数据进入Firestore，仅供测试
   @Post('/all')
   createAll(@Query('token') token: string) {
     if (token !== this.configService.get<string>('ADMIN_TOKEN')) {
