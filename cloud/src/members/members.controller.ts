@@ -4,6 +4,7 @@ import {
   Get,
   Param,
   ParseArrayPipe,
+  ParseIntPipe,
   Patch,
   Post,
   Query,
@@ -56,6 +57,14 @@ export class MembersController {
   //   return `Get:id ${ids}`;
   //   // return this.membersService.findOne(+id);
   // }
+
+  @Get(':id')
+  find(
+    @Param('id', new ParseIntPipe())
+    steamId: number,
+  ) {
+    return this.membersService.find(steamId);
+  }
 
   @Get()
   findByIds(
