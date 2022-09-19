@@ -42,28 +42,36 @@ export class MembersController {
     return this.membersService.createAll();
   }
 
-  // @Get()
-  @Get('/all')
-  findAll(
-    @Query('steamId', new ParseArrayPipe({ items: Number, separator: ',' }))
-    steamId: number[],
-  ) {
-    return this.membersService.findByIds(steamId);
+  // 数据迁移 RealtimeDB to Firestore
+  @Post('/migration')
+  migration(@Query('token') token: string) {
+    if (token !== 'migrationAllMemberInfo') {
+      throw new UnauthorizedException();
+    }
+
+    return this.membersService.migration();
   }
 
-  // @Get(':ids')
-  // findOne(@Param('ids') ids: number) {
-  //   console.log('Get:id' + ids);
-  //   return `Get:id ${ids}`;
-  //   // return this.membersService.findOne(+id);
-  // }
+  // @Get()
+  @Get('/all/firebase')
+  findAllFirebase() {
+    return this.membersService.findAllFirebase();
+  }
 
+  // 获取全体玩家信息 realtimedb
+  @Get('/all')
+  findAll() {
+    // steamId: number[], // @Query('steamId', new ParseArrayPipe({ items: Number, separator: ',' }))
+    return this.membersService.findAll();
+  }
+
+  // 获取单一会员信息（firestore
   @Get(':id')
   find(
     @Param('id', new ParseIntPipe())
     steamId: number,
   ) {
-    return this.membersService.find(steamId);
+    return this.membersService.findOne(steamId);
   }
 
   @Get()
