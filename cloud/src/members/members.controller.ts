@@ -1,11 +1,11 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Get,
   Param,
   ParseArrayPipe,
   ParseIntPipe,
-  Patch,
   Post,
   Query,
   UnauthorizedException,
@@ -13,7 +13,6 @@ import {
 import { ConfigService } from '@nestjs/config';
 
 import { CreateMemberDto } from './dto/create-member.dto';
-import { UpdateMemberDto } from './dto/update-member.dto';
 import { MembersService } from './members.service';
 
 @Controller('/api/members')
@@ -78,15 +77,19 @@ export class MembersController {
   }
 
   @Get()
-  findByIds(
+  findBySteamIds(
     @Query('steamId', new ParseArrayPipe({ items: Number, separator: ',' }))
-    steamId: number[],
+    steamIds: number[],
   ) {
-    return this.membersService.findByIds(steamId);
+    // FIXME use validation like @ArrayMaxSize(10)
+    if (steamIds.length > 10) {
+      throw new BadRequestException();
+    }
+    return this.membersService.findBySteamIds(steamIds);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateMemberDto: UpdateMemberDto) {
-    return this.membersService.update(+id, updateMemberDto);
-  }
+  // @Patch(':id')
+  // update(@Param('id') id: string, @Body() updateMemberDto: UpdateMemberDto) {
+  //   return this.membersService.update(+id, updateMemberDto);
+  // }
 }

@@ -9,7 +9,6 @@ import {
 
 import { CreateMemberDto } from './dto/create-member.dto';
 import { MemberDto } from './dto/member.dto';
-import { UpdateMemberDto } from './dto/update-member.dto';
 import { Member } from './entities/member.entity';
 
 @Injectable()
@@ -69,6 +68,22 @@ export class MembersService {
     return response;
   }
 
+  // steamIds maxlength 10
+  async findBySteamIds(steamIds: number[]): Promise<MemberDto[]> {
+    const response: MemberDto[] = [];
+
+    const db = getFirestore();
+    const memberSnapshot = await db
+      .collection('members')
+      .where('steamId', 'in', steamIds)
+      .withConverter(this.memberConverter)
+      .get();
+    memberSnapshot.forEach((doc) => {
+      const member = doc.data();
+      response.push(new MemberDto(member));
+    });
+    return response;
+  }
   //#endregion
 
   create(createMemberDto: CreateMemberDto) {
@@ -160,38 +175,38 @@ export class MembersService {
     return response;
   }
 
-  async findByIds(steamId: number[]): Promise<MemberDto[]> {
-    const memberList: MemberDto[] = [];
+  // async findByIds(steamId: number[]): Promise<MemberDto[]> {
+  //   const memberList: MemberDto[] = [];
 
-    for (const id of steamId) {
-      await database()
-        .ref('members/' + `${id}`)
-        .once('value')
-        .then(function (snapshot) {
-          const value = snapshot.val();
-          if (value) {
-            const member: Member = {
-              steamId: value.steamId,
-              expireDate: new Date(value.expireDate),
-            };
-            memberList.push(new MemberDto(member));
-          }
-        });
-    }
-    // 参考
-    // // Find all dinosaurs whose height is exactly 25 meters.
-    // const refequalTo = await database().ref('members');
-    // refequalTo.orderByChild('steamId').equalTo(ids[0]).once('value', function (snapshot) {
-    //   const newPost = snapshot.val();
-    //   console.log('newPost: ' + snapshot.key);
-    //   console.log('steamId: ' + newPost.steamId);
-    //   console.log('expireDateString ' + newPost.expireDateString);
-    // });
-    return memberList;
-  }
+  //   for (const id of steamId) {
+  //     await database()
+  //       .ref('members/' + `${id}`)
+  //       .once('value')
+  //       .then(function (snapshot) {
+  //         const value = snapshot.val();
+  //         if (value) {
+  //           const member: Member = {
+  //             steamId: value.steamId,
+  //             expireDate: new Date(value.expireDate),
+  //           };
+  //           memberList.push(new MemberDto(member));
+  //         }
+  //       });
+  //   }
+  //   // 参考
+  //   // // Find all dinosaurs whose height is exactly 25 meters.
+  //   // const refequalTo = await database().ref('members');
+  //   // refequalTo.orderByChild('steamId').equalTo(ids[0]).once('value', function (snapshot) {
+  //   //   const newPost = snapshot.val();
+  //   //   console.log('newPost: ' + snapshot.key);
+  //   //   console.log('steamId: ' + newPost.steamId);
+  //   //   console.log('expireDateString ' + newPost.expireDateString);
+  //   // });
+  //   return memberList;
+  // }
 
-  update(id: number, updateMemberDto: UpdateMemberDto) {
-    // TODO
-    return `This action updates a #${id} member with ${updateMemberDto.month}`;
-  }
+  // update(id: number, updateMemberDto: UpdateMemberDto) {
+  //   // TODO
+  //   return `This action updates a #${id} member with ${updateMemberDto.month}`;
+  // }
 }
