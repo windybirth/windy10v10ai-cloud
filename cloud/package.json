@@ -19,7 +19,7 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "export NODE_ENV=develop && export GOOGLE_APPLICATION_CREDENTIALS='application_default_credentials.json' && jest --config ./test/jest-e2e.json",
-    "deploy": "export NODE_ENV=product && firebase deploy --only functions"
+    "deploy": "firebase deploy --only functions"
   },
   "dependencies": {
     "@nestjs/common": "^9.0.0",
