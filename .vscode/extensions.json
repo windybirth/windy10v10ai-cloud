@@ -1,5 +1,6 @@
 {
     "recommendations": [
-        "ZainChen.json"
+        "zainchen.json",
+        "dbaeumer.vscode-eslint"
     ]
 }

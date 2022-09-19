@@ -1,8 +1,16 @@
-import { PartialType } from '@nestjs/mapped-types';
-import { CreateMemberDto } from './create-member.dto';
+import { Member } from '../entities/member.entity';
 
-export class MemberDto extends PartialType(CreateMemberDto) {
+export class MemberDto {
   steamId!: number;
   enable!: boolean;
   expireDateString!: string;
+
+  constructor(member: Member) {
+    this.steamId = member.steamId;
+    // 有效期次日UTC 00:00后 过期
+    const oneDataAgo: Date = new Date();
+    oneDataAgo.setDate(oneDataAgo.getDate() - 1);
+    this.enable = member.expireDate > oneDataAgo;
+    this.expireDateString = member.expireDate.toISOString().split('T')[0];
+  }
 }
