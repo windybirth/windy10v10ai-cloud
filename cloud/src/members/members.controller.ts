@@ -54,7 +54,7 @@ export class MembersController {
     return this.membersService.migration();
   }
 
-  // @Get()
+  // FIXME: remove after dota2 map update API url.
   @Get('/all/firebase')
   findAllFirebase() {
     return this.membersService.findAllFirebase();
@@ -66,7 +66,22 @@ export class MembersController {
     @Query('steamId', new ParseArrayPipe({ items: Number, separator: ',' }))
     steamIds: number[],
   ) {
-    // FIXME use validation like @ArrayMaxSize(10)
+    steamIds = steamIds.filter((id) => id > 0);
+    if (steamIds.length > 10) {
+      console.warn(`Bad request with steamIds: ${steamIds}`);
+      throw new BadRequestException();
+    }
+    // FIXME: use this.membersService.findAllFirebase(); after dota2 map update API url.
+    return this.membersService.findBySteamIds(steamIds);
+  }
+
+  // 检索复数玩家会员信息 最大10件 移除steamIds=0的项目
+  @Get()
+  findBySteamIds(
+    @Query('steamIds', new ParseArrayPipe({ items: Number, separator: ',' }))
+    steamIds: number[],
+  ) {
+    steamIds = steamIds.filter((id) => id > 0);
     if (steamIds.length > 10) {
       throw new BadRequestException();
     }
@@ -80,18 +95,6 @@ export class MembersController {
     steamId: number,
   ) {
     return this.membersService.findOne(steamId);
-  }
-
-  @Get()
-  findBySteamIds(
-    @Query('steamId', new ParseArrayPipe({ items: Number, separator: ',' }))
-    steamIds: number[],
-  ) {
-    // FIXME use validation like @ArrayMaxSize(10)
-    if (steamIds.length > 10) {
-      throw new BadRequestException();
-    }
-    return this.membersService.findBySteamIds(steamIds);
   }
 
   // @Patch(':id')
