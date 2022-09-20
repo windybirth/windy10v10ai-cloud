@@ -68,6 +68,7 @@ export class MembersController {
   ) {
     steamIds = steamIds.filter((id) => id > 0);
     if (steamIds.length > 10) {
+      console.warn(`Bad request with steamIds: ${steamIds}`);
       throw new BadRequestException();
     }
     // FIXME: use this.membersService.findAllFirebase(); after dota2 map update API url.
