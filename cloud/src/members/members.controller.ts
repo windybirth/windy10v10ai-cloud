@@ -62,9 +62,15 @@ export class MembersController {
 
   // 获取全体玩家信息 realtimedb
   @Get('/all')
-  findAll() {
-    // steamId: number[], // @Query('steamId', new ParseArrayPipe({ items: Number, separator: ',' }))
-    return this.membersService.findAll();
+  findAll(
+    @Query('steamId', new ParseArrayPipe({ items: Number, separator: ',' }))
+    steamIds: number[],
+  ) {
+    // FIXME use validation like @ArrayMaxSize(10)
+    if (steamIds.length > 10) {
+      throw new BadRequestException();
+    }
+    return this.membersService.findBySteamIds(steamIds);
   }
 
   // 获取单一会员信息（firestore
