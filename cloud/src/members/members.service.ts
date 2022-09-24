@@ -87,14 +87,13 @@ export class MembersService {
   //#endregion
 
   create(createMemberDto: CreateMemberDto) {
-    // FIXME: move 31 to prop file
-    const daysPerMonth = 31;
     const steamId = createMemberDto.steamId;
     // TODO find steam id
     // steam id not exist
     const expireDate = new Date();
     expireDate.setUTCDate(
-      expireDate.getUTCDate() + createMemberDto.month * daysPerMonth,
+      expireDate.getUTCDate() +
+        createMemberDto.month * +process.env.DAYS_PER_MONTH,
     );
     expireDate.setUTCHours(0, 0, 0, 0);
     // TODO steam id exist

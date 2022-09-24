@@ -28,7 +28,7 @@ export class MembersController {
     @Body() createMemberDto: CreateMemberDto,
     @Query('token') token: string,
   ) {
-    if (token !== this.configService.get<string>('ADMIN_TOKEN')) {
+    if (token !== process.env.ADMIN_TOKEN) {
       throw new UnauthorizedException();
     }
     return this.membersService.create(createMemberDto);
@@ -37,7 +37,7 @@ export class MembersController {
   // 初期化会员数据进入Firestore，仅供测试
   @Post('/all')
   createAll(@Query('token') token: string) {
-    if (token !== this.configService.get<string>('ADMIN_TOKEN')) {
+    if (token !== process.env.ADMIN_TOKEN) {
       throw new UnauthorizedException();
     }
 
