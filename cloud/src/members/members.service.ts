@@ -53,7 +53,7 @@ export class MembersService {
     }
   }
 
-  async findAllFirebase(): Promise<MemberDto[]> {
+  async findAll(): Promise<MemberDto[]> {
     const response: MemberDto[] = [];
 
     const db = getFirestore();
@@ -104,27 +104,6 @@ export class MembersService {
     return 'This action adds a new member';
   }
 
-  async migration() {
-    const realtimedb = database();
-    const ref = realtimedb.ref('members');
-
-    const memberSnapshot = await ref.once('value');
-
-    const members: Member[] = [];
-    memberSnapshot.forEach((data) => {
-      const value = data.val();
-      const steamId = value.steamId;
-      const expireDate = new Date(value.expireDate);
-      const member: Member = { steamId, expireDate };
-      members.push(member);
-    });
-    for (const member of members) {
-      this.save(member);
-    }
-
-    return 'migration success';
-  }
-
   createAll() {
     const members: Member[] = [];
     // 开发贡献者
@@ -154,58 +133,23 @@ export class MembersService {
     return `This action create test members with init data`;
   }
 
-  async findAll(): Promise<MemberDto[]> {
-    const db = database();
-    const ref = db.ref('members');
+  // async findAll(): Promise<MemberDto[]> {
+  //   const db = database();
+  //   const ref = db.ref('members');
 
-    const memberSnapshot = await ref.once('value');
-    const response: MemberDto[] = [];
+  //   const memberSnapshot = await ref.once('value');
+  //   const response: MemberDto[] = [];
 
-    const oneDataAgo: Date = new Date();
-    oneDataAgo.setDate(oneDataAgo.getDate() - 1);
-    memberSnapshot.forEach((data) => {
-      const value = data.val();
-      const steamId = value.steamId;
-      const expireDate = new Date(value.expireDate);
-      const member: Member = { steamId, expireDate };
-      response.push(new MemberDto(member));
-    });
+  //   const oneDataAgo: Date = new Date();
+  //   oneDataAgo.setDate(oneDataAgo.getDate() - 1);
+  //   memberSnapshot.forEach((data) => {
+  //     const value = data.val();
+  //     const steamId = value.steamId;
+  //     const expireDate = new Date(value.expireDate);
+  //     const member: Member = { steamId, expireDate };
+  //     response.push(new MemberDto(member));
+  //   });
 
-    return response;
-  }
-
-  // async findByIds(steamId: number[]): Promise<MemberDto[]> {
-  //   const memberList: MemberDto[] = [];
-
-  //   for (const id of steamId) {
-  //     await database()
-  //       .ref('members/' + `${id}`)
-  //       .once('value')
-  //       .then(function (snapshot) {
-  //         const value = snapshot.val();
-  //         if (value) {
-  //           const member: Member = {
-  //             steamId: value.steamId,
-  //             expireDate: new Date(value.expireDate),
-  //           };
-  //           memberList.push(new MemberDto(member));
-  //         }
-  //       });
-  //   }
-  //   // 参考
-  //   // // Find all dinosaurs whose height is exactly 25 meters.
-  //   // const refequalTo = await database().ref('members');
-  //   // refequalTo.orderByChild('steamId').equalTo(ids[0]).once('value', function (snapshot) {
-  //   //   const newPost = snapshot.val();
-  //   //   console.log('newPost: ' + snapshot.key);
-  //   //   console.log('steamId: ' + newPost.steamId);
-  //   //   console.log('expireDateString ' + newPost.expireDateString);
-  //   // });
-  //   return memberList;
-  // }
-
-  // update(id: number, updateMemberDto: UpdateMemberDto) {
-  //   // TODO
-  //   return `This action updates a #${id} member with ${updateMemberDto.month}`;
+  //   return response;
   // }
 }
