@@ -1,5 +1,4 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { database } from 'firebase-admin';
 import {
   DocumentData,
   QueryDocumentSnapshot,
@@ -29,13 +28,13 @@ export class MembersService {
     },
   };
 
-  async save(member: Member): Promise<void> {
+  async save(member: Member) {
     const db = getFirestore();
     const memberRef = db
       .collection('members')
       .withConverter(this.memberConverter)
       .doc('' + member.steamId);
-    await memberRef.set(member);
+    return await memberRef.set(member);
   }
 
   async findOne(steamId: number): Promise<MemberDto> {
@@ -86,7 +85,7 @@ export class MembersService {
   }
   //#endregion
 
-  create(createMemberDto: CreateMemberDto) {
+  async create(createMemberDto: CreateMemberDto) {
     const steamId = createMemberDto.steamId;
     // TODO find steam id
     // steam id not exist
@@ -100,8 +99,8 @@ export class MembersService {
     // If expired, set same as new.
     // else month base on last expireDate
 
-    this.save({ steamId, expireDate });
-    return 'This action adds a new member';
+    await this.save({ steamId, expireDate });
+    return this.findOne(steamId);
   }
 
   createAll() {
@@ -124,9 +123,11 @@ export class MembersService {
     members.push(new Member(136385488));
     members.push(new Member(907056028));
     // 到期
-    members.push(new Member(1318433532, new Date('2022-08-31T00:00:00')));
+    members.push(new Member(20200801, new Date('2022-08-01T00:00:00')));
+    members.push(new Member(20201231, new Date('2022-12-31T00:00:00')));
     // 未来
-    members.push(new Member(916506173, new Date('2025-08-01T00:00:00')));
+    members.push(new Member(20300801, new Date('2030-08-01T00:00:00')));
+    members.push(new Member(20301231, new Date('2030-08-01T00:00:00')));
     members.forEach((member) => {
       this.save(member);
     });

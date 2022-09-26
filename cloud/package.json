@@ -10,15 +10,15 @@
     "prebuild": "rimraf dist",
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
-    "start": "export NODE_ENV=develop && nest start --watch | firebase emulators:start --only functions,hosting,database,firestore",
-    "start:debug": "export NODE_ENV=develop && export GOOGLE_APPLICATION_CREDENTIALS='application_default_credentials.json' && export FIRESTORE_EMULATOR_HOST='localhost:8080' && nest start --debug --watch | firebase emulators:start --only functions,hosting,database,firestore",
+    "start": "export NODE_ENV=develop && nest start --watch | firebase emulators:start --only functions,hosting,firestore",
+    "start:debug": "export NODE_ENV=develop && export GOOGLE_APPLICATION_CREDENTIALS='application_default_credentials.json' && export FIRESTORE_EMULATOR_HOST='localhost:8080' && nest start --debug --watch | firebase emulators:start --only functions,hosting,firestore",
     "start:prod": "node dist/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "export NODE_ENV=develop && export GOOGLE_APPLICATION_CREDENTIALS='application_default_credentials.json' && jest --config ./test/jest-e2e.json",
+    "test:e2e": "firebase emulators:exec --only firestore \"export GOOGLE_APPLICATION_CREDENTIALS='application_default_credentials.json' && export FIRESTORE_EMULATOR_HOST='localhost:8080' && jest --config ./test/jest-e2e.json\"",
     "deploy": "firebase deploy --only functions"
   },
   "dependencies": {
