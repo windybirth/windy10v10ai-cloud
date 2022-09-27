@@ -1,14 +1,5 @@
-公开API
-Get:https://windy10v10ai.web.app/api/members/all
-经由Firebase hosting访问
-RESPONSE
+### 调用管理员API
+
 ```
-[
-  {
-    "steamId": 136407523,
-    "enable": true,
-    "expireDateString": "2099-12-31"
-  },
-  ...
-]
+curl -H "Authorization: bearer $(gcloud auth print-identity-token)" https://us-central1-windy10v10ai.cloudfunctions.net/
 ```
