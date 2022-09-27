@@ -37,19 +37,14 @@ export class MembersService {
     return await memberRef.set(member);
   }
 
-  async findOne(steamId: number): Promise<MemberDto> {
+  async findOne(steamId: number) {
     const db = getFirestore();
     const memberSnapshot = await db
       .collection('members')
       .withConverter(this.memberConverter)
       .doc('' + steamId)
       .get();
-    const member = memberSnapshot.data();
-    if (member) {
-      return new MemberDto(member);
-    } else {
-      throw new NotFoundException();
-    }
+    return memberSnapshot.data();
   }
 
   async findAll(): Promise<MemberDto[]> {
@@ -88,8 +83,15 @@ export class MembersService {
   async create(createMemberDto: CreateMemberDto) {
     const steamId = createMemberDto.steamId;
     // TODO find steam id
-    // steam id not exist
+    const existMember = await this.findOne(steamId);
     const expireDate = new Date();
+    if (
+      existMember?.expireDate &&
+      existMember.expireDate.getTime() > expireDate.getTime()
+    ) {
+      expireDate.setTime(existMember.expireDate.getTime());
+    }
+    // steam id not exist
     expireDate.setUTCDate(
       expireDate.getUTCDate() +
         createMemberDto.month * +process.env.DAYS_PER_MONTH,
@@ -100,7 +102,16 @@ export class MembersService {
     // else month base on last expireDate
 
     await this.save({ steamId, expireDate });
-    return this.findOne(steamId);
+    return this.find(steamId);
+  }
+
+  async find(steamId: number): Promise<MemberDto> {
+    const member = await this.findOne(steamId);
+    if (member) {
+      return new MemberDto(member);
+    } else {
+      throw new NotFoundException();
+    }
   }
 
   async createAll() {
@@ -127,30 +138,10 @@ export class MembersService {
     members.push(new Member(20201231, new Date('2020-12-31T00:00:00Z')));
     // 未来
     members.push(new Member(20300801, new Date('2030-08-01T00:00:00Z')));
-    members.push(new Member(20301231, new Date('2030-08-01T00:00:00Z')));
+    members.push(new Member(20301231, new Date('2030-12-31T00:00:00Z')));
     for (const member of members) {
       await this.save(member);
     }
     return `This action create test members with init data`;
   }
-
-  // async findAll(): Promise<MemberDto[]> {
-  //   const db = database();
-  //   const ref = db.ref('members');
-
-  //   const memberSnapshot = await ref.once('value');
-  //   const response: MemberDto[] = [];
-
-  //   const oneDataAgo: Date = new Date();
-  //   oneDataAgo.setDate(oneDataAgo.getDate() - 1);
-  //   memberSnapshot.forEach((data) => {
-  //     const value = data.val();
-  //     const steamId = value.steamId;
-  //     const expireDate = new Date(value.expireDate);
-  //     const member: Member = { steamId, expireDate };
-  //     response.push(new MemberDto(member));
-  //   });
-
-  //   return response;
-  // }
 }
