@@ -26,7 +26,7 @@ npm install -g firebase-tools
 ### Local end points
  - Firebase Hosting: http://localhost:5000/api/
  - Firebase Emulator: http://localhost:4000/
- - Function (Not used): http://localhost:5001/windy10v10ai/us-central1/api/
+ - Function (Not used): http://localhost:5001/windy10v10ai/asia-northeast1/api/
 
 ## Debug and E2E Setting
 1. Copy `~/.config/firebase/<YOUR_MAIL_ADDRESS>_application_default_credentials.json` or `~/.config/gcloud/application_default_credentials.json` to `cloud/application_default_credentials.json`

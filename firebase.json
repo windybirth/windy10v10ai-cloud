@@ -21,7 +21,8 @@
     "rewrites": [
       {
         "source": "**",
-        "function": "api"
+        "function": "api",
+        "region": "asia-northeast1"
       }
     ]
   },
