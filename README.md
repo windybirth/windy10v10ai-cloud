@@ -50,7 +50,12 @@ source ~/.bash_profile
 **_Tips: If debug or e2e test not working with address already used error, kill nodejs process by `pkill -f node`_**
 
 ## Deploy
+- Deploy function only
 ```
 (cd cloud && npm run deploy)
 ```
 
+- Deploy firebase hosting only
+```
+firebase deploy --only hosting
+```

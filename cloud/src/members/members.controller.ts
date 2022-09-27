@@ -72,11 +72,6 @@ export class MembersController {
     @Param('id', new ParseIntPipe())
     steamId: number,
   ) {
-    return this.membersService.findOne(steamId);
+    return this.membersService.find(steamId);
   }
-
-  // @Patch(':id')
-  // update(@Param('id') id: string, @Body() updateMemberDto: UpdateMemberDto) {
-  //   return this.membersService.update(+id, updateMemberDto);
-  // }
 }
