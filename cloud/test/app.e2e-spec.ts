@@ -20,15 +20,7 @@ describe('AppController (e2e)', () => {
     return request(app.getHttpServer())
       .get('/api/')
       .expect(200)
-      .expect('Hello, this is the root of Hosting API! Env: develop');
-  });
-  describe('member', () => {
-    it('/ (GET)', () => {
-      return request(app.getHttpServer())
-        .get('/api/members/123456789')
-        .expect(200)
-        .expect('');
-    });
+      .expect('Hello, this is the root of Hosting API! Env: test');
   });
 
   afterAll(async () => {

@@ -8,6 +8,6 @@ export class Member {
   constructor(steamId: number, expireDate?: Date) {
     this.steamId = steamId;
     // if expireDate is not specified, set it to the default value
-    this.expireDate = expireDate || new Date('2099-12-31T00:00:00');
+    this.expireDate = expireDate || new Date('2099-12-31T00:00:00Z');
   }
 }
