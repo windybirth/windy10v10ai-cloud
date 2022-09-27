@@ -103,7 +103,7 @@ export class MembersService {
     return this.findOne(steamId);
   }
 
-  createAll() {
+  async createAll() {
     const members: Member[] = [];
     // 开发贡献者
     members.push(new Member(136407523));
@@ -123,14 +123,14 @@ export class MembersService {
     members.push(new Member(136385488));
     members.push(new Member(907056028));
     // 到期
-    members.push(new Member(20200801, new Date('2022-08-01T00:00:00')));
-    members.push(new Member(20201231, new Date('2022-12-31T00:00:00')));
+    members.push(new Member(20200801, new Date('2020-08-01T00:00:00Z')));
+    members.push(new Member(20201231, new Date('2020-12-31T00:00:00Z')));
     // 未来
-    members.push(new Member(20300801, new Date('2030-08-01T00:00:00')));
-    members.push(new Member(20301231, new Date('2030-08-01T00:00:00')));
-    members.forEach((member) => {
-      this.save(member);
-    });
+    members.push(new Member(20300801, new Date('2030-08-01T00:00:00Z')));
+    members.push(new Member(20301231, new Date('2030-08-01T00:00:00Z')));
+    for (const member of members) {
+      await this.save(member);
+    }
     return `This action create test members with init data`;
   }
 
