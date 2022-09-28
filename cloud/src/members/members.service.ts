@@ -12,9 +12,8 @@ import { Member } from './entities/member.entity';
 
 @Injectable()
 export class MembersService {
-  //#region firestore db access
-
-  // Firestore data converter
+  //#region firestore access
+  // Members converter
   memberConverter = {
     toFirestore(member: Member): DocumentData {
       return {

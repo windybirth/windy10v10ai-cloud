@@ -12,6 +12,7 @@ import {
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 
+import { AfdianWebhookDto } from './dto/afdian-webhook.dto';
 import { CreateMemberDto } from './dto/create-member.dto';
 import { MembersService } from './members.service';
 
@@ -32,6 +33,14 @@ export class MembersController {
       throw new UnauthorizedException();
     }
     return this.membersService.create(createMemberDto);
+  }
+
+  // 爱发电 Webhook
+  @Post('/afdian')
+  createAfdian(@Body() afdianWebhookDto: AfdianWebhookDto) {
+    console.log(afdianWebhookDto);
+    // TODO https://github.com/windybirth/windy10v10ai-cloud/issues/5
+    return { ec: 200, em: 'ok' };
   }
 
   // 初期化会员数据进入Firestore，仅供测试

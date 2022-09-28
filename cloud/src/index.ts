@@ -4,13 +4,17 @@ import * as express from 'express';
 import * as functions from 'firebase-functions';
 
 import { AppModule } from './app.module';
+import { AppGlobalSettings } from './util/settings';
 
 const server = express();
 
 const promiseApplicationReady = NestFactory.create(
   AppModule,
   new ExpressAdapter(server),
-).then((app) => app.init());
+).then((app) => {
+  AppGlobalSettings(app);
+  return app.init();
+});
 
 export const api = functions
   .region('asia-northeast1')

@@ -1,20 +1,13 @@
 import { INestApplication } from '@nestjs/common';
-import { Test, TestingModule } from '@nestjs/testing';
 import * as request from 'supertest';
 
-import { AppModule } from '../src/app.module';
+import { initTest } from './util';
 
 describe('MemberController (e2e)', () => {
   let app: INestApplication;
 
   beforeAll(async () => {
-    const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [AppModule],
-    }).compile();
-
-    app = moduleFixture.createNestApplication();
-    await app.init();
-
+    app = await initTest();
     // 初始化创建所有会员（仅供测试）
     await request(app.getHttpServer()).post('/api/members/all?token=123');
   });
@@ -205,6 +198,44 @@ describe('MemberController (e2e)', () => {
     });
   });
 
+  describe('members/afdian/ (POST)', () => {
+    it('爱发电Webhook返回成功', async () => {
+      // const expectBodyJson = {
+      //   steamId: 20300801,
+      //   expireDateString: '2031-08-08',
+      //   enable: true,
+      // };
+
+      const responseCreate = await request(app.getHttpServer())
+        .post('/api/members/afdian')
+        .send({
+          ec: 200,
+          em: 'ok',
+          data: {
+            type: 'order',
+            order: {
+              out_trade_no: '202106232138371083454010626',
+              user_id: 'adf397fe8374811eaacee52540025c377',
+              plan_id: 'a45353328af911eb973052540025c377',
+              month: 1,
+              total_amount: '5.00',
+              show_amount: '5.00',
+              status: 2,
+              remark: '',
+              redeem_id: '',
+              product_type: 0,
+              discount: '0.00',
+              sku_detail: [],
+              address_person: '',
+              address_phone: '',
+              address_address: '',
+            },
+          },
+        });
+      expect(responseCreate.status).toEqual(201);
+      expect(responseCreate.body).toEqual({ ec: 200, em: 'ok' });
+    });
+  });
   afterAll(async () => {
     await app.close();
   });
