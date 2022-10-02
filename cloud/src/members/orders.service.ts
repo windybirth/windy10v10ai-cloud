@@ -3,7 +3,7 @@ import { BaseFirestoreRepository } from 'fireorm';
 import { InjectRepository } from 'nestjs-fireorm';
 
 import { OrderDto } from './dto/afdian-webhook.dto';
-import { OrderEntity } from './entities/order.entity';
+import { Order } from './entities/order.entity';
 import { MembersService } from './members.service';
 
 enum Platfrom {
@@ -17,8 +17,8 @@ enum OrderType {
 @Injectable()
 export class OrdersService {
   constructor(
-    @InjectRepository(OrderEntity)
-    private readonly orderRepository: BaseFirestoreRepository<OrderEntity>,
+    @InjectRepository(Order)
+    private readonly orderRepository: BaseFirestoreRepository<Order>,
     private readonly membersService: MembersService,
   ) {}
 

@@ -41,9 +41,11 @@ export class MembersController {
   async createAfdian(
     @Headers() headers,
     @Body() afdianWebhookDto: AfdianWebhookDto,
+    @Query('token') token: string,
   ) {
-    console.log('爱发电 Webhook');
-    console.log(afdianWebhookDto);
+    if (token !== process.env.AFDIAN_TOKEN) {
+      throw new UnauthorizedException();
+    }
     const order = afdianWebhookDto?.data?.order;
     if (!order) {
       throw new BadRequestException();

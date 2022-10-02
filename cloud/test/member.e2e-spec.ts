@@ -201,6 +201,21 @@ describe('MemberController (e2e)', () => {
   // ======================== 爱发电自动开通会员 ========================
   describe('members/afdian/ (POST)', () => {
     describe('Request Validation', () => {
+      it('unauth error', async () => {
+        const responseCreate = await request(app.getHttpServer())
+          .post('/api/members/afdian')
+          .send({
+            ec: 200,
+            em: 'ok',
+            data: {
+              type: 'order',
+              order: {},
+            },
+          })
+          .query({ token: 123 });
+        expect(responseCreate.status).toEqual(401);
+      });
+
       it('ec not equal 200', async () => {
         const responseCreate = await request(app.getHttpServer())
           .post('/api/members/afdian')
@@ -211,7 +226,8 @@ describe('MemberController (e2e)', () => {
               type: 'order',
               order: {},
             },
-          });
+          })
+          .query({ token: 223 });
         expect(responseCreate.status).toEqual(400);
       });
 
@@ -221,7 +237,8 @@ describe('MemberController (e2e)', () => {
           .send({
             ec: 200,
             em: 'ok',
-          });
+          })
+          .query({ token: 223 });
         expect(responseCreate.status).toEqual(400);
       });
       it('order not exist', async () => {
@@ -230,7 +247,8 @@ describe('MemberController (e2e)', () => {
           .send({
             ec: 200,
             em: 'ok',
-          });
+          })
+          .query({ token: 223 });
         expect(responseCreate.status).toEqual(400);
       });
     });
@@ -271,7 +289,8 @@ describe('MemberController (e2e)', () => {
               address_address: `${memberId}`,
             },
           },
-        });
+        })
+        .query({ token: 223 });
       expect(responseCreate.status).toEqual(201);
       expect(responseCreate.body).toEqual({ ec: 200, em: 'ok' });
 
@@ -320,7 +339,8 @@ describe('MemberController (e2e)', () => {
             address_address: '123456',
           },
         },
-      });
+      })
+      .query({ token: 223 });
     expect(responseCreate.status).toEqual(201);
     expect(responseCreate.body).toEqual({ ec: 200, em: 'ok' });
 
@@ -368,7 +388,8 @@ describe('MemberController (e2e)', () => {
             address_address: '1234567',
           },
         },
-      });
+      })
+      .query({ token: 223 });
     expect(responseCreate.status).toEqual(201);
     expect(responseCreate.body).toEqual({ ec: 200, em: 'ok' });
 
@@ -416,7 +437,8 @@ describe('MemberController (e2e)', () => {
             address_address: '1234567',
           },
         },
-      });
+      })
+      .query({ token: 223 });
     expect(responseCreate.status).toEqual(201);
     expect(responseCreate.body).toEqual({ ec: 200, em: 'ok' });
 
@@ -459,9 +481,13 @@ describe('MemberController (e2e)', () => {
             address_address: '1234567',
           },
         },
-      });
+      })
+      .query({ token: 223 });
     expect(responseCreate.status).toEqual(201);
-    expect(responseCreate.body).toEqual({ ec: 200, em: 'ok' });
+    expect(responseCreate.body).toEqual({
+      ec: 400,
+      em: '未能正确获取Dota2 ID，请联系我手动处理。',
+    });
 
     const responseAfter = await request(app.getHttpServer()).get(
       `/api/members/${memberId}`,
