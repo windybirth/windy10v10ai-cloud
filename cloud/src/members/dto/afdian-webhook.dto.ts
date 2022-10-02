@@ -1,13 +1,13 @@
-import { IsNotEmpty } from 'class-validator';
+import { Equals, IsNotEmpty, Validate } from 'class-validator';
 
 export class AfdianWebhookDto {
-  @IsNotEmpty()
+  @Equals(200)
   ec: number;
-
   data: DataDto;
 }
 
 export class DataDto {
+  @Equals('order')
   type: string;
   order: OrderDto;
 }

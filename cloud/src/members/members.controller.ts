@@ -3,6 +3,7 @@ import {
   Body,
   Controller,
   Get,
+  Headers,
   Param,
   ParseArrayPipe,
   ParseIntPipe,
@@ -10,17 +11,17 @@ import {
   Query,
   UnauthorizedException,
 } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 
-import { AfdianWebhookDto } from './dto/afdian-webhook.dto';
+import { AfdianWebhookDto, OrderDto } from './dto/afdian-webhook.dto';
 import { CreateMemberDto } from './dto/create-member.dto';
 import { MembersService } from './members.service';
+import { OrdersService } from './orders.service';
 
 @Controller('/api/members')
 export class MembersController {
   constructor(
     private readonly membersService: MembersService,
-    private readonly configService: ConfigService,
+    private readonly ordersService: OrdersService,
   ) {}
 
   // 开通会员
@@ -37,9 +38,17 @@ export class MembersController {
 
   // 爱发电 Webhook
   @Post('/afdian')
-  createAfdian(@Body() afdianWebhookDto: AfdianWebhookDto) {
+  async createAfdian(
+    @Headers() headers,
+    @Body() afdianWebhookDto: AfdianWebhookDto,
+  ) {
+    console.log('爱发电 Webhook');
     console.log(afdianWebhookDto);
-    // TODO https://github.com/windybirth/windy10v10ai-cloud/issues/5
+    const order = afdianWebhookDto?.data?.order;
+    if (!order) {
+      throw new BadRequestException();
+    }
+    await this.ordersService.processAfdianOrder(order);
     return { ec: 200, em: 'ok' };
   }
 

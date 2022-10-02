@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { initializeApp } from 'firebase-admin/app';
+import { FireormModule } from 'nestjs-fireorm';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -14,6 +15,11 @@ const ENV = process.env.NODE_ENV;
     ConfigModule.forRoot({
       envFilePath: `envs/${ENV}.env`,
       isGlobal: true,
+    }),
+    FireormModule.forRoot({
+      fireormSettings: {
+        validateModels: true,
+      },
     }),
   ],
   controllers: [AppController],
