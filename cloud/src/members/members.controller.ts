@@ -48,8 +48,12 @@ export class MembersController {
     if (!order) {
       throw new BadRequestException();
     }
-    await this.ordersService.processAfdianOrder(order);
-    return { ec: 200, em: 'ok' };
+    const result = await this.ordersService.processAfdianOrder(order);
+    if (result.success) {
+      return { ec: 200, em: 'ok' };
+    } else {
+      return { ec: 400, em: '未能正确获取Dota2 ID，请联系我手动处理。' };
+    }
   }
 
   // 初期化会员数据进入Firestore，仅供测试
