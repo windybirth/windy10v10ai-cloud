@@ -12,7 +12,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 
-import { AfdianWebhookDto, OrderDto } from './dto/afdian-webhook.dto';
+import { AfdianWebhookDto } from './dto/afdian-webhook.dto';
 import { CreateMemberDto } from './dto/create-member.dto';
 import { MembersService } from './members.service';
 import { OrdersService } from './orders.service';

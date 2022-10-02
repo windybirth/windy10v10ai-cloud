@@ -1,4 +1,4 @@
-import { Equals, IsNotEmpty, Validate } from 'class-validator';
+import { Equals } from 'class-validator';
 
 export class AfdianWebhookDto {
   @Equals(200)
