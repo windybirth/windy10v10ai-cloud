@@ -18,7 +18,7 @@ export class GamesService {
     memberPlayerCount: number,
   ) {
     let id = undefined;
-    if (matchId === '0') {
+    if (matchId !== undefined && matchId !== '0') {
       id = matchId;
     }
     try {
@@ -62,31 +62,31 @@ export class GamesService {
         .whereEqualTo('apiKey', '3FFCF5A5F09CE52B9DC2F34E022395A31475208C')
         .find()
     ).length;
-    const playerCount1 = (
-      await this.gameRepository.whereEqualTo('playerCount', 1).find()
+    const playerCount1 = await this.gameRepository
+      .whereEqualTo('playerCount', 1)
+      .find();
+    const memberCount1 = playerCount1.filter(
+      (game) => game.memberPlayerCount > 1,
     ).length;
-    const playerCount2to5 = (
-      await this.gameRepository
-        .whereGreaterOrEqualThan('playerCount', 2)
-        .whereLessOrEqualThan('playerCount', 5)
-        .find()
+    const playerCount2to5 = await this.gameRepository
+      .whereGreaterOrEqualThan('playerCount', 2)
+      .whereLessOrEqualThan('playerCount', 5)
+      .find();
+    const memberCount2to5 = playerCount2to5.filter(
+      (game) => game.memberPlayerCount > 1,
     ).length;
-    const playerCount6to9 = (
-      await this.gameRepository
-        .whereGreaterOrEqualThan('playerCount', 6)
-        .whereLessOrEqualThan('playerCount', 9)
-        .find()
+    const playerCount6to9 = await this.gameRepository
+      .whereGreaterOrEqualThan('playerCount', 6)
+      .whereLessOrEqualThan('playerCount', 9)
+      .find();
+    const memberCount6to9 = playerCount6to9.filter(
+      (game) => game.memberPlayerCount > 1,
     ).length;
-    const playerCount10 = (
-      await this.gameRepository.whereEqualTo('playerCount', 10).find()
-    ).length;
-    const memberCount0 = (
-      await this.gameRepository.whereEqualTo('memberPlayerCount', 0).find()
-    ).length;
-    const memberCountNot0 = (
-      await this.gameRepository
-        .whereGreaterOrEqualThan('memberPlayerCount', 1)
-        .find()
+    const playerCount10 = await this.gameRepository
+      .whereEqualTo('playerCount', 10)
+      .find();
+    const memberCount10 = playerCount10.filter(
+      (game) => game.memberPlayerCount > 1,
     ).length;
     return {
       countAll,
@@ -100,14 +100,16 @@ export class GamesService {
         server: serverServer,
       },
       playerCount: {
-        p1: playerCount1,
-        p2to5: playerCount2to5,
-        p6to9: playerCount6to9,
-        p10: playerCount10,
+        p1: playerCount1.length,
+        p2to5: playerCount2to5.length,
+        p6to9: playerCount6to9.length,
+        p10: playerCount10.length,
       },
       memberCount: {
-        m0: memberCount0,
-        mNot0: memberCountNot0,
+        p1: memberCount1,
+        p2to5: memberCount2to5,
+        p6to9: memberCount6to9,
+        p10: memberCount10,
       },
     };
   }
