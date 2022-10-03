@@ -38,6 +38,7 @@ export class MembersController {
     return this.membersService.create(createMemberDto);
   }
 
+  // FIXME 移动至 orders.controller.ts
   // 爱发电 Webhook
   @Post('/afdian')
   async createAfdian(
@@ -73,10 +74,9 @@ export class MembersController {
     return this.membersService.createAll();
   }
 
-  // 获取全体玩家信息 realtimedb
+  // 获取全体玩家信息
   @Get('/all')
-  async findAll(@Headers('x-country-code') countryCode: string) {
-    await this.gamesService.recordMembersAllGame(countryCode);
+  async findAll() {
     return this.membersService.findAll();
   }
 
@@ -94,6 +94,7 @@ export class MembersController {
       throw new BadRequestException();
     }
     const res = await this.membersService.findBySteamIds(steamIds);
+    // FIXME 移除game记录
     await this.gamesService.recordMembersGame(
       matchId,
       apiKey,
@@ -104,7 +105,12 @@ export class MembersController {
     return res;
   }
 
-  // 获取单一会员信息（firestore
+  // 统计游戏数据
+  @Get('/countgames')
+  countgames() {
+    return this.gamesService.countgames();
+  }
+  // 获取单一会员信息
   @Get(':id')
   find(
     @Param('id', new ParseIntPipe())

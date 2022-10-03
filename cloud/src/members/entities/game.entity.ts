@@ -4,7 +4,6 @@ import { Collection } from 'fireorm';
 export class Game {
   id: string;
   matchId: string;
-  mapType: string;
   apiKey: string;
   countryCode: string;
   playerCount: number;
