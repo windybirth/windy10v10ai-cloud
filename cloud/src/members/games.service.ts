@@ -38,66 +38,50 @@ export class GamesService {
   }
 
   async countgames() {
-    const countAll = (await this.gameRepository.find()).length;
+    const all = await this.gameRepository.find();
+    const countAll = all.length;
     console.log('countAll', countAll);
     const countryCodeCN = (
       await this.gameRepository.whereEqualTo('countryCode', 'CN').find()
     ).length;
-    const countryCodeOther = (
-      await this.gameRepository.whereNotEqualTo('countryCode', 'CN').find()
-    ).length;
-    const countryCodeHK = (
-      await this.gameRepository.whereEqualTo('countryCode', 'HK').find()
-    ).length;
-    const countryCodeUS = (
-      await this.gameRepository.whereEqualTo('countryCode', 'US').find()
-    ).length;
-    const serverLocal = (
-      await this.gameRepository
-        .whereEqualTo('apiKey', 'Invalid_NotOnDedicatedServer')
-        .find()
-    ).length;
-    const serverServer = (
-      await this.gameRepository
-        .whereEqualTo('apiKey', '3FFCF5A5F09CE52B9DC2F34E022395A31475208C')
-        .find()
+    const serverLocal = all.filter(
+      (game) => game.apiKey === 'Invalid_NotOnDedicatedServer',
     ).length;
     const playerCount1 = await this.gameRepository
       .whereEqualTo('playerCount', 1)
       .find();
     const memberCount1 = playerCount1.filter(
-      (game) => game.memberPlayerCount > 1,
+      (game) => game.memberPlayerCount > 0,
     ).length;
     const playerCount2to5 = await this.gameRepository
       .whereGreaterOrEqualThan('playerCount', 2)
       .whereLessOrEqualThan('playerCount', 5)
       .find();
     const memberCount2to5 = playerCount2to5.filter(
-      (game) => game.memberPlayerCount > 1,
+      (game) => game.memberPlayerCount > 0,
     ).length;
     const playerCount6to9 = await this.gameRepository
       .whereGreaterOrEqualThan('playerCount', 6)
       .whereLessOrEqualThan('playerCount', 9)
       .find();
     const memberCount6to9 = playerCount6to9.filter(
-      (game) => game.memberPlayerCount > 1,
+      (game) => game.memberPlayerCount > 0,
     ).length;
     const playerCount10 = await this.gameRepository
       .whereEqualTo('playerCount', 10)
       .find();
     const memberCount10 = playerCount10.filter(
-      (game) => game.memberPlayerCount > 1,
+      (game) => game.memberPlayerCount > 0,
     ).length;
     return {
       countAll,
       countryCode: {
         CN: countryCodeCN,
-        Other: countryCodeOther,
-        Others: { HK: countryCodeHK, US: countryCodeUS },
+        Other: countAll - countryCodeCN,
       },
       serverType: {
         local: serverLocal,
-        server: serverServer,
+        server: countAll - serverLocal,
       },
       playerCount: {
         p1: playerCount1.length,
