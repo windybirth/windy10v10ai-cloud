@@ -18,7 +18,7 @@ const promiseApplicationReady = NestFactory.create(
 
 export const api = functions
   .region('asia-northeast1')
-  .runWith({ minInstances: 0, maxInstances: 10, timeoutSeconds: 30 })
+  .runWith({ minInstances: 0, maxInstances: 10, timeoutSeconds: 60 })
   .https.onRequest(async (...args) => {
     await promiseApplicationReady;
     server(...args);

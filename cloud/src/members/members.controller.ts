@@ -14,6 +14,7 @@ import {
 
 import { AfdianWebhookDto } from './dto/afdian-webhook.dto';
 import { CreateMemberDto } from './dto/create-member.dto';
+import { GamesService } from './games.service';
 import { MembersService } from './members.service';
 import { OrdersService } from './orders.service';
 
@@ -22,6 +23,7 @@ export class MembersController {
   constructor(
     private readonly membersService: MembersService,
     private readonly ordersService: OrdersService,
+    private readonly gamesService: GamesService,
   ) {}
 
   // 开通会员
@@ -36,6 +38,7 @@ export class MembersController {
     return this.membersService.create(createMemberDto);
   }
 
+  // FIXME 移动至 orders.controller.ts
   // 爱发电 Webhook
   @Post('/afdian')
   async createAfdian(
@@ -71,26 +74,43 @@ export class MembersController {
     return this.membersService.createAll();
   }
 
-  // 获取全体玩家信息 realtimedb
+  // 获取全体玩家信息
   @Get('/all')
-  findAll() {
+  async findAll() {
     return this.membersService.findAll();
   }
 
   // 检索复数玩家会员信息 最大10件 移除steamIds=0的项目
   @Get()
-  findBySteamIds(
+  async findBySteamIds(
     @Query('steamIds', new ParseArrayPipe({ items: Number, separator: ',' }))
     steamIds: number[],
+    @Headers('x-api-key') apiKey: string,
+    @Headers('x-country-code') countryCode: string,
+    @Query('matchId') matchId: string,
   ) {
     steamIds = steamIds.filter((id) => id > 0);
     if (steamIds.length > 10) {
       throw new BadRequestException();
     }
-    return this.membersService.findBySteamIds(steamIds);
+    const res = await this.membersService.findBySteamIds(steamIds);
+    // FIXME 移除game记录
+    await this.gamesService.recordMembersGame(
+      matchId,
+      apiKey,
+      countryCode,
+      steamIds,
+      res.length,
+    );
+    return res;
   }
 
-  // 获取单一会员信息（firestore
+  // 统计游戏数据
+  @Get('/countgames')
+  countgames() {
+    return this.gamesService.countgames();
+  }
+  // 获取单一会员信息
   @Get(':id')
   find(
     @Param('id', new ParseIntPipe())
