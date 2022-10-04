@@ -21,26 +21,21 @@ export class GamesService {
     if (matchId !== undefined && matchId !== '0') {
       id = matchId;
     }
-    try {
-      return await this.gameRepository.create({
-        id,
-        matchId,
-        apiKey,
-        countryCode,
-        playerCount: steamIds.length,
-        memberPlayerCount,
-        steamIds,
-        createdAt: new Date(),
-      });
-    } catch (error) {
-      console.log('[ERROR] ', error.message);
-    }
+    return await this.gameRepository.create({
+      id,
+      matchId,
+      apiKey,
+      countryCode,
+      playerCount: steamIds.length,
+      memberPlayerCount,
+      steamIds,
+      createdAt: new Date(),
+    });
   }
 
   async countgames() {
     const all = await this.gameRepository.find();
     const countAll = all.length;
-    console.log('countAll', countAll);
     const countryCodeCN = (
       await this.gameRepository.whereEqualTo('countryCode', 'CN').find()
     ).length;
@@ -73,27 +68,85 @@ export class GamesService {
     const memberCount10 = playerCount10.filter(
       (game) => game.memberPlayerCount > 0,
     ).length;
+
+    const sumPlayerCount = all.reduce((acc, cur) => acc + cur.playerCount, 0);
+    const sumMemberPlayerCount = all.reduce(
+      (acc, game) => acc + game.memberPlayerCount,
+      0,
+    );
+    const averagePlayerCount = sumPlayerCount / countAll;
+    const localPlayerCount = all.reduce(
+      (acc, game) =>
+        acc +
+        (game.apiKey === 'Invalid_NotOnDedicatedServer' ? game.playerCount : 0),
+      0,
+    );
+    const localPlayerCountPercentage = localPlayerCount / sumPlayerCount;
+    const playerAmount2to5 = playerCount2to5.reduce(
+      (acc, cur) => acc + cur.playerCount,
+      0,
+    );
+    const playerAmount6to9 = playerCount6to9.reduce(
+      (acc, cur) => acc + cur.playerCount,
+      0,
+    );
+    const memberAmount2to5 = playerCount2to5.reduce(
+      (acc, game) => acc + game.memberPlayerCount,
+      0,
+    );
+    const memberAmount6to9 = playerCount6to9.reduce(
+      (acc, game) => acc + game.memberPlayerCount,
+      0,
+    );
+    const memberAmount10 = playerCount10.reduce(
+      (acc, game) => acc + game.memberPlayerCount,
+      0,
+    );
+
     return {
-      countAll,
-      countryCode: {
-        CN: countryCodeCN,
-        Other: countAll - countryCodeCN,
-      },
-      serverType: {
-        local: serverLocal,
-        server: countAll - serverLocal,
+      matchCount: {
+        countAll,
+        countryCode: {
+          CN: countryCodeCN,
+          Other: countAll - countryCodeCN,
+        },
+        serverType: {
+          local: serverLocal,
+          server: countAll - serverLocal,
+        },
+        playerAmount: {
+          p1: playerCount1.length,
+          p2to5: playerCount2to5.length,
+          p6to9: playerCount6to9.length,
+          p10: playerCount10.length,
+        },
+        memberAmount: {
+          p1: memberCount1,
+          p2to5: memberCount2to5,
+          p6to9: memberCount6to9,
+          p10: memberCount10,
+        },
       },
       playerCount: {
-        p1: playerCount1.length,
-        p2to5: playerCount2to5.length,
-        p6to9: playerCount6to9.length,
-        p10: playerCount10.length,
-      },
-      memberCount: {
-        p1: memberCount1,
-        p2to5: memberCount2to5,
-        p6to9: memberCount6to9,
-        p10: memberCount10,
+        sumPlayerCount,
+        sumMemberPlayerCount,
+        averagePlayerCount,
+        serverType: {
+          localPlayerCount,
+          localPlayerCountPercentage,
+        },
+        playerAmount: {
+          p1: playerCount1.length,
+          p2to5: playerAmount2to5,
+          p6to9: playerAmount6to9,
+          p10: playerCount10.length * 10,
+        },
+        memberAmount: {
+          p1: memberCount1,
+          p2to5: memberAmount2to5,
+          p6to9: memberAmount6to9,
+          p10: memberAmount10,
+        },
       },
     };
   }
