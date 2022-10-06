@@ -18,7 +18,7 @@ import { GamesService } from './games.service';
 import { MembersService } from './members.service';
 import { OrdersService } from './orders.service';
 
-@Controller('/api/members')
+@Controller('members')
 export class MembersController {
   constructor(
     private readonly membersService: MembersService,

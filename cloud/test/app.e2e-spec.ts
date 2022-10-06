@@ -14,7 +14,7 @@ describe('AppController (e2e)', () => {
     return request(app.getHttpServer())
       .get('/api/')
       .expect(200)
-      .expect('Hello, this is the root of Hosting API! Env: test');
+      .expect('Hello, this is the root of API! Env: test');
   });
 
   afterAll(async () => {
