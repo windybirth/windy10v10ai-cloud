@@ -6,6 +6,7 @@ import { FireormModule } from 'nestjs-fireorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { MembersModule } from './members/members.module';
+import { GameModule } from './game/game.module';
 
 const ENV = process.env.NODE_ENV;
 
@@ -24,6 +25,7 @@ const ENV = process.env.NODE_ENV;
         validateModels: true,
       },
     }),
+    GameModule,
   ],
   controllers: [AppController],
   providers: [AppService],
