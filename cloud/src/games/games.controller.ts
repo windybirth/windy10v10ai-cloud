@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Headers, Post } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 
-import { GameService } from './game.service';
+import { GameService } from './games.service';
 
 @ApiTags('Game')
 @Controller('game')

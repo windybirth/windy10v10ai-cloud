@@ -23,3 +23,11 @@ export const api = functions
     await promiseApplicationReady;
     server(...args);
   });
+
+export const admin = functions
+  .region('asia-northeast1')
+  .runWith({ timeoutSeconds: 120 })
+  .https.onRequest(async (...args) => {
+    await promiseApplicationReady;
+    server(...args);
+  });
