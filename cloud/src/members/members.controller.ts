@@ -45,7 +45,7 @@ export class MembersController {
       throw new UnauthorizedException();
     }
 
-    return this.membersService.createAll();
+    return this.membersService.createAllOld();
   }
 
   // 获取全体玩家信息

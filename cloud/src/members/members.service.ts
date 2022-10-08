@@ -118,7 +118,7 @@ export class MembersService {
     }
   }
 
-  async createAll() {
+  async createAllOld() {
     const members: Member[] = [];
     // 开发贡献者
     members.push(new Member(136407523));

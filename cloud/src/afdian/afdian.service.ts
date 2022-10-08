@@ -40,7 +40,7 @@ export class AfdianService {
       success = false;
     }
     if (success) {
-      await this.membersService.create({ steamId, month });
+      await this.membersService.createMember({ steamId, month });
     }
 
     const orderType = OrderType.member;
