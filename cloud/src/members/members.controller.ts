@@ -12,17 +12,14 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 
-import { AfdianWebhookDto } from './dto/afdian-webhook.dto';
 import { CreateMemberDto } from './dto/create-member.dto';
 import { GamesService } from './games.service';
 import { MembersService } from './members.service';
-import { OrdersService } from './orders.service';
 
 @Controller('members')
 export class MembersController {
   constructor(
     private readonly membersService: MembersService,
-    private readonly ordersService: OrdersService,
     private readonly gamesService: GamesService,
   ) {}
 
@@ -36,29 +33,6 @@ export class MembersController {
       throw new UnauthorizedException();
     }
     return this.membersService.create(createMemberDto);
-  }
-
-  // FIXME 移动至 orders.controller.ts
-  // 爱发电 Webhook
-  @Post('/afdian')
-  async createAfdian(
-    @Headers() headers,
-    @Body() afdianWebhookDto: AfdianWebhookDto,
-    @Query('token') token: string,
-  ) {
-    if (token !== process.env.AFDIAN_TOKEN) {
-      throw new UnauthorizedException();
-    }
-    const order = afdianWebhookDto?.data?.order;
-    if (!order) {
-      throw new BadRequestException();
-    }
-    const result = await this.ordersService.processAfdianOrder(order);
-    if (result.success) {
-      return { ec: 200, em: 'ok' };
-    } else {
-      return { ec: 400, em: '未能正确获取Dota2 ID，请联系我手动处理。' };
-    }
   }
 
   // 初期化会员数据进入Firestore，仅供测试

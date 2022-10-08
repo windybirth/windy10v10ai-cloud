@@ -1,9 +1,9 @@
 import { Body, Controller, Get, Headers, Post } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 
-import { GameService } from './games.service';
+import { GameService } from './game.service';
 
-@ApiTags('Game')
+@ApiTags('Game(Open)')
 @Controller('game')
 export class GameController {
   constructor(private readonly gameService: GameService) {}
