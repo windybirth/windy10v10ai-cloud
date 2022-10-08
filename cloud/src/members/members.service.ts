@@ -5,13 +5,27 @@ import {
   Timestamp,
   getFirestore,
 } from 'firebase-admin/firestore';
+import { BaseFirestoreRepository } from 'fireorm';
+import { InjectRepository } from 'nestjs-fireorm';
 
 import { CreateMemberDto } from './dto/create-member.dto';
 import { MemberDto } from './dto/member.dto';
 import { Member } from './entities/member.entity';
+import { Members } from './entities/members.entity';
 
 @Injectable()
 export class MembersService {
+  constructor(
+    @InjectRepository(Members)
+    private readonly membersRepository: BaseFirestoreRepository<Members>,
+  ) {}
+
+  create(member: Members) {
+    return this.membersRepository.create(member);
+  }
+  findOne(steamId: number): Promise<Member> {
+    return this.membersRepository.findOne();
+  }
   //#region firestore access
   // Members converter
   memberConverter = {
@@ -36,17 +50,7 @@ export class MembersService {
     return await memberRef.set(member);
   }
 
-  async findOne(steamId: number) {
-    const db = getFirestore();
-    const memberSnapshot = await db
-      .collection('members')
-      .withConverter(this.memberConverter)
-      .doc('' + steamId)
-      .get();
-    return memberSnapshot.data();
-  }
-
-  async findAll(): Promise<MemberDto[]> {
+  async findAllOld(): Promise<MemberDto[]> {
     const response: MemberDto[] = [];
 
     const db = getFirestore();
@@ -79,7 +83,8 @@ export class MembersService {
   }
   //#endregion
 
-  async create(createMemberDto: CreateMemberDto) {
+  // TODO fix to use respository
+  async createMember(createMemberDto: CreateMemberDto) {
     const steamId = createMemberDto.steamId;
     // TODO find steam id
     const existMember = await this.findOne(steamId);

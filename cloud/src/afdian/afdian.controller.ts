@@ -2,7 +2,6 @@ import {
   BadRequestException,
   Body,
   Controller,
-  Headers,
   Post,
   Query,
   UnauthorizedException,
@@ -19,7 +18,6 @@ export class AfdianController {
 
   @Post('/webhook')
   async processAfdianWebhook(
-    @Headers() headers,
     @Body() afdianWebhookDto: AfdianWebhookDto,
     @Query('token') token: string,
   ) {
@@ -34,7 +32,7 @@ export class AfdianController {
     if (result.success) {
       return { ec: 200, em: 'ok' };
     } else {
-      return { ec: 400, em: '未能正确获取Dota2 ID，请联系我手动处理。' };
+      return { ec: 200, em: '[Error] 未能正确获取Dota2 ID' };
     }
   }
 }

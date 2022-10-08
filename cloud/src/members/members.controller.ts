@@ -32,7 +32,7 @@ export class MembersController {
     if (token !== process.env.ADMIN_TOKEN) {
       throw new UnauthorizedException();
     }
-    return this.membersService.create(createMemberDto);
+    return this.membersService.createMember(createMemberDto);
   }
 
   // 初期化会员数据进入Firestore，仅供测试
@@ -49,9 +49,9 @@ export class MembersController {
   }
 
   // 获取全体玩家信息
-  @Get('/all')
-  async findAll() {
-    return this.membersService.findAll();
+  @Get('/allOld')
+  async findAllOld() {
+    return this.membersService.findAllOld();
   }
 
   // 检索复数玩家会员信息 最大10件 移除steamIds=0的项目
