@@ -227,7 +227,7 @@ describe('MemberController (e2e)', () => {
               order: {},
             },
           })
-          .query({ token: 223 });
+          .query({ token: 'afd' });
         expect(responseCreate.status).toEqual(400);
       });
 
@@ -238,7 +238,7 @@ describe('MemberController (e2e)', () => {
             ec: 200,
             em: 'ok',
           })
-          .query({ token: 223 });
+          .query({ token: 'afd' });
         expect(responseCreate.status).toEqual(400);
       });
       it('order not exist', async () => {
@@ -248,7 +248,7 @@ describe('MemberController (e2e)', () => {
             ec: 200,
             em: 'ok',
           })
-          .query({ token: 223 });
+          .query({ token: 'afd' });
         expect(responseCreate.status).toEqual(400);
       });
     });
@@ -290,7 +290,7 @@ describe('MemberController (e2e)', () => {
             },
           },
         })
-        .query({ token: 223 });
+        .query({ token: 'afd' });
       expect(responseCreate.status).toEqual(201);
       expect(responseCreate.body).toEqual({ ec: 200, em: 'ok' });
 
@@ -340,7 +340,7 @@ describe('MemberController (e2e)', () => {
           },
         },
       })
-      .query({ token: 223 });
+      .query({ token: 'afd' });
     expect(responseCreate.status).toEqual(201);
     expect(responseCreate.body).toEqual({ ec: 200, em: 'ok' });
 
@@ -389,7 +389,7 @@ describe('MemberController (e2e)', () => {
           },
         },
       })
-      .query({ token: 223 });
+      .query({ token: 'afd' });
     expect(responseCreate.status).toEqual(201);
     expect(responseCreate.body).toEqual({ ec: 200, em: 'ok' });
 
@@ -438,7 +438,7 @@ describe('MemberController (e2e)', () => {
           },
         },
       })
-      .query({ token: 223 });
+      .query({ token: 'afd' });
     expect(responseCreate.status).toEqual(201);
     expect(responseCreate.body).toEqual({ ec: 200, em: 'ok' });
 
@@ -482,7 +482,7 @@ describe('MemberController (e2e)', () => {
           },
         },
       })
-      .query({ token: 223 });
+      .query({ token: 'afd' });
     expect(responseCreate.status).toEqual(201);
     expect(responseCreate.body).toEqual({
       ec: 400,
