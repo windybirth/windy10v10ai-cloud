@@ -40,7 +40,7 @@ npm install -g firebase-tools
 ## Local end points
  - Firebase Hosting: http://localhost:5000/api/
  - Debug end points: http://localhost:3000/api/
- - Function (Not used): http://localhost:5001/windy10v10ai/asia-northeast1/api/
+ - Function (Not used): http://localhost:5001/windy10v10ai/asia-northeast1/api/api/
  - Firebase Emulator: http://localhost:4000/
  - OpenAPI Document (Swagger): http://localhost:3000/api-doc
 
