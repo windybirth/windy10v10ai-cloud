@@ -1,10 +1,4 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import {
-  DocumentData,
-  QueryDocumentSnapshot,
-  Timestamp,
-  getFirestore,
-} from 'firebase-admin/firestore';
 import { BaseFirestoreRepository } from 'fireorm';
 import { InjectRepository } from 'nestjs-fireorm';
 
@@ -23,31 +17,6 @@ export class MembersService {
   findOne(steamId: number): Promise<Member> {
     return this.membersRepository.findById(steamId.toString());
   }
-  async findAll() {
-    const members = await this.membersRepository.find();
-    const response: MemberDto[] = [];
-    members.forEach((member) => {
-      response.push(new MemberDto(member));
-    });
-    return response;
-  }
-  //#region firestore access
-  // Member converter
-  memberConverter = {
-    toFirestore(member: MemberOld): DocumentData {
-      return {
-        steamId: member.steamId,
-        expireDate: member.expireDate,
-      };
-    },
-    fromFirestore(snapshot: QueryDocumentSnapshot): MemberOld {
-      const data = snapshot.data();
-      return new MemberOld(
-        data.steamId,
-        (data.expireDate as Timestamp).toDate(),
-      );
-    },
-  };
 
   // steamIds maxlength 10
   async findBySteamIds(steamIds: number[]): Promise<MemberDto[]> {
@@ -63,7 +32,15 @@ export class MembersService {
       });
     return response;
   }
-  //#endregion
+
+  async findAll() {
+    const members = await this.membersRepository.find();
+    const response: MemberDto[] = [];
+    members.forEach((member) => {
+      response.push(new MemberDto(member));
+    });
+    return response;
+  }
 
   async createMember(createMemberDto: CreateMemberDto) {
     const steamId = createMemberDto.steamId;
@@ -100,7 +77,17 @@ export class MembersService {
     }
   }
 
-  async createAll() {
+  async remove(steamId: number): Promise<string> {
+    const member = await this.findOne(steamId);
+    if (member) {
+      await this.membersRepository.delete(member.id);
+      return 'success';
+    } else {
+      throw new NotFoundException();
+    }
+  }
+
+  async initTestData() {
     const members: MemberOld[] = [];
     // 开发贡献者
     members.push(new MemberOld(136407523));

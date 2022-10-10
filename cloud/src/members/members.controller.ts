@@ -2,13 +2,14 @@ import {
   BadRequestException,
   Body,
   Controller,
+  Delete,
+  ForbiddenException,
   Get,
   Param,
   ParseArrayPipe,
   ParseIntPipe,
   Post,
   Query,
-  UnauthorizedException,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 
@@ -24,34 +25,15 @@ export class MembersController {
     private readonly gamesService: GamesService,
   ) {}
 
-  // 开通会员
+  // 开通会员 指定月份
   @Post()
-  create(
-    @Body() createMemberDto: CreateMemberDto,
-    @Query('token') token: string,
-  ) {
-    if (token !== process.env.ADMIN_TOKEN) {
-      throw new UnauthorizedException();
-    }
+  create(@Body() createMemberDto: CreateMemberDto) {
     return this.membersService.createMember(createMemberDto);
   }
 
   @Get('/all')
   async findAll() {
     return this.membersService.findAll();
-  }
-
-  // 初期化会员数据进入Firestore，仅供测试
-  @Post('/all')
-  createAll(@Query('token') token: string) {
-    if (
-      process.env.NODE_ENV == 'develop' &&
-      token !== process.env.ADMIN_TOKEN
-    ) {
-      throw new UnauthorizedException();
-    }
-
-    return this.membersService.createAll();
   }
 
   // FIXME 迁移到games
@@ -69,12 +51,28 @@ export class MembersController {
     return res;
   }
 
-  // 获取单一会员信息
   @Get(':id')
   find(
     @Param('id', new ParseIntPipe())
     steamId: number,
   ) {
     return this.membersService.find(steamId);
+  }
+
+  @Delete(':id')
+  remove(
+    @Param('id', new ParseIntPipe())
+    steamId: number,
+  ) {
+    return this.membersService.remove(steamId);
+  }
+
+  // 初期化会员数据进入Firestore，仅供测试
+  @Post('/init')
+  initTestData() {
+    if (process.env.NODE_ENV !== 'develop' && process.env.NODE_ENV !== 'test') {
+      throw new ForbiddenException();
+    }
+    return this.membersService.initTestData();
   }
 }

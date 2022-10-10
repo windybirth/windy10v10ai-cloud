@@ -8,9 +8,8 @@ describe('MemberController (e2e)', () => {
 
   beforeAll(async () => {
     app = await initTest();
-    // 初始化创建所有会员（仅供测试）
-    await request(app.getHttpServer()).post('/api/members/all?token=123');
-    await request(app.getHttpServer()).get('/api/members/migration');
+    // 初始化测试数据
+    await request(app.getHttpServer()).post('/api/members/init');
   });
 
   describe('members/ (GET)', () => {
@@ -65,8 +64,7 @@ describe('MemberController (e2e)', () => {
         .send({
           steamId: 123456789,
           month: 1,
-        })
-        .query({ token: 123 });
+        });
       expect(responseCreate.status).toEqual(201);
       expect(responseCreate.body).toEqual(expectBodyJson);
 
@@ -98,8 +96,7 @@ describe('MemberController (e2e)', () => {
         .send({
           steamId: 20201231,
           month: 1,
-        })
-        .query({ token: 123 });
+        });
       expect(responseCreate.status).toEqual(201);
       expect(responseCreate.body).toEqual(expectBodyJson);
 
@@ -127,8 +124,7 @@ describe('MemberController (e2e)', () => {
         .send({
           steamId: 20301231,
           month: 1,
-        })
-        .query({ token: 123 });
+        });
       expect(responseCreate.status).toEqual(201);
       expect(responseCreate.body).toEqual(expectBodyJson);
 
@@ -154,8 +150,7 @@ describe('MemberController (e2e)', () => {
         .send({
           steamId: 1234567890,
           month: 13,
-        })
-        .query({ token: 123 });
+        });
       expect(responseCreate.status).toEqual(201);
       expect(responseCreate.body).toEqual(expectBodyJson);
     });
@@ -175,8 +170,7 @@ describe('MemberController (e2e)', () => {
         .send({
           steamId: 20200801,
           month: 3,
-        })
-        .query({ token: 123 });
+        });
       expect(responseCreate.status).toEqual(201);
       expect(responseCreate.body).toEqual(expectBodyJson);
     });
@@ -192,8 +186,7 @@ describe('MemberController (e2e)', () => {
         .send({
           steamId: 20300801,
           month: 12,
-        })
-        .query({ token: 123 });
+        });
       expect(responseCreate.status).toEqual(201);
       expect(responseCreate.body).toEqual(expectBodyJson);
     });
