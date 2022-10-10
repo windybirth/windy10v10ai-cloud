@@ -1,7 +1,7 @@
 import { Collection } from 'fireorm';
 
 @Collection()
-export class Members {
+export class Member {
   id: string;
   steamId!: number;
   expireDate!: Date;

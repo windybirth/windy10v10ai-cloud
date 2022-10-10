@@ -10,38 +10,44 @@ import { InjectRepository } from 'nestjs-fireorm';
 
 import { CreateMemberDto } from './dto/create-member.dto';
 import { MemberDto } from './dto/member.dto';
-import { Member } from './entities/member.entity';
-import { Members } from './entities/members.entity';
+import { MemberOld } from './entities/member.entity';
+import { Member } from './entities/members.entity';
 
 @Injectable()
 export class MembersService {
   constructor(
-    @InjectRepository(Members)
-    private readonly membersRepository: BaseFirestoreRepository<Members>,
+    @InjectRepository(Member)
+    private readonly membersRepository: BaseFirestoreRepository<Member>,
   ) {}
 
-  create(member: Members) {
+  create(member: Member) {
     return this.membersRepository.create(member);
   }
   findOne(steamId: number): Promise<Member> {
-    return this.membersRepository.findOne();
+    return this.membersRepository.findById(steamId.toString());
+  }
+  findAll() {
+    return this.membersRepository.find();
   }
   //#region firestore access
-  // Members converter
+  // Member converter
   memberConverter = {
-    toFirestore(member: Member): DocumentData {
+    toFirestore(member: MemberOld): DocumentData {
       return {
         steamId: member.steamId,
         expireDate: member.expireDate,
       };
     },
-    fromFirestore(snapshot: QueryDocumentSnapshot): Member {
+    fromFirestore(snapshot: QueryDocumentSnapshot): MemberOld {
       const data = snapshot.data();
-      return new Member(data.steamId, (data.expireDate as Timestamp).toDate());
+      return new MemberOld(
+        data.steamId,
+        (data.expireDate as Timestamp).toDate(),
+      );
     },
   };
 
-  async save(member: Member) {
+  async saveOld(member: MemberOld) {
     const db = getFirestore();
     const memberRef = db
       .collection('members')
@@ -50,8 +56,8 @@ export class MembersService {
     return await memberRef.set(member);
   }
 
-  async findAllOld(): Promise<MemberDto[]> {
-    const response: MemberDto[] = [];
+  async findAllOld(): Promise<Member[]> {
+    const response: Member[] = [];
 
     const db = getFirestore();
     const memberSnapshot = await db
@@ -60,7 +66,7 @@ export class MembersService {
       .get();
     memberSnapshot.forEach((doc) => {
       const member = doc.data();
-      response.push(new MemberDto(member));
+      response.push({ ...member, id: member.steamId.toString() });
     });
     return response;
   }
@@ -69,21 +75,18 @@ export class MembersService {
   async findBySteamIds(steamIds: number[]): Promise<MemberDto[]> {
     const response: MemberDto[] = [];
 
-    const db = getFirestore();
-    const memberSnapshot = await db
-      .collection('members')
-      .where('steamId', 'in', steamIds)
-      .withConverter(this.memberConverter)
-      .get();
-    memberSnapshot.forEach((doc) => {
-      const member = doc.data();
-      response.push(new MemberDto(member));
-    });
+    this.membersRepository
+      .whereIn('steamId', steamIds)
+      .find()
+      .then((members) => {
+        members.forEach((member) => {
+          response.push(new MemberDto(member));
+        });
+      });
     return response;
   }
   //#endregion
 
-  // TODO fix to use respository
   async createMember(createMemberDto: CreateMemberDto) {
     const steamId = createMemberDto.steamId;
     // TODO find steam id
@@ -105,7 +108,7 @@ export class MembersService {
     // If expired, set same as new.
     // else month base on last expireDate
 
-    await this.save({ steamId, expireDate });
+    await this.create({ id: steamId.toString(), steamId, expireDate });
     return this.find(steamId);
   }
 
@@ -118,33 +121,40 @@ export class MembersService {
     }
   }
 
-  async createAllOld() {
-    const members: Member[] = [];
-    // 开发贡献者
-    members.push(new Member(136407523));
-    members.push(new Member(1194383041));
-    members.push(new Member(143575444));
-    members.push(new Member(314757913));
-    members.push(new Member(385130282));
-    members.push(new Member(967052298));
-    members.push(new Member(1159610111));
-    // 永久会员
-    members.push(new Member(136668998));
-    members.push(new Member(128984820));
-    members.push(new Member(133043280));
-    members.push(new Member(124111398));
-    members.push(new Member(120921523));
-    members.push(new Member(146837505));
-    members.push(new Member(136385488));
-    members.push(new Member(907056028));
-    // 到期
-    members.push(new Member(20200801, new Date('2020-08-01T00:00:00Z')));
-    members.push(new Member(20201231, new Date('2020-12-31T00:00:00Z')));
-    // 未来
-    members.push(new Member(20300801, new Date('2030-08-01T00:00:00Z')));
-    members.push(new Member(20301231, new Date('2030-12-31T00:00:00Z')));
+  async migration() {
+    const members = await this.findAllOld();
     for (const member of members) {
-      await this.save(member);
+      await this.create(member);
+    }
+    return `This action migration members from old data`;
+  }
+  async createAllOld() {
+    const members: MemberOld[] = [];
+    // 开发贡献者
+    members.push(new MemberOld(136407523));
+    members.push(new MemberOld(1194383041));
+    members.push(new MemberOld(143575444));
+    members.push(new MemberOld(314757913));
+    members.push(new MemberOld(385130282));
+    members.push(new MemberOld(967052298));
+    members.push(new MemberOld(1159610111));
+    // 永久会员
+    members.push(new MemberOld(136668998));
+    members.push(new MemberOld(128984820));
+    members.push(new MemberOld(133043280));
+    members.push(new MemberOld(124111398));
+    members.push(new MemberOld(120921523));
+    members.push(new MemberOld(146837505));
+    members.push(new MemberOld(136385488));
+    members.push(new MemberOld(907056028));
+    // 到期
+    members.push(new MemberOld(20200801, new Date('2020-08-01T00:00:00Z')));
+    members.push(new MemberOld(20201231, new Date('2020-12-31T00:00:00Z')));
+    // 未来
+    members.push(new MemberOld(20300801, new Date('2030-08-01T00:00:00Z')));
+    members.push(new MemberOld(20301231, new Date('2030-12-31T00:00:00Z')));
+    for (const member of members) {
+      await this.saveOld(member);
     }
     return `This action create test members with init data`;
   }

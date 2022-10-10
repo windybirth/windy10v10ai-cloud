@@ -9,7 +9,10 @@ export class GameController {
   constructor(private readonly gameService: GameService) {}
 
   @Get('start')
-  start(): string {
+  start(
+    @Headers('x-api-key') apiKey: string,
+    @Headers('x-country-code') countryCode: string,
+  ): string {
     return this.gameService.getHello();
   }
 
