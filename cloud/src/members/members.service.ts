@@ -49,35 +49,11 @@ export class MembersService {
     },
   };
 
-  async saveOld(member: MemberOld) {
-    const db = getFirestore();
-    const memberRef = db
-      .collection('members')
-      .withConverter(this.memberConverter)
-      .doc('' + member.steamId);
-    return await memberRef.set(member);
-  }
-
-  async findAllOld(): Promise<Member[]> {
-    const response: Member[] = [];
-
-    const db = getFirestore();
-    const memberSnapshot = await db
-      .collection('members')
-      .withConverter(this.memberConverter)
-      .get();
-    memberSnapshot.forEach((doc) => {
-      const member = doc.data();
-      response.push({ ...member, id: member.steamId.toString() });
-    });
-    return response;
-  }
-
   // steamIds maxlength 10
   async findBySteamIds(steamIds: number[]): Promise<MemberDto[]> {
     const response: MemberDto[] = [];
 
-    this.membersRepository
+    await this.membersRepository
       .whereIn('steamId', steamIds)
       .find()
       .then((members) => {
@@ -124,14 +100,7 @@ export class MembersService {
     }
   }
 
-  async migration() {
-    const members = await this.findAllOld();
-    for (const member of members) {
-      await this.membersRepository.create(member);
-    }
-    return `This action migration members from old data`;
-  }
-  async createAllOld() {
+  async createAll() {
     const members: MemberOld[] = [];
     // 开发贡献者
     members.push(new MemberOld(136407523));
@@ -157,7 +126,10 @@ export class MembersService {
     members.push(new MemberOld(20300801, new Date('2030-08-01T00:00:00Z')));
     members.push(new MemberOld(20301231, new Date('2030-12-31T00:00:00Z')));
     for (const member of members) {
-      await this.saveOld(member);
+      await this.membersRepository.create({
+        id: member.steamId.toString(),
+        ...member,
+      });
     }
     return `This action create test members with init data`;
   }

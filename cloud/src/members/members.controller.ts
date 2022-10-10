@@ -51,13 +51,7 @@ export class MembersController {
       throw new UnauthorizedException();
     }
 
-    return this.membersService.createAllOld();
-  }
-
-  // 获取全体玩家信息
-  @Get('/allOld')
-  async findAllOld() {
-    return this.membersService.findAllOld();
+    return this.membersService.createAll();
   }
 
   // FIXME 迁移到games
@@ -73,11 +67,6 @@ export class MembersController {
     }
     const res = await this.membersService.findBySteamIds(steamIds);
     return res;
-  }
-
-  @Get('/migration')
-  migration() {
-    return this.membersService.migration();
   }
 
   // 获取单一会员信息
