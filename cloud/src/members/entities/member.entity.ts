@@ -1,4 +1,4 @@
-export class Member {
+export class MemberOld {
   steamId!: number;
   expireDate!: Date;
   /**

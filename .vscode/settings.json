@@ -6,5 +6,6 @@
         "source.fixAll.eslint": true
     },
     "git.autofetch": true,
-    "debug.javascript.autoAttachFilter": "smart"
+    "debug.javascript.autoAttachFilter": "smart",
+    "typescript.preferences.importModuleSpecifier": "relative"
 }

@@ -10,52 +10,53 @@ Save windy 10v10ai data in cloud.
 
 # Get Start
 
-## Install
-Need
+## Installation
+### Need
 - NodeJs 16
 - java
-```
+```bash
 npm install -g firebase-tools
 (cd cloud && npm install)
 ```
 
-## Run on local
-```
-(cd cloud && npm run start)
-```
-### Local end points
- - Firebase Hosting: http://localhost:5000/api/
- - Firebase Emulator: http://localhost:4000/
- - Function (Not used): http://localhost:5001/windy10v10ai/asia-northeast1/api/
-
-## Debug and E2E Setting
+### Debug and E2E Setting
 1. Copy `~/.config/firebase/<YOUR_MAIL_ADDRESS>_application_default_credentials.json` or `~/.config/gcloud/application_default_credentials.json` to `cloud/application_default_credentials.json`
-<!-- 2. Run 
-```
-echo "export GOOGLE_APPLICATION_CREDENTIALS='application_default_credentials.json'" >> ~/.bash_profile
-echo "export FIRESTORE_EMULATOR_HOST='localhost:8080'" >> ~/.bash_profile
-source ~/.bash_profile
-``` -->
 
+## Running the app
+```bash
+# development (with watch)
+(cd cloud && npm run start)
 
-### Debug
-```
+# debug
 (cd cloud && npm run start:debug)
-```
- - Debug end points: http://localhost:3000/api/
-### E2E Test
-```
+
+# e2e tests
 (cd cloud && npm run test:e2e)
 ```
+
+
 **_Tips: If debug or e2e test not working with address already used error, kill nodejs process by `pkill -f node`_**
 
-## Deploy
-- Deploy function only
-```
-(cd cloud && npm run deploy)
-```
+## Local end points
+ - Firebase Hosting: http://localhost:5000/api/
+ - Debug end points: http://localhost:3000/api/
+ - Function (Not used): http://localhost:5001/windy10v10ai/asia-northeast1/api/api/
+ - Firebase Emulator: http://localhost:4000/
+ - OpenAPI Document (Swagger): http://localhost:3000/api-doc
 
-- Deploy firebase hosting only
-```
+
+# Deploy
+- Deploy function only
+```bash
+# Deploy api function only
+firebase deploy --only function:api
+# Deploy admin function only
+firebase deploy --only function:admin
+# Deploy all function
+firebase deploy --only function
+
+# Deploy hosting only
 firebase deploy --only hosting
+# Deploy function and hosting
+firebase deploy --only function, hosting
 ```

@@ -3,9 +3,12 @@ import { ConfigModule } from '@nestjs/config';
 import { initializeApp } from 'firebase-admin/app';
 import { FireormModule } from 'nestjs-fireorm';
 
+import { AfdianModule } from './afdian/afdian.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { GameModule } from './game/game.module';
 import { MembersModule } from './members/members.module';
+import { OrdersModule } from './orders/orders.module';
 
 const ENV = process.env.NODE_ENV;
 
@@ -24,6 +27,9 @@ const ENV = process.env.NODE_ENV;
         validateModels: true,
       },
     }),
+    GameModule,
+    AfdianModule,
+    OrdersModule,
   ],
   controllers: [AppController],
   providers: [AppService],

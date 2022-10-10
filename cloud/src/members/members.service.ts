@@ -1,87 +1,49 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import {
-  DocumentData,
-  QueryDocumentSnapshot,
-  Timestamp,
-  getFirestore,
-} from 'firebase-admin/firestore';
+import { BaseFirestoreRepository } from 'fireorm';
+import { InjectRepository } from 'nestjs-fireorm';
 
 import { CreateMemberDto } from './dto/create-member.dto';
 import { MemberDto } from './dto/member.dto';
-import { Member } from './entities/member.entity';
+import { MemberOld } from './entities/member.entity';
+import { Member } from './entities/members.entity';
 
 @Injectable()
 export class MembersService {
-  //#region firestore access
-  // Members converter
-  memberConverter = {
-    toFirestore(member: Member): DocumentData {
-      return {
-        steamId: member.steamId,
-        expireDate: member.expireDate,
-      };
-    },
-    fromFirestore(snapshot: QueryDocumentSnapshot): Member {
-      const data = snapshot.data();
-      return new Member(data.steamId, (data.expireDate as Timestamp).toDate());
-    },
-  };
+  constructor(
+    @InjectRepository(Member)
+    private readonly membersRepository: BaseFirestoreRepository<Member>,
+  ) {}
 
-  async save(member: Member) {
-    const db = getFirestore();
-    const memberRef = db
-      .collection('members')
-      .withConverter(this.memberConverter)
-      .doc('' + member.steamId);
-    return await memberRef.set(member);
-  }
-
-  async findOne(steamId: number) {
-    const db = getFirestore();
-    const memberSnapshot = await db
-      .collection('members')
-      .withConverter(this.memberConverter)
-      .doc('' + steamId)
-      .get();
-    return memberSnapshot.data();
-  }
-
-  async findAll(): Promise<MemberDto[]> {
-    const response: MemberDto[] = [];
-
-    const db = getFirestore();
-    const memberSnapshot = await db
-      .collection('members')
-      .withConverter(this.memberConverter)
-      .get();
-    memberSnapshot.forEach((doc) => {
-      const member = doc.data();
-      response.push(new MemberDto(member));
-    });
-    return response;
+  findOne(steamId: number): Promise<Member> {
+    return this.membersRepository.findById(steamId.toString());
   }
 
   // steamIds maxlength 10
   async findBySteamIds(steamIds: number[]): Promise<MemberDto[]> {
     const response: MemberDto[] = [];
 
-    const db = getFirestore();
-    const memberSnapshot = await db
-      .collection('members')
-      .where('steamId', 'in', steamIds)
-      .withConverter(this.memberConverter)
-      .get();
-    memberSnapshot.forEach((doc) => {
-      const member = doc.data();
+    await this.membersRepository
+      .whereIn('steamId', steamIds)
+      .find()
+      .then((members) => {
+        members.forEach((member) => {
+          response.push(new MemberDto(member));
+        });
+      });
+    return response;
+  }
+
+  async findAll() {
+    const members = await this.membersRepository.find();
+    const response: MemberDto[] = [];
+    members.forEach((member) => {
       response.push(new MemberDto(member));
     });
     return response;
   }
-  //#endregion
 
-  async create(createMemberDto: CreateMemberDto) {
+  async createMember(createMemberDto: CreateMemberDto) {
     const steamId = createMemberDto.steamId;
-    // TODO find steam id
     const existMember = await this.findOne(steamId);
     const expireDate = new Date();
     if (
@@ -96,11 +58,13 @@ export class MembersService {
         createMemberDto.month * +process.env.DAYS_PER_MONTH,
     );
     expireDate.setUTCHours(0, 0, 0, 0);
-    // TODO steam id exist
-    // If expired, set same as new.
-    // else month base on last expireDate
 
-    await this.save({ steamId, expireDate });
+    const member = { id: steamId.toString(), steamId, expireDate };
+    if (existMember) {
+      await this.membersRepository.update(member);
+    } else {
+      await this.membersRepository.create(member);
+    }
     return this.find(steamId);
   }
 
@@ -113,33 +77,46 @@ export class MembersService {
     }
   }
 
-  async createAll() {
-    const members: Member[] = [];
+  async remove(steamId: number): Promise<string> {
+    const member = await this.findOne(steamId);
+    if (member) {
+      await this.membersRepository.delete(member.id);
+      return 'success';
+    } else {
+      throw new NotFoundException();
+    }
+  }
+
+  async initTestData() {
+    const members: MemberOld[] = [];
     // 开发贡献者
-    members.push(new Member(136407523));
-    members.push(new Member(1194383041));
-    members.push(new Member(143575444));
-    members.push(new Member(314757913));
-    members.push(new Member(385130282));
-    members.push(new Member(967052298));
-    members.push(new Member(1159610111));
+    members.push(new MemberOld(136407523));
+    members.push(new MemberOld(1194383041));
+    members.push(new MemberOld(143575444));
+    members.push(new MemberOld(314757913));
+    members.push(new MemberOld(385130282));
+    members.push(new MemberOld(967052298));
+    members.push(new MemberOld(1159610111));
     // 永久会员
-    members.push(new Member(136668998));
-    members.push(new Member(128984820));
-    members.push(new Member(133043280));
-    members.push(new Member(124111398));
-    members.push(new Member(120921523));
-    members.push(new Member(146837505));
-    members.push(new Member(136385488));
-    members.push(new Member(907056028));
+    members.push(new MemberOld(136668998));
+    members.push(new MemberOld(128984820));
+    members.push(new MemberOld(133043280));
+    members.push(new MemberOld(124111398));
+    members.push(new MemberOld(120921523));
+    members.push(new MemberOld(146837505));
+    members.push(new MemberOld(136385488));
+    members.push(new MemberOld(907056028));
     // 到期
-    members.push(new Member(20200801, new Date('2020-08-01T00:00:00Z')));
-    members.push(new Member(20201231, new Date('2020-12-31T00:00:00Z')));
+    members.push(new MemberOld(20200801, new Date('2020-08-01T00:00:00Z')));
+    members.push(new MemberOld(20201231, new Date('2020-12-31T00:00:00Z')));
     // 未来
-    members.push(new Member(20300801, new Date('2030-08-01T00:00:00Z')));
-    members.push(new Member(20301231, new Date('2030-12-31T00:00:00Z')));
+    members.push(new MemberOld(20300801, new Date('2030-08-01T00:00:00Z')));
+    members.push(new MemberOld(20301231, new Date('2030-12-31T00:00:00Z')));
     for (const member of members) {
-      await this.save(member);
+      await this.membersRepository.create({
+        id: member.steamId.toString(),
+        ...member,
+      });
     }
     return `This action create test members with init data`;
   }

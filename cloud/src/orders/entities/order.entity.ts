@@ -1,6 +1,5 @@
 import { Collection } from 'fireorm';
-
-import { OrderDto } from '../dto/afdian-webhook.dto';
+import { OrderDto } from 'src/afdian/dto/afdian-webhook.dto';
 
 @Collection()
 export class Order {

@@ -2,9 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { BaseFirestoreRepository } from 'fireorm';
 import { InjectRepository } from 'nestjs-fireorm';
 
+import { MembersService } from '../members/members.service';
+import { Order } from '../orders/entities/order.entity';
+
 import { OrderDto } from './dto/afdian-webhook.dto';
-import { Order } from './entities/order.entity';
-import { MembersService } from './members.service';
 
 enum Platfrom {
   afdian = 'afdian',
@@ -15,13 +16,12 @@ enum OrderType {
 }
 
 @Injectable()
-export class OrdersService {
+export class AfdianService {
   constructor(
     @InjectRepository(Order)
     private readonly orderRepository: BaseFirestoreRepository<Order>,
     private readonly membersService: MembersService,
   ) {}
-
   async processAfdianOrder(orderDto: OrderDto) {
     let success = true;
     // status = 2（交易成功） and product_type = 0（常规方案）and month > 0（订阅1个月以上）
@@ -40,7 +40,7 @@ export class OrdersService {
       success = false;
     }
     if (success) {
-      await this.membersService.create({ steamId, month });
+      await this.membersService.createMember({ steamId, month });
     }
 
     const orderType = OrderType.member;

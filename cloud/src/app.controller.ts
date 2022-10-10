@@ -1,7 +1,9 @@
 import { Controller, Get } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 
 import { AppService } from './app.service';
 
+@ApiTags('Hello World')
 @Controller()
 export class AppController {
   constructor(private readonly appService: AppService) {}
@@ -9,10 +11,5 @@ export class AppController {
   @Get()
   getHello(): string {
     return this.appService.getHello();
-  }
-
-  @Get('/api')
-  getApi(): string {
-    return this.appService.getApiHello();
   }
 }
