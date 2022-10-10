@@ -10,6 +10,7 @@ describe('MemberController (e2e)', () => {
     app = await initTest();
     // 初始化创建所有会员（仅供测试）
     await request(app.getHttpServer()).post('/api/members/all?token=123');
+    await request(app.getHttpServer()).get('/api/members/migration');
   });
 
   describe('members/ (GET)', () => {

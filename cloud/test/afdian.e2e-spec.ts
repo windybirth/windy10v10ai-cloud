@@ -297,8 +297,8 @@ describe('MemberController (e2e)', () => {
       .query({ token: 'afd' });
     expect(responseCreate.status).toEqual(201);
     expect(responseCreate.body).toEqual({
-      ec: 400,
-      em: '未能正确获取Dota2 ID，请联系我手动处理。',
+      ec: 200,
+      em: '[Error] 未能正确获取Dota2 ID',
     });
 
     const responseAfter = await request(app.getHttpServer()).get(

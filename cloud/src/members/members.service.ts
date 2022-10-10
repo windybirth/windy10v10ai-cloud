@@ -20,14 +20,16 @@ export class MembersService {
     private readonly membersRepository: BaseFirestoreRepository<Member>,
   ) {}
 
-  create(member: Member) {
-    return this.membersRepository.create(member);
-  }
   findOne(steamId: number): Promise<Member> {
     return this.membersRepository.findById(steamId.toString());
   }
-  findAll() {
-    return this.membersRepository.find();
+  async findAll() {
+    const members = await this.membersRepository.find();
+    const response: MemberDto[] = [];
+    members.forEach((member) => {
+      response.push(new MemberDto(member));
+    });
+    return response;
   }
   //#region firestore access
   // Member converter
@@ -89,7 +91,6 @@ export class MembersService {
 
   async createMember(createMemberDto: CreateMemberDto) {
     const steamId = createMemberDto.steamId;
-    // TODO find steam id
     const existMember = await this.findOne(steamId);
     const expireDate = new Date();
     if (
@@ -104,11 +105,13 @@ export class MembersService {
         createMemberDto.month * +process.env.DAYS_PER_MONTH,
     );
     expireDate.setUTCHours(0, 0, 0, 0);
-    // TODO steam id exist
-    // If expired, set same as new.
-    // else month base on last expireDate
 
-    await this.create({ id: steamId.toString(), steamId, expireDate });
+    const member = { id: steamId.toString(), steamId, expireDate };
+    if (existMember) {
+      await this.membersRepository.update(member);
+    } else {
+      await this.membersRepository.create(member);
+    }
     return this.find(steamId);
   }
 
@@ -124,7 +127,7 @@ export class MembersService {
   async migration() {
     const members = await this.findAllOld();
     for (const member of members) {
-      await this.create(member);
+      await this.membersRepository.create(member);
     }
     return `This action migration members from old data`;
   }
