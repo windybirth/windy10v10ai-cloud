@@ -1,6 +1,7 @@
 {
     "recommendations": [
         "zainchen.json",
-        "dbaeumer.vscode-eslint"
+        "dbaeumer.vscode-eslint",
+        "GitHub.vscode-pull-request-github"
     ]
 }

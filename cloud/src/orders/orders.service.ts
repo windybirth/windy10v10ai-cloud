@@ -12,7 +12,14 @@ export class OrdersService {
   ) {}
 
   findAll() {
-    return this.orderRepository.find();
+    return this.orderRepository.orderByDescending('createdAt').find();
+  }
+
+  findFailed() {
+    return this.orderRepository
+      .whereEqualTo('success', false)
+      .orderByDescending('createdAt')
+      .find();
   }
 
   create(order: Order) {

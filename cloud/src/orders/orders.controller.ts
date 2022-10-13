@@ -10,4 +10,9 @@ export class OrdersController {
   findAll() {
     return this.ordersService.findAll();
   }
+
+  @Get('fail')
+  findFailed() {
+    return this.ordersService.findFailed();
+  }
 }

@@ -49,14 +49,14 @@ npm install -g firebase-tools
 - Deploy function only
 ```bash
 # Deploy api function only
-firebase deploy --only function:api
+firebase deploy --only functions:api
 # Deploy admin function only
-firebase deploy --only function:admin
+firebase deploy --only functions:admin
 # Deploy all function
-firebase deploy --only function
+firebase deploy --only functions
 
 # Deploy hosting only
 firebase deploy --only hosting
 # Deploy function and hosting
-firebase deploy --only function, hosting
+firebase deploy --only functions, hosting
 ```
