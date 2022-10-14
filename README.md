@@ -2,7 +2,7 @@
 Save windy 10v10ai data in cloud.
 
 # Built With
-- Firebase 
+- Firebase
   - Hosting
   - Functions
   - Realtime Database
@@ -16,6 +16,7 @@ Save windy 10v10ai data in cloud.
 - java
 ```bash
 npm install -g firebase-tools
+npm install -g @nestjs/cli
 (cd cloud && npm install)
 ```
 

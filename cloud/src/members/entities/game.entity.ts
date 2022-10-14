@@ -1,5 +1,6 @@
 import { Collection } from 'fireorm';
 
+// TODO remove this
 @Collection()
 export class Game {
   id: string;
