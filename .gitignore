@@ -127,3 +127,4 @@ dist
 .pnp.*
 .firebase/hosting.cHVibGlj.cache
 cloud/application_default_credentials.json
+cloud/swagger-spec.yaml
