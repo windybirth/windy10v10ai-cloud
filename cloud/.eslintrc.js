@@ -22,7 +22,7 @@ module.exports = {
     '@typescript-eslint/explicit-module-boundary-types': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
     '@typescript-eslint/no-unused-vars': 'warn',
-    'no-console': 'warn',
+    'no-console': ['warn', { allow: ['warn', 'error'] }],
     // 'autofix/no-unused-vars': 'error',
     "sort-imports": ["warn", {
       "ignoreCase": false,

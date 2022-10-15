@@ -1,4 +1,4 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Put } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 
 import { PlayerCountService } from './player-count.service';
@@ -9,11 +9,16 @@ export class PlayerCountController {
   constructor(private readonly playerCountService: PlayerCountService) {}
 
   @Get()
-  update() {
+  findAll() {
+    return this.playerCountService.findAll();
+  }
+  @Put()
+  updateTest() {
     return this.playerCountService.update({
-      apikey: '123',
-      countryCode: 'CN',
-      playerIds: ['123', '456'],
+      apikey: '123134',
+      countryCode: 'JP',
+      playerIds: [123, 456, 789],
+      memberIds: [123],
     });
   }
 }

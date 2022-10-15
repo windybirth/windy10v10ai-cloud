@@ -2,25 +2,34 @@ import { Injectable } from '@nestjs/common';
 import { BaseFirestoreRepository } from 'fireorm';
 import { InjectRepository } from 'nestjs-fireorm';
 
-import { UpdateGamePlayerCountDto } from './dto/update-player-count.dto';
-import { GamePlayerCount } from './entities/game-player-count.entity';
+import { UpdatePlayerCountDto } from './dto/player-count.dto';
+import { PlayerCount } from './entities/player-count.entity';
 
 @Injectable()
 export class PlayerCountService {
   constructor(
-    @InjectRepository(GamePlayerCount)
-    private readonly gamePlayerCountRepository: BaseFirestoreRepository<GamePlayerCount>,
+    @InjectRepository(PlayerCount)
+    private readonly gamePlayerCountRepository: BaseFirestoreRepository<PlayerCount>,
   ) {}
-  async update(countDto: UpdateGamePlayerCountDto) {
+  async update(countDto: UpdatePlayerCountDto) {
     const id = new Date().toISOString().slice(0, 10).replace(/-/g, '');
-    const { countryCode, playerIds } = countDto;
-    const playerCount = playerIds.length;
 
-    let gamePlayerCount = await this.gamePlayerCountRepository.findById(id);
-    if (!gamePlayerCount) {
-      gamePlayerCount = new GamePlayerCount();
+    const gamePlayerCountExist = await this.gamePlayerCountRepository.findById(
+      id,
+    );
+    if (gamePlayerCountExist) {
+      gamePlayerCountExist.addPlayerCount(countDto);
+      await this.gamePlayerCountRepository.update(gamePlayerCountExist);
+    } else {
+      const gamePlayerCount = new PlayerCount();
+      gamePlayerCount.init(id);
+      gamePlayerCount.addPlayerCount(countDto);
+      await this.gamePlayerCountRepository.create(gamePlayerCount);
     }
 
-    return `This action update gamePlayerCount: ${gamePlayerCount}`;
+    return `This action update gamePlayerCount`;
+  }
+  async findAll() {
+    return await this.gamePlayerCountRepository.find();
   }
 }
