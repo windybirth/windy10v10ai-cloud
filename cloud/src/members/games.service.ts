@@ -4,6 +4,7 @@ import { InjectRepository } from 'nestjs-fireorm';
 
 import { Game } from './entities/game.entity';
 
+// TODO remove this
 @Injectable()
 export class GamesService {
   constructor(

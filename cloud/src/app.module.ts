@@ -9,6 +9,7 @@ import { AppService } from './app.service';
 import { GameModule } from './game/game.module';
 import { MembersModule } from './members/members.module';
 import { OrdersModule } from './orders/orders.module';
+import { PlayerCountModule } from './player-count/player-count.module';
 
 const ENV = process.env.NODE_ENV;
 
@@ -21,6 +22,7 @@ const ENV = process.env.NODE_ENV;
     }),
     FireormModule.forRoot({
       firestoreSettings: {
+        projectId: 'windy10v10ai',
         ignoreUndefinedProperties: true,
       },
       fireormSettings: {
@@ -30,6 +32,7 @@ const ENV = process.env.NODE_ENV;
     GameModule,
     AfdianModule,
     OrdersModule,
+    PlayerCountModule,
   ],
   controllers: [AppController],
   providers: [AppService],
@@ -37,14 +40,6 @@ const ENV = process.env.NODE_ENV;
 export class AppModule {
   constructor() {
     // Initialize the firebase admin app
-    if (ENV === 'develop') {
-      initializeApp({
-        storageBucket: 'windy10v10ai.appspot.com',
-        databaseURL: 'http://127.0.0.1:9000/?ns=windy10v10ai-default-rtdb',
-        projectId: 'windy10v10ai',
-      });
-    } else {
-      initializeApp();
-    }
+    initializeApp();
   }
 }
