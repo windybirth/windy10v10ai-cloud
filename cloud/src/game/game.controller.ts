@@ -83,6 +83,7 @@ export class GameController {
           player.steamId,
           player.teamId == gameInfo.winnerTeamId,
           player.points,
+          player.isDisconnect,
         );
       }
     }

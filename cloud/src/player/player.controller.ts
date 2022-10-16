@@ -10,4 +10,9 @@ export class PlayerController {
   findAll() {
     return this.playerService.findAll();
   }
+
+  @Get('/setDisconnectForAll')
+  setDisconnectForAll() {
+    return this.playerService.setDisconnectForAll();
+  }
 }
