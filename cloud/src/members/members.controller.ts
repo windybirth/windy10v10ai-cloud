@@ -1,15 +1,12 @@
 import {
-  BadRequestException,
   Body,
   Controller,
   Delete,
   ForbiddenException,
   Get,
   Param,
-  ParseArrayPipe,
   ParseIntPipe,
   Post,
-  Query,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 
