@@ -68,8 +68,8 @@ export class GameController {
   ): string {
     // 验证服务器主机
     if (apiKey !== process.env.SERVER_APIKEY) {
-      console.warn(`[Endgame] apiKey permission error wtih ${apiKey}.`);
-      throw new BadRequestException();
+      console.warn(`[Endgame] apiKey permission error with ${apiKey}.`);
+      return 'Error';
     }
     if (gameInfo.winnerTeamId == 2) {
       this.matchService.gameEnd(true);
