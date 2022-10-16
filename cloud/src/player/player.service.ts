@@ -48,8 +48,8 @@ export class PlayerService {
     return this.playerRepository.find();
   }
 
-  setDisconnectForAll() {
-    this.playerRepository.find().then((players) => {
+  async setDisconnectForAll() {
+    await this.playerRepository.find().then((players) => {
       players.forEach((player) => {
         player.disconnectCount = 0;
         this.playerRepository.update(player);
