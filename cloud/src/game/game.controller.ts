@@ -8,11 +8,12 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiTags } from '@nestjs/swagger';
 
 import { MatchService } from '../match/match.service';
 import { MembersService } from '../members/members.service';
 import { PlayerCountService } from '../player-count/player-count.service';
+import { PlayerService } from '../player/player.service';
 
 import { GameInfo } from './dto/game-end.request.body';
 import { GameService } from './game.service';
@@ -25,6 +26,7 @@ export class GameController {
     private readonly membersService: MembersService,
     private readonly playerCountService: PlayerCountService,
     private readonly matchService: MatchService,
+    private readonly playerService: PlayerService,
   ) {}
 
   @Get('start')
@@ -58,19 +60,32 @@ export class GameController {
     return res;
   }
 
+  @ApiBody({ type: GameInfo })
   @Post('end')
-  end(@Headers('x-api-key') apiKey: string, @Body() body: GameInfo): string {
+  end(
+    @Headers('x-api-key') apiKey: string,
+    @Body() gameInfo: GameInfo,
+  ): string {
     // 验证服务器主机
     if (apiKey !== process.env.SERVER_APIKEY) {
       console.warn(`[Endgame] apiKey permission error wtih ${apiKey}.`);
       throw new BadRequestException();
     }
-    console.log(body);
-    if (body.winnerTeamId == 2) {
+    if (gameInfo.winnerTeamId == 2) {
       this.matchService.gameEnd(true);
     } else {
       this.matchService.gameEnd(false);
     }
-    return this.gameService.getHello();
+    const players = gameInfo.players;
+    for (const player of players) {
+      if (player.steamId > 0) {
+        this.playerService.gameEnd(
+          player.steamId,
+          player.teamId == gameInfo.winnerTeamId,
+          player.points,
+        );
+      }
+    }
+    return this.gameService.getOK();
   }
 }
