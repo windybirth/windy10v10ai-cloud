@@ -10,9 +10,11 @@ import {
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 
+import { MatchService } from '../match/match.service';
 import { MembersService } from '../members/members.service';
 import { PlayerCountService } from '../player-count/player-count.service';
 
+import { GameInfo } from './dto/game-end.request.body';
 import { GameService } from './game.service';
 
 @ApiTags('Game(Open)')
@@ -22,6 +24,7 @@ export class GameController {
     private readonly gameService: GameService,
     private readonly membersService: MembersService,
     private readonly playerCountService: PlayerCountService,
+    private readonly matchService: MatchService,
   ) {}
 
   @Get('start')
@@ -36,6 +39,7 @@ export class GameController {
     if (steamIds.length > 10) {
       throw new BadRequestException();
     }
+    // 获取会员信息
     const res = await this.membersService.findBySteamIds(steamIds);
     try {
       await this.playerCountService.update({
@@ -47,13 +51,26 @@ export class GameController {
     } catch (error) {
       console.error(error);
     }
+    // 验证服务器主机
+    if (apiKey === process.env.SERVER_APIKEY) {
+      await this.matchService.gameStart();
+    }
     return res;
   }
 
   @Post('end')
-  end(@Headers('x-api-key') apiKey: string, @Body() body: any): string {
-    console.log(apiKey);
+  end(@Headers('x-api-key') apiKey: string, @Body() body: GameInfo): string {
+    // 验证服务器主机
+    if (apiKey !== process.env.SERVER_APIKEY) {
+      console.warn(`[Endgame] apiKey permission error wtih ${apiKey}.`);
+      throw new BadRequestException();
+    }
     console.log(body);
+    if (body.winnerTeamId == 2) {
+      this.matchService.gameEnd(true);
+    } else {
+      this.matchService.gameEnd(false);
+    }
     return this.gameService.getHello();
   }
 }
