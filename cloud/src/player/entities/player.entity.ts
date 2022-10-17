@@ -10,4 +10,6 @@ export class Player {
   seasonPointTotal: number;
   chargePointUsable: number;
   chargePointTotal: number;
+  // 最近一次游戏开始时间
+  lastMatchTime: Date;
 }

@@ -42,22 +42,26 @@ export class GameController {
       throw new BadRequestException();
     }
     // 获取会员信息
-    const res = await this.membersService.findBySteamIds(steamIds);
+    const members = await this.membersService.findBySteamIds(steamIds);
     try {
       await this.playerCountService.update({
         apikey: apiKey,
         countryCode: countryCode,
         playerIds: steamIds,
-        memberIds: res.map((m) => m.steamId),
+        memberIds: members.map((m) => m.steamId),
       });
     } catch (error) {
       console.error(error);
     }
     // 验证服务器主机
     if (apiKey === process.env.SERVER_APIKEY) {
-      await this.matchService.gameStart();
+      await this.matchService.countGameStart();
+      for (const steamId of steamIds) {
+        const isMember = members.some((m) => m.steamId === steamId);
+        await this.playerService.upsertGameStart(steamId, isMember);
+      }
     }
-    return res;
+    return members;
   }
 
   @ApiBody({ type: GameInfo })
@@ -72,14 +76,14 @@ export class GameController {
       return 'Error';
     }
     if (gameInfo.winnerTeamId == 2) {
-      this.matchService.gameEnd(true);
+      this.matchService.countGameEnd(true);
     } else {
-      this.matchService.gameEnd(false);
+      this.matchService.countGameEnd(false);
     }
     const players = gameInfo.players;
     for (const player of players) {
       if (player.steamId > 0) {
-        this.playerService.gameEnd(
+        this.playerService.upsertGameEnd(
           player.steamId,
           player.teamId == gameInfo.winnerTeamId,
           player.points,

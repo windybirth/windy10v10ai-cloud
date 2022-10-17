@@ -13,8 +13,8 @@ export class PlayerController {
     return this.playerService.findAll();
   }
 
-  @Get('/setDisconnectForAll')
-  setDisconnectForAll() {
-    return this.playerService.setDisconnectForAll();
+  @Get('/fix')
+  fix() {
+    return this.playerService.fixPlayers();
   }
 }

@@ -15,7 +15,7 @@ export class MatchService {
     return this.matchRepository.find();
   }
 
-  async gameStart() {
+  async countGameStart() {
     const id = new Date().toISOString().slice(0, 10).replace(/-/g, '');
     const existMatchCount = await this.matchRepository.findById(id);
     if (existMatchCount) {
@@ -29,7 +29,7 @@ export class MatchService {
     }
   }
 
-  async gameEnd(isWinner: boolean) {
+  async countGameEnd(isWinner: boolean) {
     const id = new Date().toISOString().slice(0, 10).replace(/-/g, '');
     const existMatchCount = await this.matchRepository.findById(id);
     if (existMatchCount) {
