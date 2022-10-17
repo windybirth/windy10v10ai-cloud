@@ -96,4 +96,8 @@ export class PlayerService {
       await this.playerRepository.update(player);
     }
   }
+
+  async count() {
+    return this.playerRepository.find().then((players) => players.length);
+  }
 }
