@@ -80,24 +80,19 @@ export class PlayerService {
     }
   }
 
-  findAll() {
+  async findAll() {
     return this.playerRepository.find();
   }
 
   async fixPlayers() {
-    const players = await this.playerRepository.find();
-
-    const yesterday = new Date();
-    yesterday.setDate(yesterday.getDate() - 1);
-    for (const player of players) {
-      player.lastMatchTime = yesterday;
-      player.seasonPointUsable = Math.floor(player.seasonPointUsable);
-      player.seasonPointTotal = Math.floor(player.seasonPointTotal);
-      await this.playerRepository.update(player);
-    }
+    // const players = await this.playerRepository.find();
+    // for (const player of players) {
+    //   await this.playerRepository.update(player);
+    // }
   }
 
   async count() {
-    return this.playerRepository.find().then((players) => players.length);
+    const players = await this.playerRepository.find();
+    return players.length;
   }
 }

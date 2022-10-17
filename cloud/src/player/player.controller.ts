@@ -17,4 +17,9 @@ export class PlayerController {
   fix() {
     return this.playerService.fixPlayers();
   }
+
+  @Get('/counts')
+  count() {
+    return this.playerService.count();
+  }
 }
