@@ -18,12 +18,13 @@ export class PlayerService {
 
     const todayZero = new Date();
     todayZero.setHours(0, 0, 0, 0);
-    if (
-      isMember &&
-      player?.lastMatchTime &&
-      player.lastMatchTime.getTime() < todayZero.getTime()
-    ) {
-      memberDailyPoint = +process.env.MEMBER_DAILY_POINT;
+    if (isMember) {
+      if (
+        !player?.lastMatchTime ||
+        player.lastMatchTime.getTime() < todayZero.getTime()
+      ) {
+        memberDailyPoint = +process.env.MEMBER_DAILY_POINT;
+      }
       if (isNaN(memberDailyPoint)) {
         memberDailyPoint = 0;
       }
@@ -93,6 +94,9 @@ export class PlayerService {
   async fixPlayers() {
     // const players = await this.playerRepository.find();
     // for (const player of players) {
+    //   // set player.chargePointTotal multi 0.6
+    //   player.chargePointUsable = Math.floor(player.chargePointUsable * 0.6);
+    //   player.chargePointTotal = Math.floor(player.chargePointTotal * 0.6);
     //   await this.playerRepository.update(player);
     // }
   }
