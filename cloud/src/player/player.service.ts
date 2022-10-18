@@ -24,6 +24,9 @@ export class PlayerService {
       player.lastMatchTime.getTime() < todayZero.getTime()
     ) {
       memberDailyPoint = +process.env.MEMBER_DAILY_POINT;
+      if (isNaN(memberDailyPoint)) {
+        memberDailyPoint = 0;
+      }
     }
 
     if (player) {
@@ -52,6 +55,9 @@ export class PlayerService {
     seasonPoint: number,
     isDisconnect: boolean,
   ) {
+    if (isNaN(seasonPoint)) {
+      seasonPoint = 0;
+    }
     const player = await this.playerRepository.findById(steamId.toString());
     if (player) {
       player.matchCount++;
