@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-class Player {
+export class Player {
   @ApiProperty()
   teamId: number;
   @ApiProperty()
@@ -9,6 +9,8 @@ class Player {
   heroName: string;
   @ApiProperty()
   points: number;
+  @ApiProperty()
+  isDisconnect: boolean;
 }
 
 export class GameInfo {

@@ -1,15 +1,12 @@
 import {
-  BadRequestException,
   Body,
   Controller,
   Delete,
   ForbiddenException,
   Get,
   Param,
-  ParseArrayPipe,
   ParseIntPipe,
   Post,
-  Query,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 
@@ -31,24 +28,9 @@ export class MembersController {
     return this.membersService.createMember(createMemberDto);
   }
 
-  @Get('/all')
+  @Get()
   async findAll() {
     return this.membersService.findAll();
-  }
-
-  // FIXME 迁移到games
-  // 检索复数玩家会员信息 最大10件 移除steamIds=0的项目
-  @Get()
-  async findBySteamIds(
-    @Query('steamIds', new ParseArrayPipe({ items: Number, separator: ',' }))
-    steamIds: number[],
-  ) {
-    steamIds = steamIds.filter((id) => id > 0);
-    if (steamIds.length > 10) {
-      throw new BadRequestException();
-    }
-    const res = await this.membersService.findBySteamIds(steamIds);
-    return res;
   }
 
   @Get(':id')
