@@ -7,6 +7,7 @@ import {
   ParseArrayPipe,
   Post,
   Query,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { ApiBody, ApiTags } from '@nestjs/swagger';
 
@@ -15,7 +16,8 @@ import { MembersService } from '../members/members.service';
 import { PlayerCountService } from '../player-count/player-count.service';
 import { PlayerService } from '../player/player.service';
 
-import { GameInfo } from './dto/game-end.request.body';
+import { GameEnd } from './dto/game-end.request.body';
+import { GameStart } from './dto/game-start.response';
 import { GameService } from './game.service';
 
 @ApiTags('Game(Open)')
@@ -29,6 +31,7 @@ export class GameController {
     private readonly playerService: PlayerService,
   ) {}
 
+  // TODO remove after v1.46
   @Get('start')
   async start(
     @Query('steamIds', new ParseArrayPipe({ items: Number, separator: ',' }))
@@ -64,16 +67,63 @@ export class GameController {
     return members;
   }
 
-  @ApiBody({ type: GameInfo })
+  @Get('start/v2')
+  async startV2(
+    @Query('steamIds', new ParseArrayPipe({ items: Number, separator: ',' }))
+    steamIds: number[],
+    @Headers('x-api-key')
+    apiKey: string,
+    @Headers('x-country-code') countryCode: string,
+  ): Promise<GameStart> {
+    if (
+      apiKey !== process.env.SERVER_APIKEY &&
+      apiKey !== process.env.SERVER_APIKEY_TEST
+    ) {
+      console.warn(`[Endstart] apiKey permission error with ${apiKey}.`);
+      throw new UnauthorizedException();
+    }
+
+    steamIds = steamIds.filter((id) => id > 0);
+    if (steamIds.length > 10) {
+      console.warn(`[Endstart] steamIds has length more than 10, ${steamIds}.`);
+      throw new BadRequestException();
+    }
+
+    // 获取会员信息
+    const members = await this.membersService.findBySteamIds(steamIds);
+    try {
+      await this.playerCountService.update({
+        apikey: apiKey,
+        countryCode: countryCode,
+        playerIds: steamIds,
+        memberIds: members.map((m) => m.steamId),
+      });
+    } catch (error) {
+      console.error(error);
+    }
+    // 获取玩家信息
+    // convert steamIds to string
+    const steamIdsStr = steamIds.map((id) => id.toString());
+    const players = await this.playerService.findBySteamIds(steamIdsStr);
+
+    // 记录游戏开始信息
+    await this.matchService.countGameStart();
+    for (const steamId of steamIds) {
+      const isMember = members.some((m) => m.steamId === steamId);
+      await this.playerService.upsertGameStart(steamId, isMember);
+    }
+    return { members, players };
+  }
+
+  @ApiBody({ type: GameEnd })
   @Post('end')
-  end(
-    @Headers('x-api-key') apiKey: string,
-    @Body() gameInfo: GameInfo,
-  ): string {
-    // 验证服务器主机
-    if (apiKey !== process.env.SERVER_APIKEY) {
+  end(@Headers('x-api-key') apiKey: string, @Body() gameInfo: GameEnd): string {
+    if (
+      apiKey !== process.env.SERVER_APIKEY &&
+      apiKey !== process.env.SERVER_APIKEY_TEST
+    ) {
       console.warn(`[Endgame] apiKey permission error with ${apiKey}.`);
-      return 'Error';
+      throw new UnauthorizedException();
     }
     if (gameInfo.winnerTeamId == 2) {
       this.matchService.countGameEnd(true);
