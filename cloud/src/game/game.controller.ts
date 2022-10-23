@@ -101,17 +101,17 @@ export class GameController {
     } catch (error) {
       console.error(error);
     }
-    // 获取玩家信息
-    // convert steamIds to string
-    const steamIdsStr = steamIds.map((id) => id.toString());
-    const players = await this.playerService.findBySteamIds(steamIdsStr);
 
-    // 记录游戏开始信息
+    // 记录游戏开始信息，创建玩家数据
     await this.matchService.countGameStart();
     for (const steamId of steamIds) {
       const isMember = members.some((m) => m.steamId === steamId);
       await this.playerService.upsertGameStart(steamId, isMember);
     }
+
+    // 获取玩家信息
+    const steamIdsStr = steamIds.map((id) => id.toString());
+    const players = await this.playerService.findBySteamIds(steamIdsStr);
     return { members, players };
   }
 
