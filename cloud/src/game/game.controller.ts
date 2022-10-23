@@ -7,7 +7,6 @@ import {
   ParseArrayPipe,
   Post,
   Query,
-  UnauthorizedException,
 } from '@nestjs/common';
 import { ApiBody, ApiTags } from '@nestjs/swagger';
 
@@ -80,7 +79,7 @@ export class GameController {
       apiKey !== process.env.SERVER_APIKEY_TEST
     ) {
       console.warn(`[Endstart] apiKey permission error with ${apiKey}.`);
-      throw new UnauthorizedException();
+      return { members: [], players: [] };
     }
 
     steamIds = steamIds.filter((id) => id > 0);
@@ -123,7 +122,7 @@ export class GameController {
       apiKey !== process.env.SERVER_APIKEY_TEST
     ) {
       console.warn(`[Endgame] apiKey permission error with ${apiKey}.`);
-      throw new UnauthorizedException();
+      return 'error';
     }
     if (gameInfo.winnerTeamId == 2) {
       this.matchService.countGameEnd(true);
