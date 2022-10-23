@@ -1,9 +1,14 @@
+import { ApiProperty } from '@nestjs/swagger';
+
 import { MemberOld } from '../entities/member.entity';
 import { Member } from '../entities/members.entity';
 
 export class MemberDto {
+  @ApiProperty()
   steamId!: number;
+  @ApiProperty()
   enable!: boolean;
+  @ApiProperty()
   expireDateString!: string;
 
   constructor(member: MemberOld | Member) {

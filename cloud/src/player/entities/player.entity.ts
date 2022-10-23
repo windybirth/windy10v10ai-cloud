@@ -1,15 +1,26 @@
+import { ApiProperty } from '@nestjs/swagger';
+import { Exclude } from 'class-transformer';
 import { Collection } from 'fireorm';
 
 @Collection()
 export class Player {
+  @ApiProperty()
   id: string;
+  @ApiProperty()
   matchCount: number;
+  @ApiProperty()
   winCount: number;
+  @ApiProperty()
   disconnectCount: number;
+  @ApiProperty()
   seasonPointUsable: number;
+  @ApiProperty()
   seasonPointTotal: number;
+  @ApiProperty()
   chargePointUsable: number;
+  @ApiProperty()
   chargePointTotal: number;
   // 最近一次游戏开始时间
+  @Exclude()
   lastMatchTime: Date;
 }

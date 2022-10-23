@@ -91,6 +91,11 @@ export class PlayerService {
     return this.playerRepository.find();
   }
 
+  async findBySteamIds(ids: string[]): Promise<Player[]> {
+    const players = await this.playerRepository.whereIn('id', ids).find();
+    return players;
+  }
+
   async fixPlayers() {
     // const players = await this.playerRepository.find();
     // for (const player of players) {
