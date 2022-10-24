@@ -110,4 +110,15 @@ export class PlayerService {
     const players = await this.playerRepository.find();
     return players.length;
   }
+  async scoreAll() {
+    const players = await this.playerRepository.find();
+    let returnString = '';
+    // seasonPointTotal, matchCount
+    // create csv
+    for (const player of players) {
+      returnString += `${player.id},${player.seasonPointTotal},${player.matchCount},${player.winCount},${player.disconnectCount}\n`;
+    }
+
+    return returnString;
+  }
 }

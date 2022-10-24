@@ -22,4 +22,8 @@ export class PlayerController {
   count() {
     return this.playerService.count();
   }
+  @Get('/scoreall')
+  scoreAll() {
+    return this.playerService.scoreAll();
+  }
 }
