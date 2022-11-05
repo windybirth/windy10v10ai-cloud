@@ -117,7 +117,7 @@ export class PlayerService {
       const memberPoint = player.memberPointTotal;
       const memberLevel = this.getMemberLevelBuyPoint(memberPoint);
       player.memberLevel = memberLevel;
-      player.memberCurrrentLevelPoint =
+      player.memberCurrentLevelPoint =
         memberPoint - this.getMemberTotalPoint(memberLevel);
       player.memberNextLevelPoint = this.getMemberNextLevelPoint(
         memberLevel + 1,
