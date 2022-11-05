@@ -34,6 +34,7 @@ export class PlayerService {
     if (player) {
       player.chargePointUsable += memberDailyPoint;
       player.chargePointTotal += memberDailyPoint;
+      player.memberPointTotal += memberDailyPoint;
       player.lastMatchTime = new Date();
       await this.playerRepository.update(player);
     } else {
