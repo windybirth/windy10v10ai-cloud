@@ -30,44 +30,8 @@ export class GameController {
     private readonly playerService: PlayerService,
   ) {}
 
-  // TODO remove after v1.46
-  @Get('start')
+  @Get(['start', 'start/v2'])
   async start(
-    @Query('steamIds', new ParseArrayPipe({ items: Number, separator: ',' }))
-    steamIds: number[],
-    @Headers('x-api-key')
-    apiKey: string,
-    @Headers('x-country-code') countryCode: string,
-  ) {
-    steamIds = steamIds.filter((id) => id > 0);
-    if (steamIds.length > 10) {
-      throw new BadRequestException();
-    }
-    // 获取会员信息
-    const members = await this.membersService.findBySteamIds(steamIds);
-    try {
-      await this.playerCountService.update({
-        apikey: apiKey,
-        countryCode: countryCode,
-        playerIds: steamIds,
-        memberIds: members.map((m) => m.steamId),
-      });
-    } catch (error) {
-      console.error(error);
-    }
-    // 验证服务器主机
-    if (apiKey === process.env.SERVER_APIKEY) {
-      await this.matchService.countGameStart();
-      for (const steamId of steamIds) {
-        const isMember = members.some((m) => m.steamId === steamId);
-        await this.playerService.upsertGameStart(steamId, isMember);
-      }
-    }
-    return members;
-  }
-
-  @Get('start/v2')
-  async startV2(
     @Query('steamIds', new ParseArrayPipe({ items: Number, separator: ',' }))
     steamIds: number[],
     @Headers('x-api-key')
@@ -110,7 +74,9 @@ export class GameController {
 
     // 获取玩家信息
     const steamIdsStr = steamIds.map((id) => id.toString());
-    const players = await this.playerService.findBySteamIds(steamIdsStr);
+    const players = await this.playerService.findBySteamIdsWithLevelInfo(
+      steamIdsStr,
+    );
     return { members, players };
   }
 

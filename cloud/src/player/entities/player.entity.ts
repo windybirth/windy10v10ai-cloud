@@ -12,14 +12,19 @@ export class Player {
   winCount: number;
   @ApiProperty()
   disconnectCount: number;
+  // FIXME remove
   @ApiProperty()
   seasonPointUsable: number;
   @ApiProperty()
   seasonPointTotal: number;
+  // FIXME remove
   @ApiProperty()
   chargePointUsable: number;
+  // FIXME remove
   @ApiProperty()
   chargePointTotal: number;
+  @ApiProperty()
+  memberPointTotal: number;
   // 最近一次游戏开始时间
   @Exclude()
   lastMatchTime: Date;
