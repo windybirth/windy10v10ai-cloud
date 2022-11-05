@@ -114,12 +114,12 @@ export class PlayerService {
         seasonLevel + 1,
       );
 
-      const memberPoint = player.chargePointTotal;
+      const memberPoint = player.memberPointTotal;
       const memberLevel = this.getMemberLevelBuyPoint(memberPoint);
       player.memberLevel = memberLevel;
-      player.seasonCurrrentLevelPoint =
+      player.memberCurrrentLevelPoint =
         memberPoint - this.getMemberTotalPoint(memberLevel);
-      player.seasonNextLevelPoint = this.getMemberNextLevelPoint(
+      player.memberNextLevelPoint = this.getMemberNextLevelPoint(
         memberLevel + 1,
       );
     }
@@ -127,11 +127,11 @@ export class PlayerService {
   }
 
   async fixPlayers() {
-    const players = await this.playerRepository.find();
-    for (const player of players) {
-      player.memberPointTotal = player.chargePointTotal;
-      await this.playerRepository.update(player);
-    }
+    // const players = await this.playerRepository.find();
+    // for (const player of players) {
+    //   player.memberPointTotal = player.chargePointTotal;
+    //   await this.playerRepository.update(player);
+    // }
   }
 
   async count() {
