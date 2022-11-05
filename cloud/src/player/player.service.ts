@@ -79,8 +79,10 @@ export class PlayerService {
         matchCount: 1,
         winCount: isWinner ? 1 : 0,
         disconnectCount: isDisconnect ? 1 : 0,
+        // FIXME remove Usable
         seasonPointUsable: seasonPoint,
         seasonPointTotal: seasonPoint,
+        // FIXME remove charge point
         chargePointUsable: 0,
         chargePointTotal: 0,
         memberPointTotal: 0,

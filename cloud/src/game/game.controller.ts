@@ -30,6 +30,7 @@ export class GameController {
     private readonly playerService: PlayerService,
   ) {}
 
+  // FIXME remove v2
   @Get(['start', 'start/v2'])
   async start(
     @Query('steamIds', new ParseArrayPipe({ items: Number, separator: ',' }))
