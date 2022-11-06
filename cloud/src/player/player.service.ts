@@ -32,8 +32,6 @@ export class PlayerService {
     }
 
     if (player) {
-      player.chargePointUsable += memberDailyPoint;
-      player.chargePointTotal += memberDailyPoint;
       player.memberPointTotal += memberDailyPoint;
       player.lastMatchTime = new Date();
       await this.playerRepository.update(player);
@@ -43,10 +41,7 @@ export class PlayerService {
         matchCount: 0,
         winCount: 0,
         disconnectCount: 0,
-        seasonPointUsable: 0,
         seasonPointTotal: 0,
-        chargePointUsable: memberDailyPoint,
-        chargePointTotal: memberDailyPoint,
         memberPointTotal: memberDailyPoint,
         lastMatchTime: new Date(),
       };
@@ -68,7 +63,6 @@ export class PlayerService {
       if (isWinner) {
         player.winCount++;
       }
-      player.seasonPointUsable += seasonPoint;
       player.seasonPointTotal += seasonPoint;
       if (isDisconnect) {
         player.disconnectCount++;
@@ -80,12 +74,7 @@ export class PlayerService {
         matchCount: 1,
         winCount: isWinner ? 1 : 0,
         disconnectCount: isDisconnect ? 1 : 0,
-        // FIXME remove Usable
-        seasonPointUsable: seasonPoint,
         seasonPointTotal: seasonPoint,
-        // FIXME remove charge point
-        chargePointUsable: 0,
-        chargePointTotal: 0,
         memberPointTotal: 0,
         lastMatchTime: new Date(),
       };
