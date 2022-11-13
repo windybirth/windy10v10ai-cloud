@@ -82,6 +82,18 @@ export class PlayerService {
     }
   }
 
+  async getPlayerTotalLevel(steamId: number) {
+    const player = await this.playerRepository.findById(steamId.toString());
+    if (!player) {
+      return 0;
+    }
+    const seasonPoint = player.seasonPointTotal;
+    const seasonLevel = this.getSeasonLevelBuyPoint(seasonPoint);
+    const memberPoint = player.memberPointTotal;
+    const memberLevel = this.getMemberLevelBuyPoint(memberPoint);
+    return seasonLevel + memberLevel;
+  }
+
   async findAll() {
     return this.playerRepository.find();
   }

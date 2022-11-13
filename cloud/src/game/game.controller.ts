@@ -13,6 +13,8 @@ import { ApiBody, ApiTags } from '@nestjs/swagger';
 import { MatchService } from '../match/match.service';
 import { MembersService } from '../members/members.service';
 import { PlayerCountService } from '../player-count/player-count.service';
+import { UpdatePlayerPropertyDto } from '../player-property/dto/update-player-property.dto';
+import { PlayerPropertyService } from '../player-property/player-property.service';
 import { PlayerService } from '../player/player.service';
 
 import { GameEnd } from './dto/game-end.request.body';
@@ -28,6 +30,7 @@ export class GameController {
     private readonly playerCountService: PlayerCountService,
     private readonly matchService: MatchService,
     private readonly playerService: PlayerService,
+    private readonly playerPropertyService: PlayerPropertyService,
   ) {}
 
   @Get(['start'])
@@ -107,5 +110,21 @@ export class GameController {
       }
     }
     return this.gameService.getOK();
+  }
+
+  @Post('addPlayerProperty')
+  addPlayerProperty(
+    @Headers('x-api-key') apiKey: string,
+    @Body() updatePlayerPropertyDto: UpdatePlayerPropertyDto,
+  ) {
+    if (
+      apiKey !== process.env.SERVER_APIKEY &&
+      apiKey !== process.env.SERVER_APIKEY_TEST
+    ) {
+      console.warn(`[Endgame] apiKey permission error with ${apiKey}.`);
+      return 'error';
+    }
+
+    return this.playerPropertyService.update(updatePlayerPropertyDto);
   }
 }
