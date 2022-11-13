@@ -41,13 +41,7 @@ export class GameController {
     apiKey: string,
     @Headers('x-country-code') countryCode: string,
   ): Promise<GameStart> {
-    if (
-      apiKey !== process.env.SERVER_APIKEY &&
-      apiKey !== process.env.SERVER_APIKEY_TEST
-    ) {
-      console.warn(`[Endstart] apiKey permission error with ${apiKey}.`);
-      return { members: [], players: [] };
-    }
+    this.gameService.assertApiKey(apiKey);
 
     steamIds = steamIds.filter((id) => id > 0);
     if (steamIds.length > 10) {
@@ -80,24 +74,25 @@ export class GameController {
     const players = await this.playerService.findBySteamIdsWithLevelInfo(
       steamIdsStr,
     );
+    // 添加玩家属性信息
+    for (const player of players) {
+      const property = await this.playerPropertyService.findBySteamId(
+        +player.id,
+      );
+      if (property) {
+        player.properties = property;
+      }
+    }
     return { members, players };
   }
 
   @ApiBody({ type: GameEnd })
   @Post('end')
   end(@Headers('x-api-key') apiKey: string, @Body() gameInfo: GameEnd): string {
-    if (
-      apiKey !== process.env.SERVER_APIKEY &&
-      apiKey !== process.env.SERVER_APIKEY_TEST
-    ) {
-      console.warn(`[Endgame] apiKey permission error with ${apiKey}.`);
-      return 'error';
-    }
-    if (gameInfo.winnerTeamId == 2) {
-      this.matchService.countGameEnd(true);
-    } else {
-      this.matchService.countGameEnd(false);
-    }
+    this.gameService.assertApiKey(apiKey);
+
+    this.matchService.countGameEnd(gameInfo.winnerTeamId == 2);
+
     const players = gameInfo.players;
     for (const player of players) {
       if (player.steamId > 0) {
@@ -117,13 +112,7 @@ export class GameController {
     @Headers('x-api-key') apiKey: string,
     @Body() updatePlayerPropertyDto: UpdatePlayerPropertyDto,
   ) {
-    if (
-      apiKey !== process.env.SERVER_APIKEY &&
-      apiKey !== process.env.SERVER_APIKEY_TEST
-    ) {
-      console.warn(`[Endgame] apiKey permission error with ${apiKey}.`);
-      return 'error';
-    }
+    this.gameService.assertApiKey(apiKey);
 
     return this.playerPropertyService.update(updatePlayerPropertyDto);
   }
