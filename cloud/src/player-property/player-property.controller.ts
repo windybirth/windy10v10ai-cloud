@@ -15,13 +15,13 @@ export class PlayerPropertyController {
     return this.playerPropertyService.create(createPlayerPropertyDto);
   }
 
-  @Get('/steamId/:steamId')
-  findBySteamId(@Param('steamId') steamId: string) {
-    return this.playerPropertyService.findBySteamId(+steamId);
-  }
-
   @Put()
   update(@Body() updatePlayerPropertyDto: UpdatePlayerPropertyDto) {
     return this.playerPropertyService.update(updatePlayerPropertyDto);
+  }
+
+  @Get('/steamId/:steamId')
+  findBySteamId(@Param('steamId') steamId: string) {
+    return this.playerPropertyService.findBySteamId(+steamId);
   }
 }

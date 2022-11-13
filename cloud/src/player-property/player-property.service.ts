@@ -10,12 +10,18 @@ import { PlayerProperty } from './entities/player-property.entity';
 
 @Injectable()
 export class PlayerPropertyService {
+  static PROPERTY_NAME_LIST = [
+    'property_cooldown_percentage',
+    'property_status_resistance_stacking',
+    'property_cast_range_bonus_stacking',
+  ];
   constructor(
     @InjectRepository(PlayerProperty)
     private readonly playerPropertyRepository: BaseFirestoreRepository<PlayerProperty>,
     private readonly playerService: PlayerService,
   ) {}
   async create(createPlayerPropertyDto: CreatePlayerPropertyDto) {
+    this.validatePropertyName(createPlayerPropertyDto.name);
     await this.cheakPlayerLevel(
       createPlayerPropertyDto.steamId,
       createPlayerPropertyDto.level,
@@ -27,14 +33,8 @@ export class PlayerPropertyService {
       ...createPlayerPropertyDto,
     });
   }
-
-  findBySteamId(steamId: number) {
-    return this.playerPropertyRepository
-      .whereEqualTo('steamId', steamId)
-      .find();
-  }
-
   async update(updatePlayerPropertyDto: UpdatePlayerPropertyDto) {
+    this.validatePropertyName(updatePlayerPropertyDto.name);
     const existPlayerProperty = await this.playerPropertyRepository.findById(
       updatePlayerPropertyDto.steamId.toString() + updatePlayerPropertyDto.name,
     );
@@ -51,6 +51,12 @@ export class PlayerPropertyService {
     }
   }
 
+  findBySteamId(steamId: number) {
+    return this.playerPropertyRepository
+      .whereEqualTo('steamId', steamId)
+      .find();
+  }
+
   async getPlayerUsedLevel(steamId: number) {
     const playerProperties = await this.findBySteamId(steamId);
     let usedLevel = 0;
@@ -64,6 +70,11 @@ export class PlayerPropertyService {
     const totalLevel = await this.playerService.getPlayerTotalLevel(steamId);
     const usedLevel = await this.getPlayerUsedLevel(steamId);
     if (totalLevel < usedLevel + levelAdd) {
+      throw new BadRequestException();
+    }
+  }
+  private validatePropertyName(name: string) {
+    if (!PlayerPropertyService.PROPERTY_NAME_LIST.includes(name)) {
       throw new BadRequestException();
     }
   }
