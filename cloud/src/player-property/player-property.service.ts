@@ -28,14 +28,6 @@ export class PlayerPropertyService {
     });
   }
 
-  findAll() {
-    return this.playerPropertyRepository.find();
-  }
-
-  findOne(id: string) {
-    return this.playerPropertyRepository.findById(id);
-  }
-
   findBySteamId(steamId: number) {
     return this.playerPropertyRepository
       .whereEqualTo('steamId', steamId)

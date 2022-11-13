@@ -15,16 +15,6 @@ export class PlayerPropertyController {
     return this.playerPropertyService.create(createPlayerPropertyDto);
   }
 
-  @Get()
-  findAll() {
-    return this.playerPropertyService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.playerPropertyService.findOne(id);
-  }
-
   @Get('/steamId/:steamId')
   findBySteamId(@Param('steamId') steamId: string) {
     return this.playerPropertyService.findBySteamId(+steamId);
