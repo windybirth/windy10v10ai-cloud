@@ -127,12 +127,24 @@ export class PlayerService {
     return players;
   }
 
-  async fixPlayers() {
-    // const players = await this.playerRepository.find();
-    // for (const player of players) {
-    //   player.memberPointTotal = player.chargePointTotal;
-    //   await this.playerRepository.update(player);
-    // }
+  async setMemberLevel(steamId: number, level: number) {
+    const point = this.getMemberTotalPoint(level);
+    const player = await this.playerRepository.findById(steamId.toString());
+    if (player) {
+      player.memberPointTotal += point;
+      await this.playerRepository.update(player);
+    } else {
+      const newPlayer = {
+        id: steamId.toString(),
+        matchCount: 0,
+        winCount: 0,
+        disconnectCount: 0,
+        seasonPointTotal: 0,
+        memberPointTotal: point,
+        lastMatchTime: new Date(),
+      };
+      await this.playerRepository.create(newPlayer);
+    }
   }
 
   async count() {
