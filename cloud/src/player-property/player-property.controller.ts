@@ -24,4 +24,17 @@ export class PlayerPropertyController {
   findBySteamId(@Param('steamId') steamId: string) {
     return this.playerPropertyService.findBySteamId(+steamId);
   }
+
+  @Get('/initialLevel')
+  initialLevel() {
+    return this.playerPropertyService.initialLevel();
+  }
+  @Get('/initialProperty')
+  initialProperty() {
+    return this.playerPropertyService.initialProperty();
+  }
+  @Get('/getMemberLevelList')
+  getMemberLevelList() {
+    return this.playerPropertyService.getMemberLevelList();
+  }
 }

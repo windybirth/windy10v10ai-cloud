@@ -1,6 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { BaseFirestoreRepository } from 'fireorm';
 import { InjectRepository } from 'nestjs-fireorm';
+import { map } from 'rxjs';
 
 import { PlayerService } from '../player/player.service';
 
@@ -27,16 +28,20 @@ export class PlayerPropertyService {
       createPlayerPropertyDto.level,
     );
     return this.playerPropertyRepository.create({
-      id:
-        createPlayerPropertyDto.steamId.toString() +
+      id: this.buildId(
+        createPlayerPropertyDto.steamId,
         createPlayerPropertyDto.name,
+      ),
       ...createPlayerPropertyDto,
     });
   }
   async update(updatePlayerPropertyDto: UpdatePlayerPropertyDto) {
     this.validatePropertyName(updatePlayerPropertyDto.name);
     const existPlayerProperty = await this.playerPropertyRepository.findById(
-      updatePlayerPropertyDto.steamId.toString() + updatePlayerPropertyDto.name,
+      this.buildId(
+        updatePlayerPropertyDto.steamId,
+        updatePlayerPropertyDto.name,
+      ),
     );
 
     if (existPlayerProperty) {
@@ -51,6 +56,34 @@ export class PlayerPropertyService {
     }
   }
 
+  async getMemberLevelList() {
+    let returnString = '';
+    const memberSteamIdList = this.memberLevelList.map(
+      (memberLevel) => memberLevel.steamId,
+    );
+    for (const steamId of memberSteamIdList) {
+      const steamIdStrList = steamId.toString().split('#');
+      const player = (
+        await this.playerService.findBySteamIdsWithLevelInfo(steamIdStrList)
+      )[0];
+      returnString += `${player.id},${player.memberLevel},${player.memberPointTotal}\n`;
+    }
+    return returnString;
+  }
+  async initialLevel() {
+    for (const memberLevel of this.memberLevelList) {
+      await this.playerService.setMemberLevel(
+        memberLevel.steamId,
+        memberLevel.level,
+      );
+    }
+  }
+
+  async initialProperty() {
+    for (const createPlayerPropertyDto of this.createPlayerPropertyDtoList) {
+      await this.update(createPlayerPropertyDto);
+    }
+  }
   findBySteamId(steamId: number) {
     return this.playerPropertyRepository
       .whereEqualTo('steamId', steamId)
@@ -70,12 +103,61 @@ export class PlayerPropertyService {
     const totalLevel = await this.playerService.getPlayerTotalLevel(steamId);
     const usedLevel = await this.getPlayerUsedLevel(steamId);
     if (totalLevel < usedLevel + levelAdd) {
+      console.error(
+        'cheakPlayerLevel error',
+        `steamId ${steamId}`,
+        `totalLevel ${totalLevel}`,
+        `usedLevel ${usedLevel}`,
+        `levelAdd ${levelAdd}`,
+      );
       throw new BadRequestException();
     }
   }
   private validatePropertyName(name: string) {
     if (!PlayerPropertyService.PROPERTY_NAME_LIST.includes(name)) {
+      console.error('validatePropertyName error', `name ${name}`);
       throw new BadRequestException();
     }
   }
+  private buildId(steamId: number, name: string) {
+    return steamId.toString() + '#' + name;
+  }
+
+  // 136407523  31
+  // 1194383041  31
+  memberLevelList = [
+    {
+      steamId: 136407523,
+      level: 31,
+    },
+    {
+      steamId: 1194383041,
+      level: 31,
+    },
+  ];
+  // Name	property_cooldown_percentage	property_status_resistance_stacking	property_cast_range_bonus_stacking
+  // 136407523	8	8	8
+  // 1194383041	8
+  createPlayerPropertyDtoList = [
+    {
+      steamId: 136407523,
+      name: 'property_cooldown_percentage',
+      level: 8,
+    },
+    {
+      steamId: 136407523,
+      name: 'property_status_resistance_stacking',
+      level: 8,
+    },
+    {
+      steamId: 136407523,
+      name: 'property_cast_range_bonus_stacking',
+      level: 8,
+    },
+    {
+      steamId: 1194383041,
+      name: 'property_cooldown_percentage',
+      level: 8,
+    },
+  ];
 }
