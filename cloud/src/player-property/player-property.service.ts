@@ -72,6 +72,10 @@ export class PlayerPropertyService {
     }
   }
 
+  async getAll() {
+    return this.playerPropertyRepository.find();
+  }
+
   async getMemberLevelList() {
     let returnString = '';
     const memberSteamIdList = this.memberLevelList.map(

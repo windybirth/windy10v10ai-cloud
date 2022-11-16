@@ -10,6 +10,11 @@ import { PlayerPropertyService } from './player-property.service';
 export class PlayerPropertyController {
   constructor(private readonly playerPropertyService: PlayerPropertyService) {}
 
+  @Get()
+  getAll() {
+    return this.playerPropertyService.getAll();
+  }
+
   @Post()
   create(@Body() createPlayerPropertyDto: CreatePlayerPropertyDto) {
     return this.playerPropertyService.create(createPlayerPropertyDto);
