@@ -11,16 +11,12 @@ import {
 import { ApiBody, ApiTags } from '@nestjs/swagger';
 
 import { CreateMemberDto } from './dto/create-member.dto';
-import { GamesService } from './games.service';
 import { MembersService } from './members.service';
 
 @ApiTags('Members')
 @Controller('members')
 export class MembersController {
-  constructor(
-    private readonly membersService: MembersService,
-    private readonly gamesService: GamesService,
-  ) {}
+  constructor(private readonly membersService: MembersService) {}
 
   // 开通会员 指定月份
   @ApiBody({ type: CreateMemberDto })

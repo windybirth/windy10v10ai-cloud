@@ -13,13 +13,9 @@ export class Player {
   @ApiProperty()
   disconnectCount: number;
   @ApiProperty()
-  seasonPointUsable: number;
-  @ApiProperty()
   seasonPointTotal: number;
   @ApiProperty()
-  chargePointUsable: number;
-  @ApiProperty()
-  chargePointTotal: number;
+  memberPointTotal: number;
   // 最近一次游戏开始时间
   @Exclude()
   lastMatchTime: Date;

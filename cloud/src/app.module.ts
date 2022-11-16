@@ -11,6 +11,7 @@ import { MatchModule } from './match/match.module';
 import { MembersModule } from './members/members.module';
 import { OrdersModule } from './orders/orders.module';
 import { PlayerCountModule } from './player-count/player-count.module';
+import { PlayerPropertyModule } from './player-property/player-property.module';
 import { PlayerModule } from './player/player.module';
 
 const ENV = process.env.NODE_ENV;
@@ -37,6 +38,7 @@ const ENV = process.env.NODE_ENV;
     PlayerCountModule,
     MatchModule,
     PlayerModule,
+    PlayerPropertyModule,
   ],
   controllers: [AppController],
   providers: [AppService],

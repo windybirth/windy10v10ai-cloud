@@ -7,13 +7,14 @@ import {
   ParseArrayPipe,
   Post,
   Query,
-  UnauthorizedException,
 } from '@nestjs/common';
 import { ApiBody, ApiTags } from '@nestjs/swagger';
 
 import { MatchService } from '../match/match.service';
 import { MembersService } from '../members/members.service';
 import { PlayerCountService } from '../player-count/player-count.service';
+import { UpdatePlayerPropertyDto } from '../player-property/dto/update-player-property.dto';
+import { PlayerPropertyService } from '../player-property/player-property.service';
 import { PlayerService } from '../player/player.service';
 
 import { GameEnd } from './dto/game-end.request.body';
@@ -29,59 +30,18 @@ export class GameController {
     private readonly playerCountService: PlayerCountService,
     private readonly matchService: MatchService,
     private readonly playerService: PlayerService,
+    private readonly playerPropertyService: PlayerPropertyService,
   ) {}
 
-  // TODO remove after v1.46
-  @Get('start')
+  @Get(['start'])
   async start(
     @Query('steamIds', new ParseArrayPipe({ items: Number, separator: ',' }))
     steamIds: number[],
     @Headers('x-api-key')
     apiKey: string,
     @Headers('x-country-code') countryCode: string,
-  ) {
-    steamIds = steamIds.filter((id) => id > 0);
-    if (steamIds.length > 10) {
-      throw new BadRequestException();
-    }
-    // 获取会员信息
-    const members = await this.membersService.findBySteamIds(steamIds);
-    try {
-      await this.playerCountService.update({
-        apikey: apiKey,
-        countryCode: countryCode,
-        playerIds: steamIds,
-        memberIds: members.map((m) => m.steamId),
-      });
-    } catch (error) {
-      console.error(error);
-    }
-    // 验证服务器主机
-    if (apiKey === process.env.SERVER_APIKEY) {
-      await this.matchService.countGameStart();
-      for (const steamId of steamIds) {
-        const isMember = members.some((m) => m.steamId === steamId);
-        await this.playerService.upsertGameStart(steamId, isMember);
-      }
-    }
-    return members;
-  }
-
-  @Get('start/v2')
-  async startV2(
-    @Query('steamIds', new ParseArrayPipe({ items: Number, separator: ',' }))
-    steamIds: number[],
-    @Headers('x-api-key')
-    apiKey: string,
-    @Headers('x-country-code') countryCode: string,
   ): Promise<GameStart> {
-    if (
-      apiKey !== process.env.SERVER_APIKEY &&
-      apiKey !== process.env.SERVER_APIKEY_TEST
-    ) {
-      console.warn(`[Endstart] apiKey permission error with ${apiKey}.`);
-      throw new UnauthorizedException();
-    }
+    this.gameService.assertApiKey(apiKey);
 
     steamIds = steamIds.filter((id) => id > 0);
     if (steamIds.length > 10) {
@@ -111,25 +71,28 @@ export class GameController {
 
     // 获取玩家信息
     const steamIdsStr = steamIds.map((id) => id.toString());
-    const players = await this.playerService.findBySteamIds(steamIdsStr);
+    const players = await this.playerService.findBySteamIdsWithLevelInfo(
+      steamIdsStr,
+    );
+    // 添加玩家属性信息
+    for (const player of players) {
+      const property = await this.playerPropertyService.findBySteamId(
+        +player.id,
+      );
+      if (property) {
+        player.properties = property;
+      }
+    }
     return { members, players };
   }
 
   @ApiBody({ type: GameEnd })
   @Post('end')
   end(@Headers('x-api-key') apiKey: string, @Body() gameInfo: GameEnd): string {
-    if (
-      apiKey !== process.env.SERVER_APIKEY &&
-      apiKey !== process.env.SERVER_APIKEY_TEST
-    ) {
-      console.warn(`[Endgame] apiKey permission error with ${apiKey}.`);
-      throw new UnauthorizedException();
-    }
-    if (gameInfo.winnerTeamId == 2) {
-      this.matchService.countGameEnd(true);
-    } else {
-      this.matchService.countGameEnd(false);
-    }
+    this.gameService.assertApiKey(apiKey);
+
+    this.matchService.countGameEnd(gameInfo.winnerTeamId == 2);
+
     const players = gameInfo.players;
     for (const player of players) {
       if (player.steamId > 0) {
@@ -142,5 +105,15 @@ export class GameController {
       }
     }
     return this.gameService.getOK();
+  }
+
+  @Post('addPlayerProperty')
+  addPlayerProperty(
+    @Headers('x-api-key') apiKey: string,
+    @Body() updatePlayerPropertyDto: UpdatePlayerPropertyDto,
+  ) {
+    this.gameService.assertApiKey(apiKey);
+
+    return this.playerPropertyService.update(updatePlayerPropertyDto);
   }
 }

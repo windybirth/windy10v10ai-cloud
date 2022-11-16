@@ -1,16 +1,14 @@
 import { Module } from '@nestjs/common';
 import { FireormModule } from 'nestjs-fireorm';
 
-import { Game } from './entities/game.entity';
 import { Member } from './entities/members.entity';
-import { GamesService } from './games.service';
 import { MembersController } from './members.controller';
 import { MembersService } from './members.service';
 
 @Module({
-  imports: [FireormModule.forFeature([Member, Game])],
+  imports: [FireormModule.forFeature([Member])],
   controllers: [MembersController],
-  providers: [MembersService, GamesService],
+  providers: [MembersService],
   exports: [MembersService],
 })
 export class MembersModule {}
