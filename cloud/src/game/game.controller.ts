@@ -81,6 +81,10 @@ export class GameController {
       );
       if (property) {
         player.properties = property;
+        player.propertyTotalLevel = property.reduce(
+          (total, p) => total + p.level,
+          0,
+        );
       }
     }
     return { members, players };
