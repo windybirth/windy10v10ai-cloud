@@ -119,7 +119,7 @@ export class PlayerPropertyService {
         if (propertyKey !== 'steamId') {
           if (property[propertyKey] !== '') {
             await this.update({
-              steamId: property.steamId,
+              steamId: Number(property.steamId),
               name: propertyKey,
               level: Number(property[propertyKey]),
             });
