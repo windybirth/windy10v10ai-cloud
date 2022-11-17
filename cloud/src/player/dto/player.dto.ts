@@ -19,5 +19,5 @@ export class PlayerDto extends Player {
   @ApiPropertyOptional()
   properties?: PlayerProperty[];
   @ApiPropertyOptional()
-  propertyTotalLevels?: number;
+  propertyTotalLevel?: number;
 }
