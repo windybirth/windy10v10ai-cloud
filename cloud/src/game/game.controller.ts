@@ -82,6 +82,8 @@ export class GameController {
       );
       if (property) {
         player.properties = property;
+      } else {
+        player.properties = [];
       }
     }
     return { members, players };
