@@ -6,6 +6,7 @@ import {
   Headers,
   ParseArrayPipe,
   Post,
+  Put,
   Query,
 } from '@nestjs/common';
 import { ApiBody, ApiTags } from '@nestjs/swagger';
@@ -81,10 +82,6 @@ export class GameController {
       );
       if (property) {
         player.properties = property;
-        player.propertyTotalLevel = property.reduce(
-          (total, p) => total + p.level,
-          0,
-        );
       }
     }
     return { members, players };
@@ -111,7 +108,7 @@ export class GameController {
     return this.gameService.getOK();
   }
 
-  @Post('addPlayerProperty')
+  @Put('addPlayerProperty')
   addPlayerProperty(
     @Headers('x-api-key') apiKey: string,
     @Body() updatePlayerPropertyDto: UpdatePlayerPropertyDto,
