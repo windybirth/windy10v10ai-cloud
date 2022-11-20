@@ -29,7 +29,10 @@ export class PlayerController {
 
   @Post('/addMemberPoint')
   addMemberPoint(@Body() addMemberPoint: AddMemberPointDto) {
-    return this.playerService.addMemberPoint(addMemberPoint);
+    return this.playerService.addMemberPoint(
+      addMemberPoint.steamId,
+      addMemberPoint.point,
+    );
   }
   @Post('/setMemberLevel')
   setMemberLevel(

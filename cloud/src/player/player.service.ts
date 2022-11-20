@@ -123,8 +123,7 @@ export class PlayerService {
     return players;
   }
 
-  async addMemberPoint(addMemberPoint: AddMemberPointDto) {
-    const { steamId, point } = addMemberPoint;
+  async addMemberPoint(steamId: number, point: number) {
     const existPlayer = await this.playerRepository.findById(
       steamId.toString(),
     );
