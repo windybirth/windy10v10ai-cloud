@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Body,
   Controller,
+  Get,
   Post,
   Query,
   UnauthorizedException,
@@ -34,5 +35,10 @@ export class AfdianController {
     } else {
       return { ec: 200, em: '[Error] 未能正确获取Dota2 ID' };
     }
+  }
+
+  @Get('/reward')
+  async reward() {
+    return await this.afdianService.reward();
   }
 }

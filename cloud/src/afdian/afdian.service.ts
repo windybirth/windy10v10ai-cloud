@@ -44,6 +44,18 @@ export class AfdianService {
     private readonly membersService: MembersService,
     private readonly playerService: PlayerService,
   ) {}
+  async reward() {
+    const orders = await this.orderRepository.find();
+    for (const order of orders) {
+      if (order.orderType === OrderType.member && order.success) {
+        await this.playerService.addMemberPoint(
+          order.steamId,
+          AfdianService.MEMBER_MONTHLY_POINT * order.orderDto.month,
+        );
+      }
+    }
+  }
+
   async processAfdianOrder(orderDto: OrderDto) {
     let success = true;
     let orderType = OrderType.others;

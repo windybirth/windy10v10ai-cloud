@@ -1,12 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNumberString } from 'class-validator';
+import { IsNumber } from 'class-validator';
 
 export class AddMemberPointDto {
-  @IsNumberString()
+  @IsNumber()
   @ApiProperty()
   steamId: number;
 
-  @IsNumberString()
+  @IsNumber()
   @ApiProperty()
   point: number;
 }
