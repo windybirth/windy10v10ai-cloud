@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { BaseFirestoreRepository } from 'fireorm';
 import { InjectRepository } from 'nestjs-fireorm';
 
-import { AddMemberPointDto } from './dto/add-member-point.dto';
 import { PlayerDto } from './dto/player.dto';
 import { Player } from './entities/player.entity';
 
