@@ -78,22 +78,6 @@ export class PlayerPropertyService {
     return this.playerPropertyRepository.find();
   }
 
-  async getMemberLevelList() {
-    let returnString = '';
-    const memberSteamIdList = this.memberLevelList.map(
-      (memberLevel) => memberLevel.steamId,
-    );
-    for (const steamId of memberSteamIdList) {
-      const steamIdStrList = steamId.toString().split('#');
-      const player = (
-        await this.playerService.findBySteamIdsWithLevelInfo(steamIdStrList)
-      )[0];
-      if (player) {
-        returnString += `${player.id},${player.memberLevel},${player.memberPointTotal}\n`;
-      }
-    }
-    return returnString;
-  }
   async initialLevel() {
     for (const memberLevel of this.memberLevelList) {
       await this.playerService.setMemberLevel(

@@ -67,9 +67,6 @@ export class PlayerService {
       player.disconnectCount++;
     }
     // 行为分计算
-    if (!player.conductPoint) {
-      player.conductPoint = 100;
-    }
     if (isDisconnect) {
       player.conductPoint -= 5;
     } else {
@@ -98,9 +95,6 @@ export class PlayerService {
     return seasonLevel + memberLevel;
   }
 
-  async findAll() {
-    return this.playerRepository.find();
-  }
   async findBySteamId(steamId: number) {
     return this.playerRepository.findById(steamId.toString());
   }

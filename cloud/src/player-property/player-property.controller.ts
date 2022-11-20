@@ -5,7 +5,7 @@ import { CreatePlayerPropertyDto } from './dto/create-player-property.dto';
 import { UpdatePlayerPropertyDto } from './dto/update-player-property.dto';
 import { PlayerPropertyService } from './player-property.service';
 
-@ApiTags('PlayerProperty')
+@ApiTags('Player Property')
 @Controller('player-property')
 export class PlayerPropertyController {
   constructor(private readonly playerPropertyService: PlayerPropertyService) {}
@@ -28,10 +28,5 @@ export class PlayerPropertyController {
   @Get('/steamId/:steamId')
   findBySteamId(@Param('steamId') steamId: string) {
     return this.playerPropertyService.findBySteamId(+steamId);
-  }
-
-  @Get('/getMemberLevelList')
-  getMemberLevelList() {
-    return this.playerPropertyService.getMemberLevelList();
   }
 }

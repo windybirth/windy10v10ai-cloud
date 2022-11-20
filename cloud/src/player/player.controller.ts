@@ -9,10 +9,6 @@ import { PlayerService } from './player.service';
 export class PlayerController {
   constructor(private readonly playerService: PlayerService) {}
 
-  @Get()
-  findAll() {
-    return this.playerService.findAll();
-  }
   @Get('/steamId/:steamId')
   findBySteamId(@Param('steamId') steamId: string) {
     return this.playerService.findBySteamId(+steamId);
