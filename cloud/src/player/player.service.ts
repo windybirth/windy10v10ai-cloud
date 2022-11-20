@@ -67,6 +67,18 @@ export class PlayerService {
     if (isDisconnect) {
       player.disconnectCount++;
     }
+    // 行为分计算
+    if (!player.conductPoint) {
+      player.conductPoint = 100;
+    }
+    if (isDisconnect) {
+      player.conductPoint -= 5;
+    } else {
+      player.conductPoint += 1;
+    }
+    // conductPoint max 100 min 0
+    player.conductPoint = Math.min(100, player.conductPoint);
+    player.conductPoint = Math.max(0, player.conductPoint);
 
     if (existPlayer) {
       await this.playerRepository.update(player);
@@ -178,6 +190,7 @@ export class PlayerService {
       seasonPointTotal: 0,
       memberPointTotal: 0,
       lastMatchTime: null,
+      conductPoint: 100,
     };
   }
 
