@@ -93,8 +93,13 @@ export class AfdianService {
             success = false;
             break;
         }
+        const goodsCount = Number(orderDto.sku_detail[0]?.count);
+        if (isNaN(goodsCount) || goodsCount <= 0) {
+          success = false;
+        }
         if (success) {
-          await this.playerService.addMemberPoint(steamId, planPoint);
+          const addPoint = planPoint * goodsCount;
+          await this.playerService.addMemberPoint(steamId, addPoint);
         }
 
         break;

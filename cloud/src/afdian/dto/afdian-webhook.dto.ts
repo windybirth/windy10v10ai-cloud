@@ -28,7 +28,13 @@ export class OrderDto {
   remark: string;
   // 0表示常规方案 1表示售卖方案
   product_type: number;
+  sku_detail: SkuDetailDto[];
   address_person: string;
   address_phone: string;
   address_address: string;
+}
+
+export class SkuDetailDto {
+  sku_id: string;
+  count: number;
 }
