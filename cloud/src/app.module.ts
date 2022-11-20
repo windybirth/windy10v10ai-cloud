@@ -13,6 +13,7 @@ import { OrdersModule } from './orders/orders.module';
 import { PlayerCountModule } from './player-count/player-count.module';
 import { PlayerPropertyModule } from './player-property/player-property.module';
 import { PlayerModule } from './player/player.module';
+import { TestModule } from './test/test.module';
 
 const ENV = process.env.NODE_ENV;
 
@@ -39,6 +40,7 @@ const ENV = process.env.NODE_ENV;
     MatchModule,
     PlayerModule,
     PlayerPropertyModule,
+    TestModule,
   ],
   controllers: [AppController],
   providers: [AppService],
