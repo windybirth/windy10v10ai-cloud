@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { BaseFirestoreRepository } from 'fireorm';
 import { InjectRepository } from 'nestjs-fireorm';
 
+import { AddMemberPointDto } from './dto/add-member-point.dto';
 import { PlayerDto } from './dto/player.dto';
 import { Player } from './entities/player.entity';
 
@@ -13,7 +14,10 @@ export class PlayerService {
   ) {}
 
   async upsertGameStart(steamId: number, isMember: boolean) {
-    const player = await this.playerRepository.findById(steamId.toString());
+    const existPlayer = await this.playerRepository.findById(
+      steamId.toString(),
+    );
+    const player = existPlayer ?? this.genereNewPlayerEntity(steamId);
 
     let memberDailyPoint = 0;
 
@@ -31,21 +35,13 @@ export class PlayerService {
       }
     }
 
-    if (player) {
-      player.memberPointTotal += memberDailyPoint;
-      player.lastMatchTime = new Date();
+    player.memberPointTotal += memberDailyPoint;
+    player.lastMatchTime = new Date();
+
+    if (existPlayer) {
       await this.playerRepository.update(player);
     } else {
-      const newPlayer = {
-        id: steamId.toString(),
-        matchCount: 0,
-        winCount: 0,
-        disconnectCount: 0,
-        seasonPointTotal: 0,
-        memberPointTotal: memberDailyPoint,
-        lastMatchTime: new Date(),
-      };
-      await this.playerRepository.create(newPlayer);
+      await this.playerRepository.create(player);
     }
   }
   async upsertGameEnd(
@@ -57,28 +53,25 @@ export class PlayerService {
     if (isNaN(seasonPoint)) {
       seasonPoint = 0;
     }
-    const player = await this.playerRepository.findById(steamId.toString());
-    if (player) {
-      player.matchCount++;
-      if (isWinner) {
-        player.winCount++;
-      }
-      player.seasonPointTotal += seasonPoint;
-      if (isDisconnect) {
-        player.disconnectCount++;
-      }
+    const existPlayer = await this.playerRepository.findById(
+      steamId.toString(),
+    );
+
+    const player = existPlayer ?? this.genereNewPlayerEntity(steamId);
+
+    player.matchCount++;
+    if (isWinner) {
+      player.winCount++;
+    }
+    player.seasonPointTotal += seasonPoint;
+    if (isDisconnect) {
+      player.disconnectCount++;
+    }
+
+    if (existPlayer) {
       await this.playerRepository.update(player);
     } else {
-      const newPlayer = {
-        id: steamId.toString(),
-        matchCount: 1,
-        winCount: isWinner ? 1 : 0,
-        disconnectCount: isDisconnect ? 1 : 0,
-        seasonPointTotal: seasonPoint,
-        memberPointTotal: 0,
-        lastMatchTime: new Date(),
-      };
-      await this.playerRepository.create(newPlayer);
+      await this.playerRepository.create(player);
     }
   }
 
@@ -96,6 +89,9 @@ export class PlayerService {
 
   async findAll() {
     return this.playerRepository.find();
+  }
+  async findBySteamId(steamId: number) {
+    return this.playerRepository.findById(steamId.toString());
   }
 
   async findBySteamIds(ids: string[]): Promise<Player[]> {
@@ -127,23 +123,34 @@ export class PlayerService {
     return players;
   }
 
-  async setMemberLevel(steamId: number, level: number) {
-    const point = this.getMemberTotalPoint(level);
-    const player = await this.playerRepository.findById(steamId.toString());
-    if (player) {
-      player.memberPointTotal += point;
+  async addMemberPoint(addMemberPoint: AddMemberPointDto) {
+    const { steamId, point } = addMemberPoint;
+    const existPlayer = await this.playerRepository.findById(
+      steamId.toString(),
+    );
+
+    const player = existPlayer ?? this.genereNewPlayerEntity(steamId);
+    player.memberPointTotal += point;
+    if (existPlayer) {
       await this.playerRepository.update(player);
     } else {
-      const newPlayer = {
-        id: steamId.toString(),
-        matchCount: 0,
-        winCount: 0,
-        disconnectCount: 0,
-        seasonPointTotal: 0,
-        memberPointTotal: point,
-        lastMatchTime: new Date(),
-      };
-      await this.playerRepository.create(newPlayer);
+      await this.playerRepository.create(player);
+    }
+  }
+
+  async setMemberLevel(steamId: number, level: number) {
+    const point = this.getMemberTotalPoint(level);
+    const existPlayer = await this.playerRepository.findById(
+      steamId.toString(),
+    );
+
+    const player = existPlayer ?? this.genereNewPlayerEntity(steamId);
+
+    player.memberPointTotal += point;
+    if (existPlayer) {
+      await this.playerRepository.update(player);
+    } else {
+      await this.playerRepository.create(player);
     }
   }
 
@@ -161,6 +168,18 @@ export class PlayerService {
     }
 
     return returnString;
+  }
+
+  private genereNewPlayerEntity(steamId: number): Player {
+    return {
+      id: steamId.toString(),
+      matchCount: 0,
+      winCount: 0,
+      disconnectCount: 0,
+      seasonPointTotal: 0,
+      memberPointTotal: 0,
+      lastMatchTime: null,
+    };
   }
 
   // 赛季积分

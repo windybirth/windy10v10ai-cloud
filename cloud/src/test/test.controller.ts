@@ -11,10 +11,10 @@ export class TestController {
   ) {}
 
   @Get('/init')
-  initTestData() {
-    this.playerPropertyService.initialLevel();
-    this.playerPropertyService.initialProperty();
-    this.membersService.createMember({
+  async initTestData() {
+    await this.playerPropertyService.initialLevel();
+    await this.playerPropertyService.initialProperty();
+    await this.membersService.createMember({
       steamId: 136407523,
       month: 1,
     });
