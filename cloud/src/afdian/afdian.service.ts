@@ -25,8 +25,8 @@ enum ProductType {
 
 enum PlanId {
   tire1 = '6f73a48e546011eda08052540025c377',
-  tire2 = '',
-  tire3 = '',
+  tire2 = '29df1632688911ed9e7052540025c377',
+  tire3 = '0783fa70688a11edacd452540025c377',
 }
 
 enum PlanPoint {
@@ -37,24 +37,13 @@ enum PlanPoint {
 
 @Injectable()
 export class AfdianService {
-  private static MEMBER_MONTHLY_POINT = 200;
+  private static MEMBER_MONTHLY_POINT = 300;
   constructor(
     @InjectRepository(Order)
     private readonly orderRepository: BaseFirestoreRepository<Order>,
     private readonly membersService: MembersService,
     private readonly playerService: PlayerService,
   ) {}
-  async reward() {
-    const orders = await this.orderRepository.find();
-    for (const order of orders) {
-      if (order.orderType === OrderType.member && order.success) {
-        await this.playerService.addMemberPoint(
-          order.steamId,
-          AfdianService.MEMBER_MONTHLY_POINT * order.orderDto.month,
-        );
-      }
-    }
-  }
 
   async processAfdianOrder(orderDto: OrderDto) {
     let success = true;
