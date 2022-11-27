@@ -4,6 +4,7 @@ import { InjectRepository } from 'nestjs-fireorm';
 
 import { MembersService } from '../members/members.service';
 import { Order } from '../orders/entities/order.entity';
+import { PlayerPropertyService } from '../player-property/player-property.service';
 import { PlayerService } from '../player/player.service';
 
 import { OrderDto } from './dto/afdian-webhook.dto';
@@ -16,6 +17,7 @@ enum OrderType {
   goods1 = 'point3000',
   goods2 = 'point9800',
   goods3 = 'point26000',
+  initialAttribute = 'initialAttribute',
   others = 'others',
 }
 enum ProductType {
@@ -27,6 +29,7 @@ enum PlanId {
   tire1 = '6f73a48e546011eda08052540025c377',
   tire2 = '29df1632688911ed9e7052540025c377',
   tire3 = '0783fa70688a11edacd452540025c377',
+  initialAttribute = '7bda7efc6e7111edb5b652540025c377',
 }
 
 enum PlanPoint {
@@ -43,6 +46,7 @@ export class AfdianService {
     private readonly orderRepository: BaseFirestoreRepository<Order>,
     private readonly membersService: MembersService,
     private readonly playerService: PlayerService,
+    private readonly playerPropertyService: PlayerPropertyService,
   ) {}
 
   async processAfdianOrder(orderDto: OrderDto) {
@@ -89,17 +93,24 @@ export class AfdianService {
             orderType = OrderType.goods3;
             planPoint = PlanPoint.tire3;
             break;
+          case PlanId.initialAttribute:
+            orderType = OrderType.initialAttribute;
+            planPoint = 0;
+            break;
           default:
             success = false;
             break;
         }
         const goodsCount = Number(orderDto.sku_detail[0]?.count);
-        if (isNaN(goodsCount) || goodsCount <= 0) {
+        if (isNaN(goodsCount) || goodsCount < 0) {
           success = false;
         }
         if (success) {
           const addPoint = planPoint * goodsCount;
           await this.playerService.addMemberPoint(steamId, addPoint);
+        }
+        if (orderType === OrderType.initialAttribute) {
+          await this.playerPropertyService.deleteBySteamId(steamId);
         }
 
         break;
