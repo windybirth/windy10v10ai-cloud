@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+} from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 
 import { CreatePlayerPropertyDto } from './dto/create-player-property.dto';
@@ -9,11 +17,6 @@ import { PlayerPropertyService } from './player-property.service';
 @Controller('player-property')
 export class PlayerPropertyController {
   constructor(private readonly playerPropertyService: PlayerPropertyService) {}
-
-  @Get()
-  getAll() {
-    return this.playerPropertyService.getAll();
-  }
 
   @Post()
   create(@Body() createPlayerPropertyDto: CreatePlayerPropertyDto) {
@@ -28,5 +31,10 @@ export class PlayerPropertyController {
   @Get('/steamId/:steamId')
   findBySteamId(@Param('steamId') steamId: string) {
     return this.playerPropertyService.findBySteamId(+steamId);
+  }
+
+  @Delete('/steamId/:steamId')
+  deleteBySteamId(@Param('steamId') steamId: string) {
+    return this.playerPropertyService.deleteBySteamId(+steamId);
   }
 }

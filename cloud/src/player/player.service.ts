@@ -158,10 +158,6 @@ export class PlayerService {
     }
   }
 
-  async count() {
-    const players = await this.playerRepository.find();
-    return players.length;
-  }
   async scoreAll() {
     const players = await this.playerRepository.find();
     let returnString = '';

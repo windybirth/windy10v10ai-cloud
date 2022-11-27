@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 
 import { AddMemberPointDto } from './dto/add-member-point.dto';
@@ -14,10 +14,6 @@ export class PlayerController {
     return this.playerService.findBySteamId(+steamId);
   }
 
-  @Get('/counts')
-  count() {
-    return this.playerService.count();
-  }
   @Get('/scoreall')
   scoreAll() {
     return this.playerService.scoreAll();
@@ -29,12 +25,5 @@ export class PlayerController {
       addMemberPoint.steamId,
       addMemberPoint.point,
     );
-  }
-  @Post('/setMemberLevel')
-  setMemberLevel(
-    @Query('steamId') steamId: number,
-    @Query('level') level: number,
-  ) {
-    return this.playerService.setMemberLevel(+steamId, +level);
   }
 }

@@ -112,10 +112,17 @@ export class PlayerPropertyService {
       }
     }
   }
-  findBySteamId(steamId: number) {
+  async findBySteamId(steamId: number) {
     return this.playerPropertyRepository
       .whereEqualTo('steamId', steamId)
       .find();
+  }
+
+  async deleteBySteamId(steamId: number) {
+    const playerPropertyList = await this.findBySteamId(steamId);
+    for (const playerProperty of playerPropertyList) {
+      await this.playerPropertyRepository.delete(playerProperty.id);
+    }
   }
 
   async getPlayerUsedLevel(steamId: number) {
