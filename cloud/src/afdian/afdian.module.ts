@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 
+import { PlayerPropertyModule } from '../player-property/player-property.module';
 import { PlayerModule } from '../player/player.module';
 
 import { MembersModule } from './../members/members.module';
@@ -8,7 +9,7 @@ import { AfdianController } from './afdian.controller';
 import { AfdianService } from './afdian.service';
 
 @Module({
-  imports: [MembersModule, OrdersModule, PlayerModule],
+  imports: [MembersModule, OrdersModule, PlayerModule, PlayerPropertyModule],
   controllers: [AfdianController],
   providers: [AfdianService],
 })
