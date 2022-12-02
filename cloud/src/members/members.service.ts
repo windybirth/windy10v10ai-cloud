@@ -30,6 +30,30 @@ export class MembersService {
           response.push(new MemberDto(member));
         });
       });
+    // FIXME remove after 2nd anniversary
+    // if date from 2022-12-03 to 2022-12-05
+    const fromDate = new Date();
+    fromDate.setUTCFullYear(2022, 11, 3);
+    fromDate.setUTCHours(0, 0, 0, 0);
+    const toDate = new Date();
+    toDate.setUTCFullYear(2022, 11, 6);
+    toDate.setUTCHours(0, 0, 0, 0);
+    const now = new Date();
+    if (
+      now.getTime() > fromDate.getTime() &&
+      now.getTime() < toDate.getTime()
+    ) {
+      steamIds.forEach((steamId) => {
+        if (!response.find((member) => member.steamId === steamId)) {
+          response.push({
+            steamId,
+            enable: true,
+            expireDateString: '-',
+          });
+        }
+      });
+    }
+    // FIXME END
     return response;
   }
 
