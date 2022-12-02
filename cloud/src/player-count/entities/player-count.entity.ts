@@ -15,7 +15,7 @@ export class PlayerCount {
     return this;
   }
   addPlayerCount(countDto: UpdatePlayerCountDto) {
-    const { apikey, countryCode, playerIds, memberIds } = countDto;
+    const { countryCode, playerIds, memberIds } = countDto;
 
     const playerCount = playerIds.length;
     this.playerCount.count += playerCount;
@@ -24,9 +24,6 @@ export class PlayerCount {
       this.playerCount.countryCode[countryCode] = 0;
     }
     this.playerCount.countryCode[countryCode] += playerCount;
-    if (apikey && apikey !== process.env.LOCAL_APIKEY) {
-      this.playerCount.server += playerCount;
-    }
 
     const memberCount = memberIds.length;
     this.memberCount.count += memberCount;
@@ -35,15 +32,11 @@ export class PlayerCount {
       this.memberCount.countryCode[countryCode] = 0;
     }
     this.memberCount.countryCode[countryCode] += memberCount;
-    if (countDto.apikey && countDto.apikey !== process.env.LOCAL_APIKEY) {
-      this.memberCount.server += memberCount;
-    }
   }
 
   private buildCount() {
     return {
       count: 0,
-      server: 0,
       countryCode: {
         CN: 0,
         HK: 0,
@@ -67,7 +60,6 @@ export class PlayerCount {
 
 export class Count {
   count: number;
-  server: number;
   countryCode: CountryCode;
   playerNumber: PlayerNumber;
 }

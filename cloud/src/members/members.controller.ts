@@ -2,7 +2,6 @@ import {
   Body,
   Controller,
   Delete,
-  ForbiddenException,
   Get,
   Param,
   ParseIntPipe,
@@ -25,11 +24,6 @@ export class MembersController {
     return this.membersService.createMember(createMemberDto);
   }
 
-  @Get()
-  async findAll() {
-    return this.membersService.findAll();
-  }
-
   @Get(':id')
   find(
     @Param('id', new ParseIntPipe())
@@ -44,14 +38,5 @@ export class MembersController {
     steamId: number,
   ) {
     return this.membersService.remove(steamId);
-  }
-
-  // 初期化会员数据进入Firestore，仅供测试
-  @Post('/init')
-  initTestData() {
-    if (process.env.NODE_ENV !== 'develop' && process.env.NODE_ENV !== 'test') {
-      throw new ForbiddenException();
-    }
-    return this.membersService.initTestData();
   }
 }
