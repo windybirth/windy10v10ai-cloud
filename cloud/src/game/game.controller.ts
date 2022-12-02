@@ -54,7 +54,6 @@ export class GameController {
     const members = await this.membersService.findBySteamIds(steamIds);
     try {
       await this.playerCountService.update({
-        apikey: apiKey,
         countryCode: countryCode,
         playerIds: steamIds,
         memberIds: members.map((m) => m.steamId),
