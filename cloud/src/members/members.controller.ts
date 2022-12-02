@@ -40,13 +40,4 @@ export class MembersController {
   ) {
     return this.membersService.remove(steamId);
   }
-
-  // 初期化会员数据进入Firestore，仅供测试
-  @Post('/init')
-  initTestData() {
-    if (process.env.NODE_ENV !== 'develop' && process.env.NODE_ENV !== 'test') {
-      throw new ForbiddenException();
-    }
-    return this.membersService.initTestData();
-  }
 }
