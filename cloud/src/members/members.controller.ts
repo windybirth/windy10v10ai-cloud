@@ -25,11 +25,6 @@ export class MembersController {
     return this.membersService.createMember(createMemberDto);
   }
 
-  @Get()
-  async findAll() {
-    return this.membersService.findAll();
-  }
-
   @Get(':id')
   find(
     @Param('id', new ParseIntPipe())

@@ -12,13 +12,4 @@ export class PlayerCountController {
   findAll() {
     return this.playerCountService.findAll();
   }
-  @Put()
-  updateTest() {
-    return this.playerCountService.update({
-      apikey: '123134',
-      countryCode: 'JP',
-      playerIds: [123, 456, 789],
-      memberIds: [123],
-    });
-  }
 }

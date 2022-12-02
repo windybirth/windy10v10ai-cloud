@@ -33,15 +33,6 @@ export class MembersService {
     return response;
   }
 
-  async findAll() {
-    const members = await this.membersRepository.find();
-    const response: MemberDto[] = [];
-    members.forEach((member) => {
-      response.push(new MemberDto(member));
-    });
-    return response;
-  }
-
   async createMember(createMemberDto: CreateMemberDto) {
     const steamId = createMemberDto.steamId;
     const existMember = await this.findOne(steamId);
