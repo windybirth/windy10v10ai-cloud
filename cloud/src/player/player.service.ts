@@ -142,6 +142,22 @@ export class PlayerService {
     }
   }
 
+  async addAllSeasonPoint(point: number) {
+    const fromDate = new Date();
+    fromDate.setUTCFullYear(2022, 11, 2);
+    fromDate.setUTCHours(22, 0, 0, 0);
+    const players = await this.playerRepository.find();
+    for (const player of players) {
+      if (
+        player.lastMatchTime &&
+        player.lastMatchTime.getTime() > fromDate.getTime()
+      ) {
+        player.seasonPointTotal += point;
+        await this.playerRepository.update(player);
+      }
+    }
+  }
+
   async setMemberLevel(steamId: number, level: number) {
     const point = this.getMemberTotalPoint(level);
     const existPlayer = await this.playerRepository.findById(

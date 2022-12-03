@@ -52,6 +52,12 @@ export class MembersService {
           });
         }
       });
+      response.forEach((member) => {
+        if (!member.enable) {
+          member.enable = true;
+          member.expireDateString = '-';
+        }
+      });
     }
     // FIXME END
     return response;
