@@ -2,13 +2,18 @@ import { Injectable } from '@nestjs/common';
 import { BaseFirestoreRepository } from 'fireorm';
 import { InjectRepository } from 'nestjs-fireorm';
 
+import { GameEnd } from '../game/dto/game-end.request.body';
+
 import { MatchCount } from './entities/match-count.entity';
+import { MatchDifficult } from './entities/match-difficult.entity';
 
 @Injectable()
 export class MatchService {
   constructor(
     @InjectRepository(MatchCount)
     private readonly matchRepository: BaseFirestoreRepository<MatchCount>,
+    @InjectRepository(MatchDifficult)
+    private readonly matchDifficultRepository: BaseFirestoreRepository<MatchDifficult>,
   ) {}
 
   findAll() {
@@ -16,7 +21,7 @@ export class MatchService {
   }
 
   async countGameStart() {
-    const id = new Date().toISOString().slice(0, 10).replace(/-/g, '');
+    const id = this.getDateString();
     const existMatchCount = await this.matchRepository.findById(id);
     if (existMatchCount) {
       existMatchCount.addMatchStart();
@@ -29,8 +34,9 @@ export class MatchService {
     }
   }
 
-  async countGameEnd(isWinner: boolean) {
-    const id = new Date().toISOString().slice(0, 10).replace(/-/g, '');
+  async countGameEnd(gameEnd: GameEnd) {
+    const isWinner = gameEnd.winnerTeamId == 2;
+    const id = this.getDateString();
     const existMatchCount = await this.matchRepository.findById(id);
     if (existMatchCount) {
       existMatchCount.addMatchEnd(isWinner);
@@ -41,5 +47,25 @@ export class MatchService {
       matchCount.addMatchEnd(isWinner);
       await this.matchRepository.create(matchCount);
     }
+  }
+
+  async countGameDifficult(gameEnd: GameEnd) {
+    const id = `${this.getDateString()}#${gameEnd.gameOption.gameDifficulty}`;
+    const existMatchDifficult = await this.matchDifficultRepository.findById(
+      id,
+    );
+    if (existMatchDifficult) {
+      existMatchDifficult.add(gameEnd);
+      await this.matchDifficultRepository.update(existMatchDifficult);
+    } else {
+      const matchCount = new MatchDifficult();
+      matchCount.init(id);
+      matchCount.add(gameEnd);
+      await this.matchDifficultRepository.create(matchCount);
+    }
+  }
+
+  private getDateString() {
+    return new Date().toISOString().slice(0, 10).replace(/-/g, '');
   }
 }
