@@ -13,6 +13,19 @@ export class PlayerGameEnd {
   isDisconnect: boolean;
 }
 
+export class GameOption {
+  @ApiProperty()
+  gameDifficulty?: number;
+  @ApiProperty()
+  playerGoldXpMultiplier?: number;
+  @ApiProperty()
+  botGoldXpMultiplier?: number;
+  @ApiProperty()
+  towerPower: number;
+  @ApiProperty()
+  towerEndure: number;
+}
+
 export class GameEnd {
   @ApiProperty({ type: [PlayerGameEnd] })
   players: PlayerGameEnd[];
@@ -21,5 +34,5 @@ export class GameEnd {
   @ApiProperty()
   matchId: string;
   @ApiProperty()
-  gameOption: any;
+  gameOption?: GameOption;
 }

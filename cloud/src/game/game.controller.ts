@@ -90,15 +90,16 @@ export class GameController {
 
   @ApiBody({ type: GameEnd })
   @Post('end')
-  end(@Headers('x-api-key') apiKey: string, @Body() gameInfo: GameEnd): string {
+  async end(
+    @Headers('x-api-key') apiKey: string,
+    @Body() gameInfo: GameEnd,
+  ): Promise<string> {
     this.gameService.assertApiKey(apiKey);
-
-    this.matchService.countGameEnd(gameInfo.winnerTeamId == 2);
 
     const players = gameInfo.players;
     for (const player of players) {
       if (player.steamId > 0) {
-        this.playerService.upsertGameEnd(
+        await this.playerService.upsertGameEnd(
           player.steamId,
           player.teamId == gameInfo.winnerTeamId,
           player.points,
@@ -106,6 +107,10 @@ export class GameController {
         );
       }
     }
+
+    await this.matchService.countGameEnd(gameInfo);
+    await this.matchService.countGameDifficult(gameInfo);
+
     return this.gameService.getOK();
   }
 
