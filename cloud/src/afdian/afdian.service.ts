@@ -14,9 +14,9 @@ enum Platfrom {
 }
 enum OrderType {
   member = 'member',
-  goods1 = 'point3000',
-  goods2 = 'point9800',
-  goods3 = 'point26000',
+  goods1 = 'pointTire1',
+  goods2 = 'pointTire2',
+  goods3 = 'pointTire3',
   initialAttribute = 'initialAttribute',
   others = 'others',
 }
@@ -33,8 +33,8 @@ enum PlanId {
 }
 
 enum PlanPoint {
-  tire1 = 3000,
-  tire2 = 9800,
+  tire1 = 3200,
+  tire2 = 10000,
   tire3 = 26000,
 }
 

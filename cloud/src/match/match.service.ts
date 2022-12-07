@@ -50,6 +50,7 @@ export class MatchService {
   }
 
   async countGameDifficult(gameEnd: GameEnd) {
+    // TODO 改为根据版本号判断
     const id = `${this.getDateString()}#${gameEnd.gameOption.gameDifficulty}`;
     const existMatchDifficult = await this.matchDifficultRepository.findById(
       id,
