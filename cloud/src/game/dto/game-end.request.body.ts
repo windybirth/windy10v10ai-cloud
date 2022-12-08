@@ -34,5 +34,7 @@ export class GameEnd {
   @ApiProperty()
   matchId: string;
   @ApiProperty()
+  version: string;
+  @ApiProperty()
   gameOption?: GameOption;
 }
