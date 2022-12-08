@@ -112,18 +112,14 @@ export class PlayerService {
       player.seasonLevel = seasonLevel;
       player.seasonCurrrentLevelPoint =
         seasonPoint - this.getSeasonTotalPoint(seasonLevel);
-      player.seasonNextLevelPoint = this.getSeasonNextLevelPoint(
-        seasonLevel + 1,
-      );
+      player.seasonNextLevelPoint = this.getSeasonNextLevelPoint(seasonLevel);
 
       const memberPoint = player.memberPointTotal;
       const memberLevel = this.getMemberLevelBuyPoint(memberPoint);
       player.memberLevel = memberLevel;
       player.memberCurrentLevelPoint =
         memberPoint - this.getMemberTotalPoint(memberLevel);
-      player.memberNextLevelPoint = this.getMemberNextLevelPoint(
-        memberLevel + 1,
-      );
+      player.memberNextLevelPoint = this.getMemberNextLevelPoint(memberLevel);
     }
     return players;
   }
@@ -199,31 +195,47 @@ export class PlayerService {
     };
   }
 
-  // 赛季积分
-  // 升级所需积分 level 目标等级
+  /**
+   * 赛季积分
+   * @param level 当前等级
+   * @returns 升级积分
+   */
   getSeasonNextLevelPoint(level: number) {
     return 100 * (level + 4);
   }
-  // 等级所需累计积分 level 目标等级
+  /**
+   * 赛季积分
+   * @param level 指定等级
+   * @returns 累计积分
+   */
   getSeasonTotalPoint(level: number) {
+    level -= 1;
     return 100 * ((level * level) / 2 + level * 4.5);
   }
   // 根据积分获取当前等级
   getSeasonLevelBuyPoint(point: number) {
-    return Math.floor(Math.sqrt(point / 50 + 20.25) - 4.5);
+    return Math.floor(Math.sqrt(point / 50 + 20.25) - 4.5) + 1;
   }
 
-  // 会员积分
-  // 升级所需积分 level 目标等级
+  /**
+   * 会员积分
+   * @param level 当前等级
+   * @returns 升级积分
+   */
   getMemberNextLevelPoint(level: number) {
     return 50 * (level + 19);
   }
-  // 等级所需累计积分 level 目标等级
+  /**
+   * 会员积分
+   * @param level 指定等级
+   * @returns 累计积分
+   */
   getMemberTotalPoint(level: number) {
+    level -= 1;
     return 100 * ((level * level) / 4 + level * 9.75);
   }
   // 根据积分获取当前等级
   getMemberLevelBuyPoint(point: number) {
-    return Math.floor(Math.sqrt(point / 25 + 380.25) - 19.5);
+    return Math.floor(Math.sqrt(point / 25 + 380.25) - 19.5) + 1;
   }
 }
