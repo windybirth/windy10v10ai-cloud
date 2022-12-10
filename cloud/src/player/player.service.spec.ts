@@ -58,32 +58,39 @@ describe('CatsController', () => {
     });
     describe('等级所需累计积分', () => {
       let level = 1;
-      let point = 500;
+      let point = 0;
       it(`${level} -> ${point}`, async () => {
         const result = playerService.getSeasonTotalPoint(level);
         expect(result).toBe(point);
       });
 
       level = 2;
+      point = 500;
+      it(`${level} -> ${point}`, async () => {
+        const result = playerService.getSeasonTotalPoint(level);
+        expect(result).toBe(point);
+      });
+
+      level = 3;
       point = 1100;
       it(`${level} -> ${point}`, async () => {
         const result = playerService.getSeasonTotalPoint(level);
         expect(result).toBe(point);
       });
 
-      level = 10;
+      level = 11;
       point = 9500;
       it(`${level} -> ${point}`, async () => {
         const result = playerService.getSeasonTotalPoint(level);
         expect(result).toBe(point);
       });
-      level = 20;
+      level = 21;
       point = 29000;
       it(`${level} -> ${point}`, async () => {
         const result = playerService.getSeasonTotalPoint(level);
         expect(result).toBe(point);
       });
-      level = 50;
+      level = 51;
       point = 147500;
       it(`${level} -> ${point}`, async () => {
         const result = playerService.getSeasonTotalPoint(level);
@@ -93,56 +100,56 @@ describe('CatsController', () => {
 
     describe('根据积分获取当前等级', () => {
       let point = 0;
-      let level = 0;
+      let level = 1;
       it(`${point} -> ${level}`, async () => {
         const result = playerService.getSeasonLevelBuyPoint(point);
         expect(result).toBe(level);
       });
 
       point = 499;
-      level = 0;
+      level = 1;
       it(`${point} -> ${level}`, async () => {
         const result = playerService.getSeasonLevelBuyPoint(point);
         expect(result).toBe(level);
       });
       point = 500;
-      level = 1;
-      it(`${point} -> ${level}`, async () => {
-        const result = playerService.getSeasonLevelBuyPoint(point);
-        expect(result).toBe(level);
-      });
-      point = 600;
-      level = 1;
-      it(`${point} -> ${level}`, async () => {
-        const result = playerService.getSeasonLevelBuyPoint(point);
-        expect(result).toBe(level);
-      });
-      point = 1099;
-      level = 1;
-      it(`${point} -> ${level}`, async () => {
-        const result = playerService.getSeasonLevelBuyPoint(point);
-        expect(result).toBe(level);
-      });
-      point = 1100;
       level = 2;
       it(`${point} -> ${level}`, async () => {
         const result = playerService.getSeasonLevelBuyPoint(point);
         expect(result).toBe(level);
       });
-      point = 28999;
-      level = 19;
+      point = 600;
+      level = 2;
       it(`${point} -> ${level}`, async () => {
         const result = playerService.getSeasonLevelBuyPoint(point);
         expect(result).toBe(level);
       });
-      point = 29000;
+      point = 1099;
+      level = 2;
+      it(`${point} -> ${level}`, async () => {
+        const result = playerService.getSeasonLevelBuyPoint(point);
+        expect(result).toBe(level);
+      });
+      point = 1100;
+      level = 3;
+      it(`${point} -> ${level}`, async () => {
+        const result = playerService.getSeasonLevelBuyPoint(point);
+        expect(result).toBe(level);
+      });
+      point = 28999;
       level = 20;
       it(`${point} -> ${level}`, async () => {
         const result = playerService.getSeasonLevelBuyPoint(point);
         expect(result).toBe(level);
       });
+      point = 29000;
+      level = 21;
+      it(`${point} -> ${level}`, async () => {
+        const result = playerService.getSeasonLevelBuyPoint(point);
+        expect(result).toBe(level);
+      });
       point = 147500;
-      level = 50;
+      level = 51;
       it(`${point} -> ${level}`, async () => {
         const result = playerService.getSeasonLevelBuyPoint(point);
         expect(result).toBe(level);
@@ -187,33 +194,33 @@ describe('CatsController', () => {
     });
 
     describe('等级所需累计积分', () => {
-      let level = 0;
+      let level = 1;
       let point = 0;
       it(`${level} -> ${point}`, async () => {
         const result = playerService.getMemberTotalPoint(level);
         expect(result).toBe(point);
       });
 
-      level = 1;
+      level = 2;
       point = 1000;
       it(`${level} -> ${point}`, async () => {
         const result = playerService.getMemberTotalPoint(level);
         expect(result).toBe(point);
       });
 
-      level = 2;
+      level = 3;
       point = 2050;
       it(`${level} -> ${point}`, async () => {
         const result = playerService.getMemberTotalPoint(level);
         expect(result).toBe(point);
       });
-      level = 20;
+      level = 21;
       point = 29500;
       it(`${level} -> ${point}`, async () => {
         const result = playerService.getMemberTotalPoint(level);
         expect(result).toBe(point);
       });
-      level = 50;
+      level = 51;
       point = 111250;
       it(`${level} -> ${point}`, async () => {
         const result = playerService.getMemberTotalPoint(level);
@@ -223,50 +230,50 @@ describe('CatsController', () => {
 
     describe('根据积分获取当前等级', () => {
       let point = 0;
-      let level = 0;
+      let level = 1;
       it(`${point} -> ${level}`, async () => {
         const result = playerService.getMemberLevelBuyPoint(point);
         expect(result).toBe(level);
       });
 
       point = 999;
-      level = 0;
+      level = 1;
       it(`${point} -> ${level}`, async () => {
         const result = playerService.getMemberLevelBuyPoint(point);
         expect(result).toBe(level);
       });
       point = 1000;
-      level = 1;
-      it(`${point} -> ${level}`, async () => {
-        const result = playerService.getMemberLevelBuyPoint(point);
-        expect(result).toBe(level);
-      });
-      point = 1001;
-      level = 1;
-      it(`${point} -> ${level}`, async () => {
-        const result = playerService.getMemberLevelBuyPoint(point);
-        expect(result).toBe(level);
-      });
-      point = 2049;
-      level = 1;
-      it(`${point} -> ${level}`, async () => {
-        const result = playerService.getMemberLevelBuyPoint(point);
-        expect(result).toBe(level);
-      });
-      point = 2050;
       level = 2;
       it(`${point} -> ${level}`, async () => {
         const result = playerService.getMemberLevelBuyPoint(point);
         expect(result).toBe(level);
       });
+      point = 1001;
+      level = 2;
+      it(`${point} -> ${level}`, async () => {
+        const result = playerService.getMemberLevelBuyPoint(point);
+        expect(result).toBe(level);
+      });
+      point = 2049;
+      level = 2;
+      it(`${point} -> ${level}`, async () => {
+        const result = playerService.getMemberLevelBuyPoint(point);
+        expect(result).toBe(level);
+      });
+      point = 2050;
+      level = 3;
+      it(`${point} -> ${level}`, async () => {
+        const result = playerService.getMemberLevelBuyPoint(point);
+        expect(result).toBe(level);
+      });
       point = 29500;
-      level = 20;
+      level = 21;
       it(`${point} -> ${level}`, async () => {
         const result = playerService.getMemberLevelBuyPoint(point);
         expect(result).toBe(level);
       });
       point = 111250;
-      level = 50;
+      level = 51;
       it(`${point} -> ${level}`, async () => {
         const result = playerService.getMemberLevelBuyPoint(point);
         expect(result).toBe(level);
