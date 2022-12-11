@@ -69,9 +69,6 @@ export class CountService {
   }
 
   async countHeroes(gameEnd: GameEnd) {
-    const players = gameEnd.players.filter((p) => p.steamId != 0);
-    const bots = players.filter((p) => p.steamId == 0 && p.teamId == 3);
-
     for (const player of gameEnd.players) {
       let heroType: HeroType;
       if (player.steamId != 0) {
