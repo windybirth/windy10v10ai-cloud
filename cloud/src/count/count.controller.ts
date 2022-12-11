@@ -1,4 +1,4 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Param, Query } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 
 import { CountService } from './count.service';
@@ -11,5 +11,14 @@ export class CountController {
   @Get('match')
   findAllMatch() {
     return this.countService.findAllMatch();
+  }
+
+  @Get('hero/:version/:heroType')
+  findHeroRate(
+    @Param('version') version: string,
+    @Param('heroType') heroType: string,
+    @Query('order') order: string,
+  ) {
+    return this.countService.findHeroRate(version, heroType, order);
   }
 }
