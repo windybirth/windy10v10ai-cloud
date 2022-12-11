@@ -21,4 +21,13 @@ export class CountController {
   ) {
     return this.countService.findHeroRate(version, heroType, order);
   }
+
+  @Get('hero/chart/:version/:heroType')
+  findHeroRateChart(
+    @Param('version') version: string,
+    @Param('heroType') heroType: string,
+    @Query('order') order: string,
+  ) {
+    return this.countService.findHeroRateChart(version, heroType, order);
+  }
 }
