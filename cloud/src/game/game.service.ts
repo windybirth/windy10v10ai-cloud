@@ -1,4 +1,5 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { logger } from 'firebase-functions';
 
 @Injectable()
 export class GameService {
@@ -11,7 +12,7 @@ export class GameService {
       apiKey !== process.env.SERVER_APIKEY &&
       apiKey !== process.env.SERVER_APIKEY_TEST
     ) {
-      console.warn(`[Endgame] apiKey permission error with ${apiKey}.`);
+      logger.warn(`[Game Start] apiKey permission error with ${apiKey}.`);
       throw new UnauthorizedException();
     }
   }

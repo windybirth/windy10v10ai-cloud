@@ -20,8 +20,17 @@ export const api = functions
   .region('asia-northeast1')
   .runWith({ minInstances: 0, maxInstances: 10, timeoutSeconds: 10 })
   .https.onRequest(async (...args) => {
-    await promiseApplicationReady;
-    server(...args);
+    const regex = '^/api/(game|afdian).*';
+    const path = args[0].path;
+    if (!path.match(regex)) {
+      functions.logger.warn(
+        `Abnormal requeston API Cloud Function! Path: ${path}`,
+      );
+      args[1].status(403).send('Invalid path');
+    } else {
+      await promiseApplicationReady;
+      server(...args);
+    }
   });
 
 export const admin = functions

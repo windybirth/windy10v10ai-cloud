@@ -23,11 +23,6 @@
         "regex": "^/api/(game|afdian).*",
         "function": "api",
         "region": "asia-northeast1"
-      },
-      {
-        "source": "**",
-        "function": "admin",
-        "region": "asia-northeast1"
       }
     ]
   },
