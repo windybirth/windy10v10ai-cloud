@@ -110,6 +110,7 @@ export class GameController {
 
     await this.matchService.countGameEnd(gameInfo);
     await this.matchService.countGameDifficult(gameInfo);
+    await this.matchService.countHeroes(gameInfo);
 
     return this.gameService.getOK();
   }

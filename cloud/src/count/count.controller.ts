@@ -8,8 +8,8 @@ import { CountService } from './count.service';
 export class CountController {
   constructor(private readonly countService: CountService) {}
 
-  @Get()
-  findAll() {
-    return this.countService.findAll();
+  @Get('match')
+  findAllMatch() {
+    return this.countService.findAllMatch();
   }
 }
