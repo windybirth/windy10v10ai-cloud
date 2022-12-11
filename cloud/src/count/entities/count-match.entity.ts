@@ -1,7 +1,7 @@
 import { Collection } from 'fireorm';
 
 @Collection()
-export class MatchCount {
+export class CountMatch {
   id: string;
   start: number;
   end: number;

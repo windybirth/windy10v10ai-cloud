@@ -4,16 +4,16 @@ import { InjectRepository } from 'nestjs-fireorm';
 
 import { GameEnd } from '../game/dto/game-end.request.body';
 
-import { MatchCount } from './entities/match-count.entity';
-import { MatchDifficult } from './entities/match-difficult.entity';
+import { CountDifficult } from './entities/count-difficult.entity';
+import { CountMatch } from './entities/count-match.entity';
 
 @Injectable()
-export class MatchService {
+export class CountService {
   constructor(
-    @InjectRepository(MatchCount)
-    private readonly matchRepository: BaseFirestoreRepository<MatchCount>,
-    @InjectRepository(MatchDifficult)
-    private readonly matchDifficultRepository: BaseFirestoreRepository<MatchDifficult>,
+    @InjectRepository(CountMatch)
+    private readonly matchRepository: BaseFirestoreRepository<CountMatch>,
+    @InjectRepository(CountDifficult)
+    private readonly matchDifficultRepository: BaseFirestoreRepository<CountDifficult>,
   ) {}
 
   findAll() {
@@ -27,7 +27,7 @@ export class MatchService {
       existMatchCount.addMatchStart();
       await this.matchRepository.update(existMatchCount);
     } else {
-      const matchCount = new MatchCount();
+      const matchCount = new CountMatch();
       matchCount.init(id);
       matchCount.addMatchStart();
       await this.matchRepository.create(matchCount);
@@ -42,7 +42,7 @@ export class MatchService {
       existMatchCount.addMatchEnd(isWinner);
       await this.matchRepository.update(existMatchCount);
     } else {
-      const matchCount = new MatchCount();
+      const matchCount = new CountMatch();
       matchCount.init(id);
       matchCount.addMatchEnd(isWinner);
       await this.matchRepository.create(matchCount);
@@ -58,7 +58,7 @@ export class MatchService {
       existMatchDifficult.add(gameEnd);
       await this.matchDifficultRepository.update(existMatchDifficult);
     } else {
-      const matchCount = new MatchDifficult();
+      const matchCount = new CountDifficult();
       matchCount.init(id);
       matchCount.add(gameEnd);
       await this.matchDifficultRepository.create(matchCount);

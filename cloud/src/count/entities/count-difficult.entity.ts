@@ -3,8 +3,8 @@ import { Collection } from 'fireorm';
 import { GameEnd } from '../../game/dto/game-end.request.body';
 
 @Collection()
-export class MatchDifficult {
-  // data#difficulty
+export class CountDifficult {
+  // version#difficulty
   id: string;
   matchTotal: number;
   matchWin: number;
