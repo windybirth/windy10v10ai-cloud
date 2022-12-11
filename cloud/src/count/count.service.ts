@@ -57,6 +57,18 @@ export class CountService {
     });
   }
 
+  async findHeroRateChart(version: string, heroType: string, order?: string) {
+    const heroRate = await this.findHeroRate(version, heroType, order);
+    const label = heroRate.map((heroWinrate) => heroWinrate.heroName);
+    const winrate = heroRate.map((heroWinrate) => heroWinrate.winrate * 100);
+    const pickrate = heroRate.map((heroWinrate) => heroWinrate.pickrate * 100);
+    return {
+      label: `'${label.join("', '")}'`,
+      winrate: winrate.join(', '),
+      pickrate: pickrate.join(', '),
+    };
+  }
+
   findHeroPickrate() {
     return this.matchRepository.find();
   }
