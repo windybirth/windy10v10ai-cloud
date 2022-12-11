@@ -10,6 +10,8 @@ export class CountDifficult {
   matchWin: number;
   playerTotal: number;
   playerWin: number;
+  version: string;
+  difficulty: number;
 
   init(id: string) {
     this.id = id;
@@ -17,6 +19,8 @@ export class CountDifficult {
     this.matchWin = 0;
     this.playerTotal = 0;
     this.playerWin = 0;
+    this.version = id.split('#')[0];
+    this.difficulty = parseInt(id.split('#')[1]);
     return this;
   }
 
