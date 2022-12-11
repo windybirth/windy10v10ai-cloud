@@ -4,19 +4,22 @@ import { InjectRepository } from 'nestjs-fireorm';
 
 import { GameEnd } from '../game/dto/game-end.request.body';
 
-import { MatchCount } from './entities/match-count.entity';
-import { MatchDifficult } from './entities/match-difficult.entity';
+import { CountDifficult } from './entities/count-difficult.entity';
+import { CountHero, HeroType } from './entities/count-hero.entity';
+import { CountMatch } from './entities/count-match.entity';
 
 @Injectable()
-export class MatchService {
+export class CountService {
   constructor(
-    @InjectRepository(MatchCount)
-    private readonly matchRepository: BaseFirestoreRepository<MatchCount>,
-    @InjectRepository(MatchDifficult)
-    private readonly matchDifficultRepository: BaseFirestoreRepository<MatchDifficult>,
+    @InjectRepository(CountMatch)
+    private readonly matchRepository: BaseFirestoreRepository<CountMatch>,
+    @InjectRepository(CountDifficult)
+    private readonly matchDifficultRepository: BaseFirestoreRepository<CountDifficult>,
+    @InjectRepository(CountHero)
+    private readonly countHeroRepository: BaseFirestoreRepository<CountHero>,
   ) {}
 
-  findAll() {
+  findAllMatch() {
     return this.matchRepository.find();
   }
 
@@ -27,7 +30,7 @@ export class MatchService {
       existMatchCount.addMatchStart();
       await this.matchRepository.update(existMatchCount);
     } else {
-      const matchCount = new MatchCount();
+      const matchCount = new CountMatch();
       matchCount.init(id);
       matchCount.addMatchStart();
       await this.matchRepository.create(matchCount);
@@ -42,7 +45,7 @@ export class MatchService {
       existMatchCount.addMatchEnd(isWinner);
       await this.matchRepository.update(existMatchCount);
     } else {
-      const matchCount = new MatchCount();
+      const matchCount = new CountMatch();
       matchCount.init(id);
       matchCount.addMatchEnd(isWinner);
       await this.matchRepository.create(matchCount);
@@ -58,10 +61,39 @@ export class MatchService {
       existMatchDifficult.add(gameEnd);
       await this.matchDifficultRepository.update(existMatchDifficult);
     } else {
-      const matchCount = new MatchDifficult();
+      const matchCount = new CountDifficult();
       matchCount.init(id);
       matchCount.add(gameEnd);
       await this.matchDifficultRepository.create(matchCount);
+    }
+  }
+
+  async countHeroes(gameEnd: GameEnd) {
+    const players = gameEnd.players.filter((p) => p.steamId != 0);
+    const bots = players.filter((p) => p.steamId == 0 && p.teamId == 3);
+
+    for (const player of gameEnd.players) {
+      let heroType: HeroType;
+      if (player.steamId != 0) {
+        // 人类玩家
+        heroType = HeroType.human;
+      } else if (player.teamId == 3) {
+        // 夜魇bot
+        heroType = HeroType.bot;
+      } else {
+        // 天辉bot
+        continue;
+      }
+      const id = `${gameEnd.version}#${gameEnd.gameOption.gameDifficulty}#${heroType}#${player.heroName}`;
+      const exist = await this.countHeroRepository.findById(id);
+
+      const countHero = exist ?? new CountHero().init(id);
+      countHero.add(player, gameEnd.winnerTeamId);
+      if (exist) {
+        await this.countHeroRepository.update(countHero);
+      } else {
+        await this.countHeroRepository.create(countHero);
+      }
     }
   }
 

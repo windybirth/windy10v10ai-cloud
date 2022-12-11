@@ -11,7 +11,7 @@ import {
 } from '@nestjs/common';
 import { ApiBody, ApiTags } from '@nestjs/swagger';
 
-import { MatchService } from '../match/match.service';
+import { CountService } from '../count/count.service';
 import { MembersService } from '../members/members.service';
 import { PlayerCountService } from '../player-count/player-count.service';
 import { UpdatePlayerPropertyDto } from '../player-property/dto/update-player-property.dto';
@@ -29,7 +29,7 @@ export class GameController {
     private readonly gameService: GameService,
     private readonly membersService: MembersService,
     private readonly playerCountService: PlayerCountService,
-    private readonly matchService: MatchService,
+    private readonly matchService: CountService,
     private readonly playerService: PlayerService,
     private readonly playerPropertyService: PlayerPropertyService,
   ) {}
@@ -110,6 +110,7 @@ export class GameController {
 
     await this.matchService.countGameEnd(gameInfo);
     await this.matchService.countGameDifficult(gameInfo);
+    await this.matchService.countHeroes(gameInfo);
 
     return this.gameService.getOK();
   }

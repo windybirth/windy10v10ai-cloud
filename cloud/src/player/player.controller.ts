@@ -26,8 +26,8 @@ export class PlayerController {
       addMemberPoint.point,
     );
   }
-  @Post('/addAllSeasonPoint/:point')
-  addAllSeasonPoint(@Param('point') point: string) {
-    return this.playerService.addAllSeasonPoint(+point);
-  }
+  // @Post('/addAllSeasonPoint/:point')
+  // addAllSeasonPoint(@Param('point') point: string) {
+  //   return this.playerService.addAllSeasonPoint(+point);
+  // }
 }

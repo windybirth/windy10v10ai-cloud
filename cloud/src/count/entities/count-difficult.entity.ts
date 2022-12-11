@@ -3,13 +3,15 @@ import { Collection } from 'fireorm';
 import { GameEnd } from '../../game/dto/game-end.request.body';
 
 @Collection()
-export class MatchDifficult {
-  // data#difficulty
+export class CountDifficult {
+  // version#difficulty
   id: string;
   matchTotal: number;
   matchWin: number;
   playerTotal: number;
   playerWin: number;
+  version: string;
+  difficulty: number;
 
   init(id: string) {
     this.id = id;
@@ -17,6 +19,8 @@ export class MatchDifficult {
     this.matchWin = 0;
     this.playerTotal = 0;
     this.playerWin = 0;
+    this.version = id.split('#')[0];
+    this.difficulty = parseInt(id.split('#')[1]);
     return this;
   }
 
