@@ -10,6 +10,7 @@ import {
   Query,
 } from '@nestjs/common';
 import { ApiBody, ApiTags } from '@nestjs/swagger';
+import { logger } from 'firebase-functions';
 
 import { CountService } from '../count/count.service';
 import { MembersService } from '../members/members.service';
@@ -46,7 +47,9 @@ export class GameController {
 
     steamIds = steamIds.filter((id) => id > 0);
     if (steamIds.length > 10) {
-      console.warn(`[Endstart] steamIds has length more than 10, ${steamIds}.`);
+      logger.warn(
+        `[Game Start] steamIds has length more than 10, ${steamIds}.`,
+      );
       throw new BadRequestException();
     }
 
@@ -59,7 +62,7 @@ export class GameController {
         memberIds: members.map((m) => m.steamId),
       });
     } catch (error) {
-      console.error(error);
+      logger.warn(`[Game Start] playerCount Failed, ${steamIds}`, error);
     }
 
     // 记录游戏开始信息，创建玩家数据

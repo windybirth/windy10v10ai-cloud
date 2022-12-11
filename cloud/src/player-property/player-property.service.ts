@@ -2,6 +2,7 @@ import * as fs from 'fs';
 
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { parse } from 'csv-parse/sync';
+import { logger } from 'firebase-functions';
 import { BaseFirestoreRepository } from 'fireorm';
 import { InjectRepository } from 'nestjs-fireorm';
 
@@ -138,19 +139,20 @@ export class PlayerPropertyService {
     const totalLevel = await this.playerService.getPlayerTotalLevel(steamId);
     const usedLevel = await this.getPlayerUsedLevel(steamId);
     if (totalLevel < usedLevel + levelAdd) {
-      console.error(
-        'cheakPlayerLevel error',
-        `steamId ${steamId}`,
-        `totalLevel ${totalLevel}`,
-        `usedLevel ${usedLevel}`,
-        `levelAdd ${levelAdd}`,
-      );
+      logger.error('[Player Property] cheakPlayerLevel error', {
+        steamId,
+        totalLevel,
+        usedLevel,
+        levelAdd,
+      });
       throw new BadRequestException();
     }
   }
   private validatePropertyName(name: string) {
     if (!PlayerPropertyService.PROPERTY_NAME_LIST.includes(name)) {
-      console.error('validatePropertyName error', `name ${name}`);
+      logger.error(
+        `[Player Property] validatePropertyName error, name ${name}`,
+      );
       throw new BadRequestException();
     }
   }

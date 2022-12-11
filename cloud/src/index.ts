@@ -23,11 +23,9 @@ export const api = functions
     const regex = '^/api/(game|afdian).*';
     const path = args[0].path;
     if (!path.match(regex)) {
-      const entry = Object.assign({
-        severity: 'WARNING',
-        message: `Abnormal requeston API Cloud Function! Path: ${path}`,
-      });
-      console.warn(JSON.stringify(entry));
+      functions.logger.warn(
+        `Abnormal requeston API Cloud Function! Path: ${path}`,
+      );
       args[1].status(403).send('Invalid path');
     } else {
       await promiseApplicationReady;
