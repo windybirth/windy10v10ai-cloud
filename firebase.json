@@ -12,7 +12,7 @@
     "runtime": "nodejs16"
   },
   "hosting": {
-    "public": "public",
+    "source": "web",
     "ignore": [
       "firebase.json",
       "**/.*",
