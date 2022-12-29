@@ -5,7 +5,7 @@ module.exports = {
     tsconfigRootDir : __dirname, 
     sourceType: 'module',
   },
-  plugins: ['@typescript-eslint/eslint-plugin', 'autofix', 'import'],
+  plugins: ['@typescript-eslint/eslint-plugin', 'autofix', 'import','unused-imports'],
   extends: [
     'plugin:@typescript-eslint/recommended',
     'plugin:prettier/recommended',
@@ -21,24 +21,29 @@ module.exports = {
     '@typescript-eslint/explicit-function-return-type': 'off',
     '@typescript-eslint/explicit-module-boundary-types': 'off',
     '@typescript-eslint/no-explicit-any': 'off',
-    '@typescript-eslint/no-unused-vars': 'warn',
+    '@typescript-eslint/no-unused-vars': 'off',
+		'unused-imports/no-unused-imports': 'warn',
+    'unused-imports/no-unused-vars': [
+			'warn',
+			{ 'vars': 'all', 'varsIgnorePattern': '^_', 'args': 'after-used', 'argsIgnorePattern': '^_' }
+		],
     'no-console': ['warn', { allow: ['warn', 'error'] }],
     // 'autofix/no-unused-vars': 'error',
-    "sort-imports": ["warn", {
-      "ignoreCase": false,
-      "ignoreDeclarationSort": true,
-      "ignoreMemberSort": false,
-      "memberSyntaxSortOrder": ["none", "all", "multiple", "single"],
-      "allowSeparatedGroups": false
+    'sort-imports': ['warn', {
+      'ignoreCase': false,
+      'ignoreDeclarationSort': true,
+      'ignoreMemberSort': false,
+      'memberSyntaxSortOrder': ['none', 'all', 'multiple', 'single'],
+      'allowSeparatedGroups': false
     }],
-    "import/order": [
-      "warn",
+    'import/order': [
+      'warn',
       {
-        "groups": ["builtin", "external", "internal", "parent", "sibling", "index", "object", "type"],
-        "newlines-between": "always",
-        "alphabetize": {
-          "order": "asc",
-          "caseInsensitive": true
+        'groups': ['builtin', 'external', 'internal', 'parent', 'sibling', 'index', 'object', 'type'],
+        'newlines-between': 'always',
+        'alphabetize': {
+          'order': 'asc',
+          'caseInsensitive': true
         }
       }
     ]
