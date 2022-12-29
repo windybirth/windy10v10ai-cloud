@@ -1,52 +1,51 @@
-<div>
-  <canvas id="myChart" width="100%" height="300%"></canvas>
-</div>
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>英雄胜率统计</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="index.css">
+  </head>
+  <body>
+    <div class="row d-flex justify-content-center mt-100 mb-100">
+                                                  
+        <div class="col-lg-6">
+        
+        <div class="card">
+            <div class="card-body text-center">
+                <h4 class="card-title m-b-0">英雄胜率统计</h4>
+            </div>
+            <ul class="list-style-none">
+                <li class="d-flex no-block card-body">
+                    <i class="fa fa-check-circle w-30px m-t-5"></i>
+                    <div>
+                        <a href="2.01/player.html" class="m-b-0 font-medium p-0" data-abc="true">Version 2.01 player</a>
+                        <span class="text-muted">玩家英雄胜率. </span>
+                    </div>
+                    <div class="ml-auto">
+                        <div class="tetx-right">
+                            <span class="text-muted font-16">2022/12/18</span>
+                        </div>
+                    </div>
+                </li>
+                <li class="d-flex no-block card-body">
+                    <i class="fa fa-check-circle w-30px m-t-5"></i>
+                    <div>
+                        <a href="2.01/bot.html" class="m-b-0 font-medium p-0" data-abc="true">Version 2.01 bot</a>
+                        <span class="text-muted">AI英雄胜率. </span>
+                    </div>
+                    <div class="ml-auto">
+                        <div class="tetx-right">
+                            <span class="text-muted font-16">2022/12/18</span>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
 
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-<script>
-  const ctx = document.getElementById('myChart');
-  const data = {
-    datasets: [
-      {
-        label: '胜率',
-        data: [90.9090909090909, 66.66666666666666, 73.17073170731707, 70, 76.31578947368422, 74.19354838709677, 86.66666666666667, 75.86206896551724, 74.07407407407408, 66.66666666666666, 87.5, 91.66666666666666, 72.72727272727273, 77.27272727272727, 85, 65, 90, 83.33333333333334, 88.88888888888889, 94.44444444444444, 81.25, 81.25, 66.66666666666666, 66.66666666666666, 73.33333333333333, 71.42857142857143, 78.57142857142857, 92.85714285714286, 84.61538461538461, 76.92307692307693, 91.66666666666666, 50, 50, 91.66666666666666, 91.66666666666666, 72.72727272727273, 81.81818181818183, 72.72727272727273, 81.81818181818183, 81.81818181818183, 70, 60, 90, 40, 70, 77.77777777777779, 100, 77.77777777777779, 88.88888888888889, 100, 55.55555555555556, 66.66666666666666, 66.66666666666666, 88.88888888888889, 77.77777777777779, 87.5, 62.5, 100, 87.5, 87.5, 87.5, 100, 87.5, 100, 100, 57.14285714285714, 100, 71.42857142857143, 85.71428571428571, 85.71428571428571, 71.42857142857143, 100, 100, 83.33333333333334, 83.33333333333334, 83.33333333333334, 50, 66.66666666666666, 66.66666666666666, 100, 80, 80, 100, 80, 80, 60, 100, 75, 75, 75, 75, 75, 75, 100, 75, 75, 75, 66.66666666666666, 100, 100, 100, 66.66666666666666, 100, 66.66666666666666, 100, 66.66666666666666, 100, 100, 100, 100, 100, 50, 100, 0, 100, 100, 100, 100, 100, 100, 0, 0, 0],
-        borderColor: '#8B7E74',
-        backgroundColor: '#82C3EC',
-      },
-      {
-        label: '选择率',
-        data: [5.132192846034215, 3.7325038880248838, 3.188180404354588, 3.1104199066874028, 2.9548989113530326, 2.410575427682737, 2.332814930015552, 2.2550544323483668, 2.0995334370139966, 2.0995334370139966, 1.8662519440124419, 1.8662519440124419, 1.7107309486780715, 1.7107309486780715, 1.5552099533437014, 1.5552099533437014, 1.5552099533437014, 1.3996889580093312, 1.3996889580093312, 1.3996889580093312, 1.244167962674961, 1.244167962674961, 1.166407465007776, 1.166407465007776, 1.166407465007776, 1.088646967340591, 1.088646967340591, 1.088646967340591, 1.010886469673406, 1.010886469673406, 0.9331259720062209, 0.9331259720062209, 0.9331259720062209, 0.9331259720062209, 0.9331259720062209, 0.8553654743390358, 0.8553654743390358, 0.8553654743390358, 0.8553654743390358, 0.8553654743390358, 0.7776049766718507, 0.7776049766718507, 0.7776049766718507, 0.7776049766718507, 0.7776049766718507, 0.6998444790046656, 0.6998444790046656, 0.6998444790046656, 0.6998444790046656, 0.6998444790046656, 0.6998444790046656, 0.6998444790046656, 0.6998444790046656, 0.6998444790046656, 0.6998444790046656, 0.6220839813374806, 0.6220839813374806, 0.6220839813374806, 0.6220839813374806, 0.6220839813374806, 0.6220839813374806, 0.6220839813374806, 0.6220839813374806, 0.6220839813374806, 0.5443234836702955, 0.5443234836702955, 0.5443234836702955, 0.5443234836702955, 0.5443234836702955, 0.5443234836702955, 0.5443234836702955, 0.46656298600311047, 0.46656298600311047, 0.46656298600311047, 0.46656298600311047, 0.46656298600311047, 0.46656298600311047, 0.46656298600311047, 0.46656298600311047, 0.46656298600311047, 0.38880248833592534, 0.38880248833592534, 0.38880248833592534, 0.38880248833592534, 0.38880248833592534, 0.38880248833592534, 0.38880248833592534, 0.3110419906687403, 0.3110419906687403, 0.3110419906687403, 0.3110419906687403, 0.3110419906687403, 0.3110419906687403, 0.3110419906687403, 0.3110419906687403, 0.3110419906687403, 0.3110419906687403, 0.23328149300155523, 0.23328149300155523, 0.23328149300155523, 0.23328149300155523, 0.23328149300155523, 0.23328149300155523, 0.23328149300155523, 0.23328149300155523, 0.23328149300155523, 0.23328149300155523, 0.15552099533437014, 0.15552099533437014, 0.15552099533437014, 0.15552099533437014, 0.15552099533437014, 0.15552099533437014, 0.15552099533437014, 0.15552099533437014, 0.15552099533437014, 0.15552099533437014, 0.07776049766718507, 0.07776049766718507, 0.07776049766718507, 0, 0, 0],
-        borderColor: '#8B7E74',
-        backgroundColor: '#F5EBE0',
-      }
-    ],
-    labels: ['npc_dota_hero_razor', 'npc_dota_hero_sniper', 'npc_dota_hero_drow_ranger', 'npc_dota_hero_zuus', 'npc_dota_hero_juggernaut', 'npc_dota_hero_nevermore', 'npc_dota_hero_spectre', 'npc_dota_hero_silencer', 'npc_dota_hero_pudge', 'npc_dota_hero_slark', 'npc_dota_hero_bristleback', 'npc_dota_hero_visage', 'npc_dota_hero_faceless_void', 'npc_dota_hero_tiny', 'npc_dota_hero_broodmother', 'npc_dota_hero_enigma', 'npc_dota_hero_warlock', 'npc_dota_hero_medusa', 'npc_dota_hero_phantom_assassin', 'npc_dota_hero_skywrath_mage', 'npc_dota_hero_life_stealer', 'npc_dota_hero_luna', 'npc_dota_hero_abaddon', 'npc_dota_hero_bounty_hunter', 'npc_dota_hero_ember_spirit', 'npc_dota_hero_earthshaker', 'npc_dota_hero_lion', 'npc_dota_hero_witch_doctor', 'npc_dota_hero_invoker', 'npc_dota_hero_kunkka', 'npc_dota_hero_axe', 'npc_dota_hero_crystal_maiden', 'npc_dota_hero_necrolyte', 'npc_dota_hero_sven', 'npc_dota_hero_viper', 'npc_dota_hero_tinker', 'npc_dota_hero_undying', 'npc_dota_hero_ursa', 'npc_dota_hero_winter_wyvern', 'npc_dota_hero_skeleton_king', 'npc_dota_hero_ancient_apparition', 'npc_dota_hero_obsidian_destroyer', 'npc_dota_hero_queenofpain', 'npc_dota_hero_snapfire', 'npc_dota_hero_troll_warlord', 'npc_dota_hero_antimage', 'npc_dota_hero_chaos_knight', 'npc_dota_hero_chen', 'npc_dota_hero_dazzle', 'npc_dota_hero_legion_commander', 'npc_dota_hero_monkey_king', 'npc_dota_hero_ogre_magi', 'npc_dota_hero_pugna', 'npc_dota_hero_riki', 'npc_dota_hero_shadow_shaman', 'npc_dota_hero_bloodseeker', 'npc_dota_hero_dark_willow', 'npc_dota_hero_disruptor', 'npc_dota_hero_jakiro', 'npc_dota_hero_lich', 'npc_dota_hero_rubick', 'npc_dota_hero_treant', 'npc_dota_hero_vengefulspirit', 'npc_dota_hero_venomancer', 'npc_dota_hero_centaur', 'npc_dota_hero_clinkz', 'npc_dota_hero_wisp', 'npc_dota_hero_magnataur', 'npc_dota_hero_mars', 'npc_dota_hero_pangolier', 'npc_dota_hero_spirit_breaker', 'npc_dota_hero_alchemist', 'npc_dota_hero_leshrac', 'npc_dota_hero_lycan', 'npc_dota_hero_meepo', 'npc_dota_hero_mirana', 'npc_dota_hero_furion', 'npc_dota_hero_phantom_lancer', 'npc_dota_hero_terrorblade', 'npc_dota_hero_tusk', 'npc_dota_hero_rattletrap', 'npc_dota_hero_dragon_knight', 'npc_dota_hero_gyrocopter', 'npc_dota_hero_keeper_of_the_light', 'npc_dota_hero_lone_druid', 'npc_dota_hero_storm_spirit', 'npc_dota_hero_templar_assassin', 'npc_dota_hero_bane', 'npc_dota_hero_doom_bringer', 'npc_dota_hero_huskar', 'npc_dota_hero_lina', 'npc_dota_hero_night_stalker', 'npc_dota_hero_nyx_assassin', 'npc_dota_hero_sand_king', 'npc_dota_hero_tidehunter', 'npc_dota_hero_abyssal_underlord', 'npc_dota_hero_windrunner', 'npc_dota_hero_batrider', 'npc_dota_hero_dark_seer', 'npc_dota_hero_elder_titan', 'npc_dota_hero_naga_siren', 'npc_dota_hero_omniknight', 'npc_dota_hero_shadow_demon', 'npc_dota_hero_techies', 'npc_dota_hero_hoodwink', 'npc_dota_hero_dawnbreaker', 'npc_dota_hero_marci', 'npc_dota_hero_arc_warden', 'npc_dota_hero_beastmaster', 'npc_dota_hero_earth_spirit', 'npc_dota_hero_enchantress', 'npc_dota_hero_grimstroke', 'npc_dota_hero_morphling', 'npc_dota_hero_oracle', 'npc_dota_hero_shredder', 'npc_dota_hero_weaver', 'npc_dota_hero_primal_beast', 'npc_dota_hero_death_prophet', 'npc_dota_hero_puck', 'npc_dota_hero_void_spirit', 'npc_dota_hero_brewmaster', 'npc_dota_hero_phoenix', 'npc_dota_hero_slardar']
-  }
-  const config = {
-    type: 'bar',
-    data: data,
-    options: {
-      indexAxis: 'y',
-      // Elements options apply to all of the options unless overridden in a dataset
-      // In this case, we are setting the border of each horizontal bar to be 2px wide
-      elements: {
-        bar: {
-          borderWidth: 2,
-        }
-      },
-      responsive: true,
-      plugins: {
-        legend: {
-          position: 'right',
-        },
-        title: {
-          display: true,
-          text: 'v2.01 英雄选择·胜率统计 2022-12-12'
-        }
-      }
-    },
-  };
-
-  new Chart(ctx, config);
-</script>
+        </div>
+    </div>
+  </body>
+</html>

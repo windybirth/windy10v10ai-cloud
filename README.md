@@ -20,9 +20,6 @@ npm install -g @nestjs/cli
 (cd cloud && npm install)
 ```
 
-### Debug and E2E Setting
-1. Copy `~/.config/firebase/<YOUR_MAIL_ADDRESS>_application_default_credentials.json` or `~/.config/gcloud/application_default_credentials.json` to `cloud/application_default_credentials.json`
-
 ## Running the app
 ```bash
 # development (with watch)
