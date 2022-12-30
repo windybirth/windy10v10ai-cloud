@@ -17,19 +17,19 @@ Save windy 10v10ai data in cloud.
 ```bash
 npm install -g firebase-tools
 npm install -g @nestjs/cli
-(cd cloud && npm install)
+(cd api && npm install)
 ```
 
 ## Running the app
 ```bash
 # development (with watch)
-(cd cloud && npm run start)
+(cd api && npm run start)
 
 # debug
-(cd cloud && npm run start:debug)
+(cd api && npm run start:debug)
 
 # e2e tests
-(cd cloud && npm run test:e2e)
+(cd api && npm run test:e2e)
 ```
 
 

@@ -1,7 +1,4 @@
 {
-    "eslint.workingDirectories": [
-        "./cloud"
-    ],
     "editor.codeActionsOnSave": {
         "source.fixAll.eslint": true
     },
