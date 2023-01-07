@@ -18,6 +18,10 @@ Save windy 10v10ai data in cloud.
 npm install -g firebase-tools
 npm install -g @nestjs/cli
 (cd api && npm install)
+
+# firebase setting
+firebase login
+firebase experiments:enable webframeworks
 ```
 
 ## Running the app
