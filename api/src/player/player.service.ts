@@ -138,15 +138,12 @@ export class PlayerService {
     }
   }
 
-  async addAllSeasonPoint(point: number) {
-    const fromDate = new Date();
-    fromDate.setUTCFullYear(2022, 11, 2);
-    fromDate.setUTCHours(22, 0, 0, 0);
+  async addAllSeasonPoint(point: number, startFrom: Date) {
     const players = await this.playerRepository.find();
     for (const player of players) {
       if (
         player.lastMatchTime &&
-        player.lastMatchTime.getTime() > fromDate.getTime()
+        player.lastMatchTime.getTime() > startFrom.getTime()
       ) {
         player.seasonPointTotal += point;
         await this.playerRepository.update(player);

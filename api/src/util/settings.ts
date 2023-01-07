@@ -6,7 +6,7 @@ import {
 import { Reflector } from '@nestjs/core';
 
 export function AppGlobalSettings(app: INestApplication) {
-  app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalPipes(new ValidationPipe({ transform: true }));
   app.setGlobalPrefix('api');
   app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
 }
