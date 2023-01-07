@@ -1,5 +1,6 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
+import { AddAllSeasonPointDto } from './dto/add-all-season-point.dto';
 
 import { AddMemberPointDto } from './dto/add-member-point.dto';
 import { PlayerService } from './player.service';
@@ -26,8 +27,8 @@ export class PlayerController {
       addMemberPoint.point,
     );
   }
-  // @Post('/addAllSeasonPoint/:point')
-  // addAllSeasonPoint(@Param('point') point: string) {
-  //   return this.playerService.addAllSeasonPoint(+point);
-  // }
+  @Post('/addAllSeasonPoint')
+  addAllSeasonPoint(@Body() addAllSeasonPoint: AddAllSeasonPointDto) {
+    return this.playerService.addAllSeasonPoint(addAllSeasonPoint.point, addAllSeasonPoint.startFrom);
+  }
 }
