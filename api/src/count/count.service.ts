@@ -103,7 +103,9 @@ export class CountService {
   }
 
   async countGameDifficult(gameEnd: GameEnd) {
-    const id = `${gameEnd.version}#${gameEnd.gameOption.gameDifficulty}`;
+    // FIXME
+    // const id = `${gameEnd.version}#${gameEnd.gameOption.gameDifficulty}`;
+    const id = `v2.04#${gameEnd.gameOption.gameDifficulty}`;
     const existMatchDifficult = await this.matchDifficultRepository.findById(
       id,
     );
@@ -131,7 +133,9 @@ export class CountService {
         // 天辉bot
         continue;
       }
-      const id = `${gameEnd.version}#${gameEnd.gameOption.gameDifficulty}#${heroType}#${player.heroName}`;
+      // FIXME
+      // const id = `${gameEnd.version}#${gameEnd.gameOption.gameDifficulty}#${heroType}#${player.heroName}`;
+      const id = `v2.04#${gameEnd.gameOption.gameDifficulty}#${heroType}#${player.heroName}`;
       const exist = await this.countHeroRepository.findById(id);
 
       const countHero = exist ?? new CountHero().init(id);
