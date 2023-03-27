@@ -3,6 +3,7 @@ import { BaseFirestoreRepository } from 'fireorm';
 import { InjectRepository } from 'nestjs-fireorm';
 
 import { PlayerDto } from './dto/player.dto';
+import { UpdatePlayerDto } from './dto/update-player.dto';
 import { Player } from './entities/player.entity';
 
 @Injectable()
@@ -124,13 +125,15 @@ export class PlayerService {
     return players;
   }
 
-  async addMemberPoint(steamId: number, point: number) {
+  async update(steamId: number, updatePlayerDto: UpdatePlayerDto) {
     const existPlayer = await this.playerRepository.findById(
       steamId.toString(),
     );
 
     const player = existPlayer ?? this.genereNewPlayerEntity(steamId);
-    player.memberPointTotal += point;
+    // TODO undefined check
+    player.memberPointTotal += updatePlayerDto.memberPointTotal;
+    player.seasonPointTotal += updatePlayerDto.seasonPointTotal;
     if (existPlayer) {
       await this.playerRepository.update(player);
     } else {
