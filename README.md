@@ -29,14 +29,32 @@ firebase experiments:enable webframeworks
 ```
 
 ## Running the app
-```bash
-# development (with watch)
-(cd api && npm run start)
 
-# debug
+### Start Firebase Emulator
+```bash
+npm run start
+
+# download data from storage (need auth)
+# (run only once)
+mkdir firestore-backup
+(cd firestore-backup && gsutil -m cp -r \
+  "gs://windy10v10ai.appspot.com/firestore-backup/20230330/20230330.overall_export_metadata" \
+  "gs://windy10v10ai.appspot.com/firestore-backup/20230330/all_namespaces" \
+  .)
+
+# start firebase with data
+npm run start:with-data
+```
+
+### Run API
+```bash
+# debug (need start firebase emulator)
 (cd api && npm run start:debug)
 
-# e2e tests
+# unit tests
+(cd api && npm run test)
+
+# e2e tests (need stop firebase emulator)
 (cd api && npm run test:e2e)
 ```
 

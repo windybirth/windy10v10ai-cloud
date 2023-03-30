@@ -127,3 +127,6 @@ dist
 .pnp.*
 .firebase/hosting.cHVibGlj.cache
 api/swagger-spec.yaml
+
+# Firebase
+firestore-backup/
