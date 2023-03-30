@@ -9,7 +9,7 @@ describe('MemberController (e2e)', () => {
   beforeAll(async () => {
     app = await initTest();
     // 初始化测试数据
-    await request(app.getHttpServer()).post('/api/members/init');
+    await request(app.getHttpServer()).get('/api/test/init');
   });
 
   describe('members/ (GET)', () => {

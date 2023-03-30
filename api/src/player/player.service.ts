@@ -3,6 +3,7 @@ import { BaseFirestoreRepository } from 'fireorm';
 import { InjectRepository } from 'nestjs-fireorm';
 
 import { PlayerDto } from './dto/player.dto';
+import { UpdatePlayerDto } from './dto/update-player.dto';
 import { Player } from './entities/player.entity';
 
 @Injectable()
@@ -10,7 +11,7 @@ export class PlayerService {
   constructor(
     @InjectRepository(Player)
     private readonly playerRepository: BaseFirestoreRepository<Player>,
-  ) {}
+  ) { }
 
   async upsertGameStart(steamId: number, isMember: boolean) {
     const existPlayer = await this.playerRepository.findById(
@@ -96,7 +97,7 @@ export class PlayerService {
   }
 
   async findBySteamId(steamId: number) {
-    return this.playerRepository.findById(steamId.toString());
+    return await this.playerRepository.findById(steamId.toString());
   }
 
   async findBySteamIds(ids: string[]): Promise<Player[]> {
@@ -124,17 +125,36 @@ export class PlayerService {
     return players;
   }
 
-  async addMemberPoint(steamId: number, point: number) {
+  async upsert(steamId: number, updatePlayerDto: UpdatePlayerDto) {
     const existPlayer = await this.playerRepository.findById(
       steamId.toString(),
     );
 
     const player = existPlayer ?? this.genereNewPlayerEntity(steamId);
-    player.memberPointTotal += point;
+    if (updatePlayerDto.memberPointTotal) {
+      player.memberPointTotal += updatePlayerDto.memberPointTotal;
+    }
+    if (updatePlayerDto.seasonPointTotal) {
+      player.seasonPointTotal += updatePlayerDto.seasonPointTotal;
+    }
     if (existPlayer) {
-      await this.playerRepository.update(player);
+      return await this.playerRepository.update(player);
     } else {
-      await this.playerRepository.create(player);
+      return await this.playerRepository.create(player);
+    }
+  }
+
+  async resetSeasonPoint(resetPercent: number) {
+    const players = await this.playerRepository.find();
+    const seasonPointPercent = resetPercent / 100;
+    for (const player of players) {
+      player.firstSeasonLevel = this.getFirstSeasonLevelBuyPoint(
+        player.seasonPointTotal,
+      );
+      player.seasonPointTotal = Math.floor(
+        player.seasonPointTotal * seasonPointPercent,
+      );
+      await this.playerRepository.update(player);
     }
   }
 
@@ -210,6 +230,9 @@ export class PlayerService {
     return 100 * ((level * level) / 2 + level * 4.5);
   }
   // 根据积分获取当前等级
+  getFirstSeasonLevelBuyPoint(point: number) {
+    return Math.floor(Math.sqrt(point / 50 + 20.25) - 4.5) + 1;
+  }
   getSeasonLevelBuyPoint(point: number) {
     return Math.floor(Math.sqrt(point / 50 + 20.25) - 4.5) + 1;
   }
