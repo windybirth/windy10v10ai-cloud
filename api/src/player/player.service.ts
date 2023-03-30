@@ -97,7 +97,7 @@ export class PlayerService {
   }
 
   async findBySteamId(steamId: number) {
-    return this.playerRepository.findById(steamId.toString());
+    return await this.playerRepository.findById(steamId.toString());
   }
 
   async findBySteamIds(ids: string[]): Promise<Player[]> {
@@ -131,13 +131,30 @@ export class PlayerService {
     );
 
     const player = existPlayer ?? this.genereNewPlayerEntity(steamId);
-    // TODO undefined check
-    player.memberPointTotal += updatePlayerDto.memberPointTotal;
-    player.seasonPointTotal += updatePlayerDto.seasonPointTotal;
+    if (updatePlayerDto.memberPointTotal) {
+      player.memberPointTotal += updatePlayerDto.memberPointTotal;
+    }
+    if (updatePlayerDto.seasonPointTotal) {
+      player.seasonPointTotal += updatePlayerDto.seasonPointTotal;
+    }
     if (existPlayer) {
       return await this.playerRepository.update(player);
     } else {
       return await this.playerRepository.create(player);
+    }
+  }
+
+  async resetSeasonPoint(resetPercent: number) {
+    const players = await this.playerRepository.find();
+    const seasonPointPercent = resetPercent / 100;
+    for (const player of players) {
+      player.firstSeasonLevel = this.getFirstSeasonLevelBuyPoint(
+        player.seasonPointTotal,
+      );
+      player.seasonPointTotal = Math.floor(
+        player.seasonPointTotal * seasonPointPercent,
+      );
+      await this.playerRepository.update(player);
     }
   }
 
@@ -213,6 +230,9 @@ export class PlayerService {
     return 100 * ((level * level) / 2 + level * 4.5);
   }
   // 根据积分获取当前等级
+  getFirstSeasonLevelBuyPoint(point: number) {
+    return Math.floor(Math.sqrt(point / 50 + 20.25) - 4.5) + 1;
+  }
   getSeasonLevelBuyPoint(point: number) {
     return Math.floor(Math.sqrt(point / 50 + 20.25) - 4.5) + 1;
   }

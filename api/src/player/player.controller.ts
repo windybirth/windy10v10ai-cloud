@@ -31,8 +31,9 @@ export class PlayerController {
 
   @Post('/all/resetSeasonPoint')
   resetSeasonPoint(@Body() resetSeasonPoint: ResetSeasonPoint) {
-    // TODO reset season point
-    // TODO record 1st season level
+    return this.playerService.resetSeasonPoint(
+      resetSeasonPoint.resetPercent,
+    );
   }
 
   @Post('/all/addSeasonPoint')
