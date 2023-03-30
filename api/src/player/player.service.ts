@@ -11,7 +11,7 @@ export class PlayerService {
   constructor(
     @InjectRepository(Player)
     private readonly playerRepository: BaseFirestoreRepository<Player>,
-  ) {}
+  ) { }
 
   async upsertGameStart(steamId: number, isMember: boolean) {
     const existPlayer = await this.playerRepository.findById(
