@@ -6,6 +6,7 @@ import { get, initTest, patch, post } from './util';
 describe('PlayerController (e2e)', () => {
   const playerGetUrl = '/api/player/steamId/';
   const playerPatchUrl = '/api/player/steamId/';
+  const playerRestUrl = '/api/player/all/resetSeasonPoint';
 
   let app: INestApplication;
 
@@ -33,7 +34,7 @@ describe('PlayerController (e2e)', () => {
       await patch(app, `${playerPatchUrl}300000001`, {
         memberPointTotal: 100,
         seasonPointTotal: 200,
-      })
+      }).expect(200);
       const result2 = await get(app, `${playerGetUrl}300000001`)
       expect(result2.status).toEqual(200);
       expect(result2.body.id).toEqual("300000001");
@@ -46,12 +47,66 @@ describe('PlayerController (e2e)', () => {
       await patch(app, `${playerPatchUrl}300000002`, {
         memberPointTotal: 100,
         seasonPointTotal: 200,
-      })
+      }).expect(200);
       const result = await get(app, `${playerGetUrl}300000002`)
       expect(result.status).toEqual(200);
       expect(result.body.id).toEqual("300000002");
       expect(result.body.memberPointTotal).toEqual(100);
       expect(result.body.seasonPointTotal).toEqual(200);
+    });
+  });
+
+  describe(`${playerRestUrl} (POST) 重置玩家赛季积分`, () => {
+    it('赛季积分 0', async () => {
+      const steamId = '300001001';
+      await patch(app, `${playerPatchUrl}${steamId}`, {
+        memberPointTotal: 100,
+        seasonPointTotal: 0,
+      }).expect(200);
+      await post(app, `${playerRestUrl}`, {
+        resetPercent: 40,
+      }).expect(201);
+      const result = await get(app, `${playerGetUrl}${steamId}`)
+      expect(result.status).toEqual(200);
+      expect(result.body.id).toEqual(steamId);
+      expect(result.body.memberPointTotal).toEqual(100);
+      expect(result.body.seasonPointTotal).toEqual(0);
+      expect(result.body.firstSeasonLevel).toEqual(1);
+    });
+
+    it('赛季积分 500', async () => {
+      const steamId = '300001002';
+      await patch(app, `${playerPatchUrl}${steamId}`, {
+        memberPointTotal: 100,
+        seasonPointTotal: 500,
+      }).expect(200);
+      await post(app, `${playerRestUrl}`, {
+        resetPercent: 40,
+      }).expect(201);
+      const result = await get(app, `${playerGetUrl}${steamId}`)
+      expect(result.status).toEqual(200);
+      expect(result.body.id).toEqual(steamId);
+      expect(result.body.memberPointTotal).toEqual(100);
+      expect(result.body.seasonPointTotal).toEqual(200);
+      expect(result.body.firstSeasonLevel).toEqual(2);
+    });
+
+
+    it('赛季积分 29000', async () => {
+      const steamId = '300001003';
+      await patch(app, `${playerPatchUrl}${steamId}`, {
+        memberPointTotal: 100,
+        seasonPointTotal: 29000,
+      }).expect(200);
+      await post(app, `${playerRestUrl}`, {
+        resetPercent: 40,
+      }).expect(201);
+      const result = await get(app, `${playerGetUrl}${steamId}`)
+      expect(result.status).toEqual(200);
+      expect(result.body.id).toEqual(steamId);
+      expect(result.body.memberPointTotal).toEqual(100);
+      expect(result.body.seasonPointTotal).toEqual(11600);
+      expect(result.body.firstSeasonLevel).toEqual(21);
     });
   });
 
