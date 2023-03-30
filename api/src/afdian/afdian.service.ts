@@ -71,7 +71,7 @@ export class AfdianService {
         }
         if (success) {
           await this.membersService.createMember({ steamId, month });
-          await this.playerService.update(
+          await this.playerService.upsert(
             steamId,
             { memberPointTotal: AfdianService.MEMBER_MONTHLY_POINT * month },
           );
@@ -107,7 +107,7 @@ export class AfdianService {
         }
         if (success) {
           const addPoint = planPoint * goodsCount;
-          await this.playerService.update(steamId, { memberPointTotal: addPoint });
+          await this.playerService.upsert(steamId, { memberPointTotal: addPoint });
         }
         if (orderType === OrderType.initialAttribute) {
           await this.playerPropertyService.deleteBySteamId(steamId);

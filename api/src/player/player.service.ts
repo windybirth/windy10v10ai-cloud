@@ -11,7 +11,7 @@ export class PlayerService {
   constructor(
     @InjectRepository(Player)
     private readonly playerRepository: BaseFirestoreRepository<Player>,
-  ) {}
+  ) { }
 
   async upsertGameStart(steamId: number, isMember: boolean) {
     const existPlayer = await this.playerRepository.findById(
@@ -125,7 +125,7 @@ export class PlayerService {
     return players;
   }
 
-  async update(steamId: number, updatePlayerDto: UpdatePlayerDto) {
+  async upsert(steamId: number, updatePlayerDto: UpdatePlayerDto) {
     const existPlayer = await this.playerRepository.findById(
       steamId.toString(),
     );
@@ -135,9 +135,9 @@ export class PlayerService {
     player.memberPointTotal += updatePlayerDto.memberPointTotal;
     player.seasonPointTotal += updatePlayerDto.seasonPointTotal;
     if (existPlayer) {
-      await this.playerRepository.update(player);
+      return await this.playerRepository.update(player);
     } else {
-      await this.playerRepository.create(player);
+      return await this.playerRepository.create(player);
     }
   }
 

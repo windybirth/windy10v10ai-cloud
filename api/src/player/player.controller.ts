@@ -9,7 +9,7 @@ import { PlayerService } from './player.service';
 @ApiTags('Player')
 @Controller('player')
 export class PlayerController {
-  constructor(private readonly playerService: PlayerService) {}
+  constructor(private readonly playerService: PlayerService) { }
 
   @Get('/steamId/:steamId')
   findOne(@Param('steamId') steamId: string) {
@@ -17,13 +17,13 @@ export class PlayerController {
   }
 
   @Patch('/steamId/:steamId')
-  update(@Param('steamId') steamId: number, @Body() updatePlayerDto: UpdatePlayerDto) {
-    return this.playerService.update(
+  upsert(@Param('steamId') steamId: number, @Body() updatePlayerDto: UpdatePlayerDto) {
+    return this.playerService.upsert(
       steamId,
       updatePlayerDto,
     );
   }
-  
+
   @Get('/all/csv')
   scoreAll() {
     return this.playerService.scoreAll();
