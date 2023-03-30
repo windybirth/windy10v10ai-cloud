@@ -22,3 +22,7 @@ export function get(app: INestApplication, url: string): request.Test {
 export function post(app: INestApplication, url: string, body: object): request.Test {
   return request(app.getHttpServer()).post(url).send(body);
 }
+
+export function patch(app: INestApplication, url: string, body: object): request.Test {
+  return request(app.getHttpServer()).patch(url).send(body);
+}

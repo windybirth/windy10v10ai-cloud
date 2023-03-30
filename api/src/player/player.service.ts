@@ -97,7 +97,7 @@ export class PlayerService {
   }
 
   async findBySteamId(steamId: number) {
-    return this.playerRepository.findById(steamId.toString());
+    return await this.playerRepository.findById(steamId.toString());
   }
 
   async findBySteamIds(ids: string[]): Promise<Player[]> {
@@ -131,9 +131,12 @@ export class PlayerService {
     );
 
     const player = existPlayer ?? this.genereNewPlayerEntity(steamId);
-    // TODO undefined check
-    player.memberPointTotal += updatePlayerDto.memberPointTotal;
-    player.seasonPointTotal += updatePlayerDto.seasonPointTotal;
+    if (updatePlayerDto.memberPointTotal) {
+      player.memberPointTotal += updatePlayerDto.memberPointTotal;
+    }
+    if (updatePlayerDto.seasonPointTotal) {
+      player.seasonPointTotal += updatePlayerDto.seasonPointTotal;
+    }
     if (existPlayer) {
       return await this.playerRepository.update(player);
     } else {
