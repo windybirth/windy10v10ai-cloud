@@ -8,7 +8,7 @@ export class TestController {
   constructor(
     private readonly playerPropertyService: PlayerPropertyService,
     private readonly membersService: MembersService,
-  ) { }
+  ) {}
 
   @Get('/init')
   async initTestData() {
