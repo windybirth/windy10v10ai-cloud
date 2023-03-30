@@ -2,6 +2,7 @@
     "recommendations": [
         "zainchen.json",
         "dbaeumer.vscode-eslint",
-        "GitHub.vscode-pull-request-github"
+        "github.vscode-pull-request-github",
+        "eamodio.gitlens"
     ]
 }
