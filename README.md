@@ -36,10 +36,11 @@ npm run start
 
 # download data from storage (need auth)
 # (run only once)
+rm -rf firestore-backup
 mkdir firestore-backup
 (cd firestore-backup && gsutil -m cp -r \
-  "gs://windy10v10ai.appspot.com/firestore-backup/20230330/20230330.overall_export_metadata" \
-  "gs://windy10v10ai.appspot.com/firestore-backup/20230330/all_namespaces" \
+  "gs://windy10v10ai.appspot.com/firestore-backup/20230331/20230331.overall_export_metadata" \
+  "gs://windy10v10ai.appspot.com/firestore-backup/20230331/all_namespaces" \
   .)
 
 # start firebase with data
