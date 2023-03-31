@@ -76,8 +76,21 @@ export class PlayerPropertyService {
     }
   }
 
-  async getAll() {
-    return this.playerPropertyRepository.find();
+  async csv() {
+    let returnString = '';
+    for (const name of PlayerPropertyService.PROPERTY_NAME_LIST) {
+      const playerPropertys = await this.playerPropertyRepository
+        .whereEqualTo('name', name)
+        .find();
+      // seasonPointTotal, matchCount
+      // create csv
+      const totalLevel = playerPropertys.reduce(
+        (total, playerProperty) => total + playerProperty.level,
+        0,
+      );
+      returnString += `${name}	${playerPropertys.length}	${totalLevel}\n`;
+    }
+    return returnString;
   }
 
   async initialLevel() {
