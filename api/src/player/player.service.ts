@@ -11,7 +11,7 @@ export class PlayerService {
   constructor(
     @InjectRepository(Player)
     private readonly playerRepository: BaseFirestoreRepository<Player>,
-  ) {}
+  ) { }
 
   async upsertGameStart(steamId: number, isMember: boolean) {
     const existPlayer = await this.playerRepository.findById(
@@ -145,7 +145,7 @@ export class PlayerService {
   }
 
   async resetSeasonPoint(resetPercent: number) {
-    const players = await this.playerRepository.find();
+    const players = await this.playerRepository.whereLessThan("firstSeasonLevel", 1).find();
     const seasonPointPercent = resetPercent / 100;
     let i = 0;
     for (const player of players) {
@@ -155,7 +155,6 @@ export class PlayerService {
       player.seasonPointTotal = Math.floor(
         player.seasonPointTotal * seasonPointPercent,
       );
-      console.log('reset season point', i++);
       await this.playerRepository.update(player);
     }
   }
