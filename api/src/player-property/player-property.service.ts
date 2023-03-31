@@ -19,6 +19,7 @@ export class PlayerPropertyService {
     'property_spell_amplify_percentage',
     'property_status_resistance_stacking',
     'property_magical_resistance_bonus',
+    'property_incoming_damage_percentage',
     'property_attack_range_bonus',
     'property_physical_armor_bonus',
     'property_preattack_bonus_damage',
@@ -39,7 +40,7 @@ export class PlayerPropertyService {
     @InjectRepository(PlayerProperty)
     private readonly playerPropertyRepository: BaseFirestoreRepository<PlayerProperty>,
     private readonly playerService: PlayerService,
-  ) {}
+  ) { }
   async create(createPlayerPropertyDto: CreatePlayerPropertyDto) {
     this.validatePropertyName(createPlayerPropertyDto.name);
     await this.cheakPlayerLevel(
