@@ -147,6 +147,7 @@ export class PlayerService {
   async resetSeasonPoint(resetPercent: number) {
     const players = await this.playerRepository.find();
     const seasonPointPercent = resetPercent / 100;
+    let i = 0;
     for (const player of players) {
       player.firstSeasonLevel = this.getFirstSeasonLevelBuyPoint(
         player.seasonPointTotal,
@@ -154,6 +155,7 @@ export class PlayerService {
       player.seasonPointTotal = Math.floor(
         player.seasonPointTotal * seasonPointPercent,
       );
+      console.log('reset season point', i++);
       await this.playerRepository.update(player);
     }
   }
