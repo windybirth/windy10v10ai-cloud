@@ -28,6 +28,11 @@ export class PlayerPropertyController {
     return this.playerPropertyService.update(updatePlayerPropertyDto);
   }
 
+  @Get('/csv')
+  csv() {
+    return this.playerPropertyService.csv();
+  }
+
   @Get('/steamId/:steamId')
   findBySteamId(@Param('steamId') steamId: string) {
     return this.playerPropertyService.findBySteamId(+steamId);

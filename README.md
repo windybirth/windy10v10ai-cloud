@@ -36,10 +36,11 @@ npm run start
 
 # download data from storage (need auth)
 # (run only once)
+rm -rf firestore-backup
 mkdir firestore-backup
 (cd firestore-backup && gsutil -m cp -r \
-  "gs://windy10v10ai.appspot.com/firestore-backup/20230330/20230330.overall_export_metadata" \
-  "gs://windy10v10ai.appspot.com/firestore-backup/20230330/all_namespaces" \
+  "gs://windy10v10ai.appspot.com/firestore-backup/20230331/20230331.overall_export_metadata" \
+  "gs://windy10v10ai.appspot.com/firestore-backup/20230331/all_namespaces" \
   .)
 
 # start firebase with data
@@ -99,6 +100,6 @@ curl -H "Authorization: bearer $(gcloud auth print-identity-token)" https://wind
 
 ``` bash
 ## Get token
-echo $(gcloud auth print-identity-token)"
+echo $(gcloud auth print-identity-token)
 ```
 Import `api/swagger-spec.yaml` to postman with variable `baseUrl` : `https://asia-northeast1-windy10v10ai.cloudfunctions.net/admin`

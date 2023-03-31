@@ -19,6 +19,7 @@ export class PlayerPropertyService {
     'property_spell_amplify_percentage',
     'property_status_resistance_stacking',
     'property_magical_resistance_bonus',
+    'property_incoming_damage_percentage',
     'property_attack_range_bonus',
     'property_physical_armor_bonus',
     'property_preattack_bonus_damage',
@@ -75,8 +76,21 @@ export class PlayerPropertyService {
     }
   }
 
-  async getAll() {
-    return this.playerPropertyRepository.find();
+  async csv() {
+    let returnString = '';
+    for (const name of PlayerPropertyService.PROPERTY_NAME_LIST) {
+      const playerPropertys = await this.playerPropertyRepository
+        .whereEqualTo('name', name)
+        .find();
+      // seasonPointTotal, matchCount
+      // create csv
+      const totalLevel = playerPropertys.reduce(
+        (total, playerProperty) => total + playerProperty.level,
+        0,
+      );
+      returnString += `${name}	${playerPropertys.length}	${totalLevel}\n`;
+    }
+    return returnString;
   }
 
   async initialLevel() {

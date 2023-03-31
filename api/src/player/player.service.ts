@@ -145,7 +145,9 @@ export class PlayerService {
   }
 
   async resetSeasonPoint(resetPercent: number) {
-    const players = await this.playerRepository.find();
+    const players = await this.playerRepository
+      .whereLessThan('firstSeasonLevel', 1)
+      .find();
     const seasonPointPercent = resetPercent / 100;
     for (const player of players) {
       player.firstSeasonLevel = this.getFirstSeasonLevelBuyPoint(
@@ -218,25 +220,25 @@ export class PlayerService {
    * @returns 升级积分
    */
   getSeasonNextLevelPoint(level: number) {
-    return 100 * (level + 4);
+    return 100 * level;
   }
   /**
-   * 赛季积分
+   * 赛季积分 指定等级所需累计积分
    * @param level 指定等级
    * @returns 累计积分
    */
   getSeasonTotalPoint(level: number) {
-    level -= 1;
-    return 100 * ((level * level) / 2 + level * 4.5);
+    return 50 * (level - 1) * level;
   }
   // 根据积分获取当前等级
+  getSeasonLevelBuyPoint(point: number) {
+    return Math.floor(Math.sqrt(point / 50 + 0.25) + 0.5);
+  }
+
+  // 第一赛季积分换算等级
   getFirstSeasonLevelBuyPoint(point: number) {
     return Math.floor(Math.sqrt(point / 50 + 20.25) - 4.5) + 1;
   }
-  getSeasonLevelBuyPoint(point: number) {
-    return Math.floor(Math.sqrt(point / 50 + 20.25) - 4.5) + 1;
-  }
-
   /**
    * 会员积分
    * @param level 当前等级
