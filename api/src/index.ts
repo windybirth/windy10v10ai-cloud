@@ -35,7 +35,7 @@ export const api = functions
 
 export const admin = functions
   .region('asia-northeast1')
-  .runWith({ minInstances: 0, maxInstances: 2, timeoutSeconds: 600 })
+  .runWith({ minInstances: 0, maxInstances: 2, timeoutSeconds: 540 })
   .https.onRequest(async (...args) => {
     await promiseApplicationReady;
     server(...args);
