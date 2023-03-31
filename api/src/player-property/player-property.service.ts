@@ -40,7 +40,7 @@ export class PlayerPropertyService {
     @InjectRepository(PlayerProperty)
     private readonly playerPropertyRepository: BaseFirestoreRepository<PlayerProperty>,
     private readonly playerService: PlayerService,
-  ) { }
+  ) {}
   async create(createPlayerPropertyDto: CreatePlayerPropertyDto) {
     this.validatePropertyName(createPlayerPropertyDto.name);
     await this.cheakPlayerLevel(

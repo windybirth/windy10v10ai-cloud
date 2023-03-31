@@ -16,7 +16,7 @@ import { PlayerPropertyService } from './player-property.service';
 @ApiTags('Player Property')
 @Controller('player-property')
 export class PlayerPropertyController {
-  constructor(private readonly playerPropertyService: PlayerPropertyService) { }
+  constructor(private readonly playerPropertyService: PlayerPropertyService) {}
 
   @Post()
   create(@Body() createPlayerPropertyDto: CreatePlayerPropertyDto) {
