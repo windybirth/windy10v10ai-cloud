@@ -88,7 +88,11 @@ export class GameController {
         player.properties = [];
       }
     }
-    return { members, players };
+
+    // 赛季前100名
+    const top100SteamIds =
+      await this.playerService.findTop100SeasonPointSteamIds();
+    return { members, players, top100SteamIds };
   }
 
   @ApiBody({ type: GameEnd })
