@@ -8,4 +8,6 @@ export class GameStart {
   members: MemberDto[];
   @ApiProperty()
   players: Player[];
+  @ApiProperty()
+  top100SteamIds: string[];
 }

@@ -96,6 +96,14 @@ export class PlayerService {
     return seasonLevel + memberLevel;
   }
 
+  async findTop100SeasonPointSteamIds(): Promise<string[]> {
+    const players = await this.playerRepository
+      .orderByDescending('seasonPointTotal')
+      .limit(100)
+      .find();
+    return players.map((player) => player.id);
+  }
+
   async findBySteamId(steamId: number) {
     return await this.playerRepository.findById(steamId.toString());
   }
