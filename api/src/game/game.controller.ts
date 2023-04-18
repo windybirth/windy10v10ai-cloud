@@ -90,9 +90,16 @@ export class GameController {
     }
 
     // 赛季前100名
-    const top100SteamIds =
-      await this.playerService.findTop100SeasonPointSteamIds();
-    return { members, players, top100SteamIds };
+    const playerRank = await this.playerCountService.getPlayerRankToday();
+    if (playerRank) {
+      const top100SteamIds = playerRank.rankSteamIds;
+      return { members, players, top100SteamIds };
+    } else {
+      const top100SteamIds =
+        await this.playerService.findTop100SeasonPointSteamIds();
+      await this.playerCountService.updatePlayerRankToday(top100SteamIds);
+      return { members, players, top100SteamIds };
+    }
   }
 
   @ApiBody({ type: GameEnd })
