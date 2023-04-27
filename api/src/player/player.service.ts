@@ -153,11 +153,14 @@ export class PlayerService {
   }
 
   async resetSeasonPoint(resetPercent: number) {
-    const players = await this.playerRepository
-      .whereLessThan('firstSeasonLevel', 1)
-      .find();
+    const playersAll = await this.playerRepository.find();
+    const players = playersAll.filter(
+      // FIXME 每个赛季需要修正
+      (player) => player.firstSeasonLevel === undefined,
+    );
     const seasonPointPercent = resetPercent / 100;
     for (const player of players) {
+      // FIXME 每个赛季需要修正
       player.firstSeasonLevel = this.getFirstSeasonLevelBuyPoint(
         player.seasonPointTotal,
       );
