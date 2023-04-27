@@ -14,6 +14,7 @@ import { PlayerCountModule } from './player-count/player-count.module';
 import { PlayerPropertyModule } from './player-property/player-property.module';
 import { PlayerModule } from './player/player.module';
 import { TestModule } from './test/test.module';
+import { AdminModule } from './admin/admin.module';
 
 const ENV = process.env.NODE_ENV;
 
@@ -41,6 +42,7 @@ const ENV = process.env.NODE_ENV;
     PlayerModule,
     PlayerPropertyModule,
     TestModule,
+    AdminModule,
   ],
   controllers: [AppController],
   providers: [AppService],
