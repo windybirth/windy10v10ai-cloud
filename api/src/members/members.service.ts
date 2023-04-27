@@ -80,6 +80,11 @@ export class MembersService {
     );
     expireDate.setUTCHours(0, 0, 0, 0);
 
+    return this.upsertMember(steamId, expireDate);
+  }
+
+  async upsertMember(steamId: number, expireDate: Date) {
+    const existMember = await this.findOne(steamId);
     const member = { id: steamId.toString(), steamId, expireDate };
     if (existMember) {
       await this.membersRepository.update(member);

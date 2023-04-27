@@ -52,6 +52,9 @@ npm run start:with-data
 # debug (need start firebase emulator)
 (cd api && npm run start:debug)
 
+# REPL
+(cd api && npm run start -- --entryFile repl)
+
 # unit tests
 (cd api && npm run test)
 
