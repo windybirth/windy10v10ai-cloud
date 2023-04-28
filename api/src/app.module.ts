@@ -16,13 +16,13 @@ import { PlayerPropertyModule } from './player-property/player-property.module';
 import { PlayerModule } from './player/player.module';
 import { TestModule } from './test/test.module';
 
-const ENV = process.env.NODE_ENV;
+const ENVIRONMENT = process.env.ENVIRONMENT ?? 'local';
 
 @Module({
   imports: [
     MembersModule,
     ConfigModule.forRoot({
-      envFilePath: `envs/${ENV}.env`,
+      envFilePath: `.env.${ENVIRONMENT}`,
       isGlobal: true,
     }),
     FireormModule.forRoot({

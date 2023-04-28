@@ -11,7 +11,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   AppGlobalSettings(app);
 
-  if (process.env.NODE_ENV !== 'production') {
+  if (process.env.ENVIRONMENT == 'local') {
     const config = new DocumentBuilder()
       .setTitle('Windy10v10 Cloud API')
       .setVersion('1.0')
