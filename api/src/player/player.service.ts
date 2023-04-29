@@ -182,6 +182,7 @@ export class PlayerService {
         await this.playerRepository.update(player);
       }
     }
+    return players.length;
   }
 
   async setMemberLevel(steamId: number, level: number) {
