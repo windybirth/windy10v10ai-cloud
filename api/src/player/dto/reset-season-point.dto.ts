@@ -7,7 +7,7 @@ export class ResetSeasonPoint {
   @IsNumber()
   @ApiProperty({
     description: 'Percent of season point to reset, 1-100',
-    default: 40,
+    default: 50,
   })
   resetPercent: number;
 }
