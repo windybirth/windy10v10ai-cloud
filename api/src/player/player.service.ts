@@ -152,13 +152,24 @@ export class PlayerService {
     }
   }
 
-  async resetSeasonPoint(resetPercent: number) {
-    const players = await this.playerRepository
-      .whereLessThan('firstSeasonLevel', 1)
+  async resetSeasonPoint(resetPercent: number, baseSeasonPoint = 500) {
+    const playersAll = await this.playerRepository
+      .whereGreaterThan('seasonPointTotal', baseSeasonPoint)
       .find();
+    const players = playersAll.filter(
+      // FIXME 每个赛季需要修正
+      (player) => player.secondSeasonLevel === undefined,
+    );
     const seasonPointPercent = resetPercent / 100;
+
+    console.info(`Reset user count: ${players.length}`);
+    let count = 0;
     for (const player of players) {
-      player.firstSeasonLevel = this.getFirstSeasonLevelBuyPoint(
+      count++;
+      console.info(`Reset user count: ${count}`);
+
+      // FIXME 每个赛季需要修正
+      player.secondSeasonLevel = this.getSeasonLevelBuyPoint(
         player.seasonPointTotal,
       );
       player.seasonPointTotal = Math.floor(
@@ -179,6 +190,7 @@ export class PlayerService {
         await this.playerRepository.update(player);
       }
     }
+    return players.length;
   }
 
   async setMemberLevel(steamId: number, level: number) {
@@ -243,10 +255,6 @@ export class PlayerService {
     return Math.floor(Math.sqrt(point / 50 + 0.25) + 0.5);
   }
 
-  // 第一赛季积分换算等级
-  getFirstSeasonLevelBuyPoint(point: number) {
-    return Math.floor(Math.sqrt(point / 50 + 20.25) - 4.5) + 1;
-  }
   /**
    * 会员积分
    * @param level 当前等级

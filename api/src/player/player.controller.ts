@@ -1,8 +1,6 @@
-import { Body, Controller, Get, Param, Patch, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 
-import { AddAllSeasonPointDto } from './dto/add-all-season-point.dto';
-import { ResetSeasonPoint } from './dto/reset-season-point.dto';
 import { UpdatePlayerDto } from './dto/update-player.dto';
 import { PlayerService } from './player.service';
 
@@ -27,18 +25,5 @@ export class PlayerController {
   @Get('/all/csv')
   scoreAll() {
     return this.playerService.scoreAll();
-  }
-
-  @Post('/all/resetSeasonPoint')
-  resetSeasonPoint(@Body() resetSeasonPoint: ResetSeasonPoint) {
-    return this.playerService.resetSeasonPoint(resetSeasonPoint.resetPercent);
-  }
-
-  @Post('/all/addSeasonPoint')
-  addAllSeasonPoint(@Body() addAllSeasonPoint: AddAllSeasonPointDto) {
-    return this.playerService.addAllSeasonPoint(
-      addAllSeasonPoint.point,
-      addAllSeasonPoint.startFrom,
-    );
   }
 }

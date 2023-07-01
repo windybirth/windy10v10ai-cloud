@@ -30,4 +30,6 @@ export class Player {
   // 赛季等级
   @ApiPropertyOptional()
   firstSeasonLevel?: number;
+  @ApiPropertyOptional()
+  secondSeasonLevel?: number;
 }

@@ -8,8 +8,8 @@
     "node": ">=12.0.0"
   },
   "scripts": {
-    "start": "export NODE_ENV=develop && firebase emulators:start --only functions,hosting,firestore",
-    "start:with-data": "export NODE_ENV=develop && firebase emulators:start --only functions,hosting,firestore --import ./firestore-backup"
+    "start": "firebase emulators:start --only functions,hosting,firestore",
+    "start:with-data": "firebase emulators:start --only functions,hosting,firestore --import ./firestore-backup"
   },
   "repository": {
     "type": "git",

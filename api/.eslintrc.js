@@ -27,7 +27,7 @@ module.exports = {
 			'warn',
 			{ 'vars': 'all', 'varsIgnorePattern': '^_', 'args': 'after-used', 'argsIgnorePattern': '^_' }
 		],
-    'no-console': ['warn', { allow: ['warn', 'error'] }],
+    'no-console': ['warn', { allow: ['info', 'warn', 'error'] }],
     // 'autofix/no-unused-vars': 'error',
     'sort-imports': ['warn', {
       'ignoreCase': false,

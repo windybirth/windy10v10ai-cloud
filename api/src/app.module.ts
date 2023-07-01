@@ -3,6 +3,7 @@ import { ConfigModule } from '@nestjs/config';
 import { initializeApp } from 'firebase-admin/app';
 import { FireormModule } from 'nestjs-fireorm';
 
+import { AdminModule } from './admin/admin.module';
 import { AfdianModule } from './afdian/afdian.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -14,15 +15,14 @@ import { PlayerCountModule } from './player-count/player-count.module';
 import { PlayerPropertyModule } from './player-property/player-property.module';
 import { PlayerModule } from './player/player.module';
 import { TestModule } from './test/test.module';
-import { AdminModule } from './admin/admin.module';
 
-const ENV = process.env.NODE_ENV;
+const ENVIRONMENT = process.env.ENVIRONMENT ?? 'local';
 
 @Module({
   imports: [
     MembersModule,
     ConfigModule.forRoot({
-      envFilePath: `envs/${ENV}.env`,
+      envFilePath: `.env.${ENVIRONMENT}`,
       isGlobal: true,
     }),
     FireormModule.forRoot({
