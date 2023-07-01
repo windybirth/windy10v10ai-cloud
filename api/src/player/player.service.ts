@@ -152,6 +152,13 @@ export class PlayerService {
     }
   }
 
+  async countPlayerSeasonPointTotalMoreThan(points = 500) {
+    const players = await this.playerRepository
+      .whereGreaterThan('seasonPointTotal', points)
+      .find();
+    return players.length;
+  }
+
   async resetSeasonPoint(resetPercent: number, baseSeasonPoint = 500) {
     const playersAll = await this.playerRepository
       .whereGreaterThan('seasonPointTotal', baseSeasonPoint)
@@ -180,15 +187,12 @@ export class PlayerService {
   }
 
   async addAllSeasonPoint(point: number, startFrom: Date) {
-    const players = await this.playerRepository.find();
+    const players = await this.playerRepository
+      .whereGreaterOrEqualThan('lastMatchTime', startFrom)
+      .find();
     for (const player of players) {
-      if (
-        player.lastMatchTime &&
-        player.lastMatchTime.getTime() > startFrom.getTime()
-      ) {
-        player.seasonPointTotal += point;
-        await this.playerRepository.update(player);
-      }
+      player.seasonPointTotal += point;
+      await this.playerRepository.update(player);
     }
     return players.length;
   }
