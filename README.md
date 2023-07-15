@@ -39,8 +39,8 @@ npm run start
 rm -rf firestore-backup
 mkdir firestore-backup
 (cd firestore-backup && gsutil -m cp -r \
-  "gs://windy10v10ai.appspot.com/firestore-backup/20230630/20230630.overall_export_metadata" \
-  "gs://windy10v10ai.appspot.com/firestore-backup/20230630/all_namespaces" \
+  "gs://windy10v10ai.appspot.com/firestore-backup/20230708/20230708.overall_export_metadata" \
+  "gs://windy10v10ai.appspot.com/firestore-backup/20230708/all_namespaces" \
   .)
 
 # start firebase with data
