@@ -160,6 +160,7 @@ export class PlayerService {
   }
 
   async resetSeasonPoint(resetPercent: number, baseSeasonPoint = 500) {
+    // FIXME baseSeasonPoint以下的玩家无法记录上个赛季的积分
     const playersAll = await this.playerRepository
       .whereGreaterThan('seasonPointTotal', baseSeasonPoint)
       .find();
@@ -169,7 +170,6 @@ export class PlayerService {
     );
     const seasonPointPercent = resetPercent / 100;
 
-    console.info(`Reset user count: ${players.length}`);
     let count = 0;
     for (const player of players) {
       count++;
