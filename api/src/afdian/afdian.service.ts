@@ -142,12 +142,12 @@ export class AfdianService {
     return null;
   }
 
-  // steamId要求，numberString 8~10位，混有其他字符的情况暂不考虑。
+  // steamId要求，numberString 6~11位，混有其他字符的情况暂不考虑。
   private extractSteamId(rawString: string): number | null {
     if (!rawString) {
       return null;
     }
-    if (rawString.length < 8 || rawString.length > 10) {
+    if (rawString.length < 6 || rawString.length > 11) {
       return null;
     }
     if (isNaN(Number(rawString))) {
