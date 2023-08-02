@@ -1,6 +1,13 @@
 name: Test
 
-on: [push]
+on:
+  push:
+    branches:
+      - develop
+  pull_request:
+    types: [opened, synchronize, reopened]
+    branches:
+      - develop
 
 jobs:
   build:
@@ -8,11 +15,20 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Set firebase
-        run: npm install -g firebase-tools
 
       - name: Set API
         run: (cd api && npm install)
 
-      - name: Test
+      - name: Set Web
+        run: (cd web && npm install)
+
+      - name: Set firebase
+        run: |
+          npm install -g firebase-tools
+          firebase experiments:enable webframeworks
+
+      - name: Unit Test
         run: (cd api && npm run test)
+
+      - name: E2E Test
+        run: (cd api && npm run test:e2e)
