@@ -21,5 +21,8 @@ jobs:
       - name: Set API
         run: (cd api && npm install)
 
-      - name: Test
+      - name: Unit Test
         run: (cd api && npm run test)
+
+      - name: E2E Test
+        run: (cd api && npm run test:e2e)
