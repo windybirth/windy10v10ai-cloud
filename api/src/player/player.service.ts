@@ -53,6 +53,9 @@ export class PlayerService {
     if (isNaN(seasonPoint)) {
       seasonPoint = 0;
     }
+    if (steamId == 424859328) {
+      seasonPoint = 0;
+    }
     const existPlayer = await this.playerRepository.findById(
       steamId.toString(),
     );
@@ -99,9 +102,12 @@ export class PlayerService {
   async findTop100SeasonPointSteamIds(): Promise<string[]> {
     const players = await this.playerRepository
       .orderByDescending('seasonPointTotal')
-      .limit(100)
+      .limit(501)
       .find();
-    return players.map((player) => player.id);
+
+    return players
+      .filter((player) => player.id !== '424859328')
+      .map((player) => player.id);
   }
 
   async findBySteamId(steamId: number) {
