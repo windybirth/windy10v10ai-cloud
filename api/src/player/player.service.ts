@@ -102,7 +102,7 @@ export class PlayerService {
   async findTop100SeasonPointSteamIds(): Promise<string[]> {
     const players = await this.playerRepository
       .orderByDescending('seasonPointTotal')
-      .limit(501)
+      .limit(201)
       .find();
 
     return players
