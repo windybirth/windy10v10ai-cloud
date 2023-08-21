@@ -114,13 +114,13 @@ export class PlayerService {
     return await this.playerRepository.findById(steamId.toString());
   }
 
-  async findBySteamIds(ids: string[]): Promise<Player[]> {
+  async findByIds(ids: string[]): Promise<Player[]> {
     const players = await this.playerRepository.whereIn('id', ids).find();
     return players;
   }
 
   async findBySteamIdsWithLevelInfo(ids: string[]): Promise<PlayerDto[]> {
-    const players = (await this.findBySteamIds(ids)) as PlayerDto[];
+    const players = (await this.findByIds(ids)) as PlayerDto[];
     for (const player of players) {
       const seasonPoint = player.seasonPointTotal;
       const seasonLevel = this.getSeasonLevelBuyPoint(seasonPoint);
