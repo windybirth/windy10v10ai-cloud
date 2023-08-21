@@ -65,6 +65,14 @@ export class GameController {
       logger.warn(`[Game Start] playerCount Failed, ${steamIds}`, error);
     }
 
+    // 活动积分赋予
+    await this.gameService.giveEventPoints(
+      new Date(process.env.EVENT_START_TIME),
+      new Date(process.env.EVENT_END_TIME),
+      +process.env.EVENT_SEASON_POINT,
+      steamIds,
+    );
+
     // 记录游戏开始信息，创建玩家数据
     await this.matchService.countGameStart();
     for (const steamId of steamIds) {
