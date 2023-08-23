@@ -9,5 +9,8 @@ export class GameStart {
   @ApiProperty()
   players: Player[];
   @ApiProperty()
+  // FIXME SteamIds 改成 ids,或者 steamIds : number[]
   top100SteamIds: string[];
+  @ApiProperty()
+  eventRewardSteamIds: number[];
 }

@@ -29,6 +29,8 @@ export class GameService {
     seasonPoints: number,
     steamIds: number[],
   ): Promise<number[]> {
+    // TODO env读取失败时 return
+
     // if now is not in the event time, return
     const now = new Date();
     if (now < startTime || now > endTime) {
@@ -45,14 +47,15 @@ export class GameService {
       // 检测用户是否为活动期间首次登陆 player.lastMatchTime
       if (player.lastMatchTime < startTime) {
         // 发放积分（赛季 player.seasonPointTotal
-        player.seasonPointTotal += seasonPoints;
+        player.seasonPointTotal = seasonPoints;
         // update player
         // 把 id 改为 steamId
         const steamId = +player.id;
         await this.playerService.upsertAddPoint(steamId, player);
         // TODO fix return
-        // return [steamId];
+        steamIds.push(steamId);
       }
     }
+    return steamIds;
   }
 }

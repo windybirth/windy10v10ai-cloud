@@ -101,12 +101,12 @@ export class GameController {
     const playerRank = await this.playerCountService.getPlayerRankToday();
     if (playerRank) {
       const top100SteamIds = playerRank.rankSteamIds;
-      return { members, players, top100SteamIds };
+      return { members, players, top100SteamIds, eventRewardSteamIds: [] };
     } else {
       const top100SteamIds =
         await this.playerService.findTop100SeasonPointSteamIds();
       await this.playerCountService.updatePlayerRankToday(top100SteamIds);
-      return { members, players, top100SteamIds };
+      return { members, players, top100SteamIds, eventRewardSteamIds: [] };
     }
   }
 
