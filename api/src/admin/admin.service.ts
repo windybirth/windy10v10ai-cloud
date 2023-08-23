@@ -17,7 +17,7 @@ export class AdminService {
     private readonly playerService: PlayerService,
   ) {}
   async createAfdianMember(createAfdianMemberDto: CreateAfdianMemberDto) {
-    const player = await this.playerService.upsert(
+    const player = await this.playerService.upsertAddPoint(
       createAfdianMemberDto.steamId,
       {
         memberPointTotal:
@@ -46,7 +46,7 @@ export class AdminService {
         continue;
       }
 
-      const player = await this.playerService.upsert(steamId, {
+      const player = await this.playerService.upsertAddPoint(steamId, {
         memberPointTotal: PATREON_MEMBER_MONTHLY_POINT,
       });
       const member = await this.membersService.upsertMember(steamId, expireAt);

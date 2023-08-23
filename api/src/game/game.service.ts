@@ -39,6 +39,7 @@ export class GameService {
     const players = await this.playerService.findByIds(
       steamIds.map((id) => id.toString()),
     );
+
     // TODO 首次游戏的新用户 取不到？
     for (const player of players) {
       // 检测用户是否为活动期间首次登陆 player.lastMatchTime
@@ -48,9 +49,9 @@ export class GameService {
         // update player
         // 把 id 改为 steamId
         const steamId = +player.id;
-        await this.playerService.upsert(steamId, player);
+        await this.playerService.upsertAddPoint(steamId, player);
         // TODO fix return
-        return [steamId];
+        // return [steamId];
       }
     }
   }

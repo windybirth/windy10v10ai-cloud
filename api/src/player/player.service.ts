@@ -139,7 +139,7 @@ export class PlayerService {
     return players;
   }
 
-  async upsert(steamId: number, updatePlayerDto: UpdatePlayerDto) {
+  async upsertAddPoint(steamId: number, updatePlayerDto: UpdatePlayerDto) {
     const existPlayer = await this.playerRepository.findById(
       steamId.toString(),
     );
