@@ -13,16 +13,24 @@ export class PlayerService {
     private readonly playerRepository: BaseFirestoreRepository<Player>,
   ) {}
 
-  async upsertGameStart(steamId: number, isMember: boolean) {
+  // 创建新玩家
+  async createNewPlayer(steamId: number) {
     const existPlayer = await this.playerRepository.findById(
       steamId.toString(),
     );
     const player = existPlayer ?? this.genereNewPlayerEntity(steamId);
+    if (!existPlayer) {
+      await this.playerRepository.create(player);
+    }
+    return player;
+  }
 
+  // 更新会员积分
+  async upsertMemberPoint(player: Player, isMember: boolean) {
     let memberDailyPoint = 0;
-
     const todayZero = new Date();
     todayZero.setHours(0, 0, 0, 0);
+
     if (isMember) {
       if (
         !player?.lastMatchTime ||
@@ -34,16 +42,17 @@ export class PlayerService {
         memberDailyPoint = 0;
       }
     }
-
     player.memberPointTotal += memberDailyPoint;
-    player.lastMatchTime = new Date();
-
-    if (existPlayer) {
-      await this.playerRepository.update(player);
-    } else {
-      await this.playerRepository.create(player);
-    }
+    return player;
   }
+
+  // 更新最后游戏时间
+  async updateLastMatchTime(player: Player) {
+    player.lastMatchTime = new Date();
+    await this.playerRepository.update(player);
+    return player;
+  }
+
   async upsertGameEnd(
     steamId: number,
     isWinner: boolean,

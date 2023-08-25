@@ -1,6 +1,7 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { logger } from 'firebase-functions';
 
+import { Player } from '../player/entities/player.entity';
 import { PlayerService } from '../player/player.service';
 
 @Injectable()
@@ -21,41 +22,55 @@ export class GameService {
     }
   }
 
+  // 创建并更新会员情报
+  async upsertMemberInfo(steamId: number, isMember: boolean) {
+    // 创建新玩家
+    let player = await this.playerService.createNewPlayer(steamId);
+
+    // 判断赋予多少活动积分
+    const rSteamId = await this.giveEventPoints(
+      new Date(process.env.EVENT_START_TIME),
+      new Date(process.env.EVENT_END_TIME),
+      +process.env.EVENT_SEASON_POINT,
+      player,
+    );
+
+    // 判断赋予多少会员积分
+    player = await this.playerService.upsertMemberPoint(player, isMember);
+
+    // 更新最后游戏时间
+    await this.playerService.updateLastMatchTime(player);
+
+    return rSteamId;
+  }
+
   // 活动积分赋予
   // 参数 活动期间（开始，结束），发放赛季积分数量
   async giveEventPoints(
     startTime: Date,
     endTime: Date,
     seasonPoints: number,
-    steamIds: number[],
-  ): Promise<number[]> {
+    player: Player,
+  ): Promise<number> {
     // TODO env读取失败时 return
 
     // if now is not in the event time, return
     const now = new Date();
     if (now < startTime || now > endTime) {
-      return [];
+      return null;
     }
 
-    // get player
-    const players = await this.playerService.findByIds(
-      steamIds.map((id) => id.toString()),
-    );
-
-    // TODO 首次游戏的新用户 取不到？
-    for (const player of players) {
-      // 检测用户是否为活动期间首次登陆 player.lastMatchTime
-      if (player.lastMatchTime < startTime) {
-        // 发放积分（赛季 player.seasonPointTotal
-        player.seasonPointTotal = seasonPoints;
-        // update player
-        // 把 id 改为 steamId
-        const steamId = +player.id;
-        await this.playerService.upsertAddPoint(steamId, player);
-        // TODO fix return
-        steamIds.push(steamId);
-      }
+    // 检测用户是否为活动期间首次登陆 player.lastMatchTime
+    if (player.lastMatchTime < startTime) {
+      // 发放积分（赛季 player.seasonPointTotal
+      player.seasonPointTotal = seasonPoints;
+      // update player
+      // 把 id 改为 steamId
+      const steamId = +player.id;
+      await this.playerService.upsertAddPoint(steamId, player);
+      return steamId;
     }
-    return steamIds;
+    // }
+    return null;
   }
 }

@@ -55,6 +55,7 @@ export class GameController {
 
     // 获取会员信息
     const members = await this.membersService.findBySteamIds(steamIds);
+    // 统计会员游戏数据
     try {
       await this.playerCountService.update({
         countryCode: countryCode,
@@ -65,19 +66,13 @@ export class GameController {
       logger.warn(`[Game Start] playerCount Failed, ${steamIds}`, error);
     }
 
-    // 活动积分赋予
-    await this.gameService.giveEventPoints(
-      new Date(process.env.EVENT_START_TIME),
-      new Date(process.env.EVENT_END_TIME),
-      +process.env.EVENT_SEASON_POINT,
-      steamIds,
-    );
-
-    // 记录游戏开始信息，创建玩家数据
+    // 统计每日开始游戏数据
     await this.matchService.countGameStart();
+
+    // 创建新玩家,赋予各种积分，更新最后游戏时间
     for (const steamId of steamIds) {
       const isMember = members.some((m) => m.steamId === steamId);
-      await this.playerService.upsertGameStart(steamId, isMember);
+      this.gameService.upsertMemberInfo(steamId, isMember);
     }
 
     // 获取玩家信息
