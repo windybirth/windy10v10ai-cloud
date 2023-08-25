@@ -52,8 +52,6 @@ export class GameService {
     seasonPoints: number,
     player: Player,
   ): Promise<number> {
-    // TODO env读取失败时 return
-
     // if now is not in the event time, return
     const now = new Date();
     if (now < startTime || now > endTime) {
