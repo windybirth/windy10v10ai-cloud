@@ -56,15 +56,15 @@ export class GameController {
     // 获取会员信息
     const members = await this.membersService.findBySteamIds(steamIds);
     // 统计会员游戏数据
-    try {
-      await this.playerCountService.update({
+    await this.playerCountService
+      .update({
         countryCode: countryCode,
         playerIds: steamIds,
         memberIds: members.map((m) => m.steamId),
+      })
+      .catch((error) => {
+        logger.warn(`[Game Start] playerCount Failed, ${steamIds}`, error);
       });
-    } catch (error) {
-      logger.warn(`[Game Start] playerCount Failed, ${steamIds}`, error);
-    }
 
     // 统计每日开始游戏数据
     await this.matchService.countGameStart();
