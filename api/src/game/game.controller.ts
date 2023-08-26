@@ -108,7 +108,7 @@ export class GameController {
     @Headers('x-api-key') apiKey: string,
     @Body() gameInfo: GameEnd,
   ): Promise<string> {
-    this.gameService.assertApiKey(apiKey);
+    this.gameService.assertApiKey(apiKey, false);
 
     const players = gameInfo.players;
     for (const player of players) {
