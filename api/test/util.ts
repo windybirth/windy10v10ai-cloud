@@ -15,8 +15,16 @@ export async function initTest(): Promise<INestApplication> {
   return await app.init();
 }
 
-export function get(app: INestApplication, url: string): request.Test {
-  return request(app.getHttpServer()).get(url);
+export function get(
+  app: INestApplication,
+  url: string,
+  query: object = {},
+): request.Test {
+  const headers = {
+    'x-api-key': 'apikey',
+    'x-country-code': 'CN',
+  };
+  return request(app.getHttpServer()).get(url).query(query).set(headers);
 }
 
 export function post(
