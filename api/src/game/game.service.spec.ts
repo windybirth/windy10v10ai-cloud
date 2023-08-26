@@ -1,5 +1,7 @@
 import { Test } from '@nestjs/testing';
 
+import { PlayerService } from '../player/player.service';
+
 import { GameService } from './game.service';
 
 describe('CatsController', () => {
@@ -7,7 +9,18 @@ describe('CatsController', () => {
 
   beforeEach(async () => {
     const moduleRef = await Test.createTestingModule({
-      providers: [GameService],
+      providers: [
+        GameService,
+        {
+          provide: PlayerService,
+          useValue: {
+            createNewPlayer: jest.fn(),
+            upsertMemberPoint: jest.fn(),
+            updateLastMatchTime: jest.fn(),
+            upsertAddPoint: jest.fn(),
+          },
+        },
+      ],
     }).compile();
 
     service = moduleRef.get<GameService>(GameService);
@@ -35,7 +48,7 @@ describe('CatsController', () => {
         player,
       );
 
-      expect(result).toBe(true);
+      expect(result).toBe(1);
     });
   });
 });
