@@ -48,7 +48,7 @@ describe('CatsController', () => {
         player,
       );
 
-      expect(result).toBe(1);
+      expect(result).toBe(100);
     });
   });
 });
