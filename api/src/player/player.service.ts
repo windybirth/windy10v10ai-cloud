@@ -14,7 +14,7 @@ export class PlayerService {
   ) {}
 
   // 创建新玩家
-  async createNewPlayer(steamId: number) {
+  async findSteamIdAndNewPlayer(steamId: number) {
     const existPlayer = await this.playerRepository.findById(
       steamId.toString(),
     );
@@ -26,7 +26,7 @@ export class PlayerService {
   }
 
   // 更新会员积分
-  async upsertMemberPoint(player: Player, isMember: boolean) {
+  upsertMemberPoint(player: Player, isMember: boolean) {
     let memberDailyPoint = 0;
     const todayZero = new Date();
     todayZero.setHours(0, 0, 0, 0);
@@ -42,13 +42,18 @@ export class PlayerService {
         memberDailyPoint = 0;
       }
     }
-    player.memberPointTotal += memberDailyPoint;
-    return player;
+    return memberDailyPoint;
   }
 
-  // 更新最后游戏时间
-  async updateLastMatchTime(player: Player) {
+  // 更新积分和最后游戏时间
+  async updatePlayer(
+    player: Player,
+    seasonPointTotal: number,
+    memberPointTotal: number,
+  ) {
     player.lastMatchTime = new Date();
+    player.seasonPointTotal += seasonPointTotal;
+    player.memberPointTotal += memberPointTotal;
     await this.playerRepository.update(player);
     return player;
   }

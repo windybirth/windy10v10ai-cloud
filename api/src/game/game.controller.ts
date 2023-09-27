@@ -70,9 +70,14 @@ export class GameController {
     await this.matchService.countGameStart();
 
     // 创建新玩家,赋予各种积分，更新最后游戏时间
+    const eventRewardSteamIds = [];
     for (const steamId of steamIds) {
       const isMember = members.some((m) => m.steamId === steamId);
-      this.gameService.upsertMemberInfo(steamId, isMember);
+      const eventRewardSteamId = this.gameService.upsertPlayerInfo(
+        steamId,
+        isMember,
+      );
+      eventRewardSteamIds.push(eventRewardSteamId);
     }
 
     // 获取玩家信息
@@ -96,12 +101,12 @@ export class GameController {
     const playerRank = await this.playerCountService.getPlayerRankToday();
     if (playerRank) {
       const top100SteamIds = playerRank.rankSteamIds;
-      return { members, players, top100SteamIds, eventRewardSteamIds: [] };
+      return { members, players, top100SteamIds, eventRewardSteamIds };
     } else {
       const top100SteamIds =
         await this.playerService.findTop100SeasonPointSteamIds();
       await this.playerCountService.updatePlayerRankToday(top100SteamIds);
-      return { members, players, top100SteamIds, eventRewardSteamIds: [] };
+      return { members, players, top100SteamIds, eventRewardSteamIds };
     }
   }
 

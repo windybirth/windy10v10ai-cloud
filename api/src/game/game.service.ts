@@ -23,56 +23,57 @@ export class GameService {
   }
 
   // 创建并更新会员情报
-  async upsertMemberInfo(steamId: number, isMember: boolean) {
-    // 创建新玩家
-    let player = await this.playerService.createNewPlayer(steamId);
+  async upsertPlayerInfo(steamId: number, isMember: boolean): Promise<number> {
+    // 获取会员信息
+    const player = await this.playerService.findSteamIdAndNewPlayer(steamId);
 
     // 判断赋予多少活动积分
-    const rSteamId = await this.giveEventPoints(
+    const seasonPointTobeAdd = this.giveEventPoints(
       new Date(process.env.EVENT_START_TIME),
       new Date(process.env.EVENT_END_TIME),
       +process.env.EVENT_SEASON_POINT,
       player,
     );
-
     // 判断赋予多少会员积分
-    player = await this.playerService.upsertMemberPoint(player, isMember);
+    const memberPointTobeAdd = this.playerService.upsertMemberPoint(
+      player,
+      isMember,
+    );
+    // 更新Player
+    await this.playerService.updatePlayer(
+      player,
+      seasonPointTobeAdd,
+      memberPointTobeAdd,
+    );
 
-    // 更新最后游戏时间
-    await this.playerService.updateLastMatchTime(player);
-
-    return rSteamId;
+    if (seasonPointTobeAdd > 0) {
+      return steamId;
+    }
   }
 
   // 活动积分赋予
   // 参数 活动期间（开始，结束），发放赛季积分数量
-  async giveEventPoints(
+  giveEventPoints(
     startTime: Date,
     endTime: Date,
     seasonPoints: number,
     player: Player,
-  ): Promise<number> {
+  ) {
     // TODO env读取失败时 return
     if (isNaN(seasonPoints)) {
-      return null;
+      return 0;
     }
     // if now is not in the event time, return
     const now = new Date();
     if (now < startTime || now > endTime) {
-      return null;
+      return 0;
     }
 
     // 检测用户是否为活动期间首次登陆 player.lastMatchTime
     if (player.lastMatchTime < startTime) {
       // 发放积分（赛季 player.seasonPointTotal
       player.seasonPointTotal = seasonPoints;
-      // update player
-      // 把 id 改为 steamId
-      const steamId = +player.id;
-      await this.playerService.upsertAddPoint(steamId, player);
-      return steamId;
     }
-    // }
-    return null;
+    return player.seasonPointTotal;
   }
 }

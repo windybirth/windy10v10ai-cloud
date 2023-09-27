@@ -59,7 +59,8 @@ describe('PlayerController (e2e)', () => {
         const playerResult = await get(app, `${playerGetUrl}100000011`);
         expect(playerResult.status).toEqual(200);
         expect(playerResult.body.memberPointTotal).toEqual(60);
-        expect(playerResult.body.seasonPointTotal).toEqual(1000);
+        // TODO 賽季積分的时间还没有到
+        expect(playerResult.body.seasonPointTotal).toEqual(0);
       });
       // it('会员 老玩家 当日首次', async () => {});
     });
