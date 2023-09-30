@@ -172,7 +172,7 @@ export class PlayerService {
       .find();
     const players = playersAll.filter(
       // FIXME 每个赛季需要修正
-      (player) => player.secondSeasonLevel === undefined,
+      (player) => player.thirdSeasonLevel === undefined,
     );
     const seasonPointPercent = resetPercent / 100;
 
@@ -182,7 +182,7 @@ export class PlayerService {
       console.info(`Reset user count: ${count}`);
 
       // FIXME 每个赛季需要修正
-      player.secondSeasonLevel = this.getSeasonLevelBuyPoint(
+      player.thirdSeasonLevel = this.getSeasonLevelBuyPoint(
         player.seasonPointTotal,
       );
       player.seasonPointTotal = Math.floor(
