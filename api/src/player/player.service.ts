@@ -176,6 +176,7 @@ export class PlayerService {
     );
     const seasonPointPercent = resetPercent / 100;
 
+    console.info(`Reset user total: ${players.length}`);
     let count = 0;
     for (const player of players) {
       count++;
