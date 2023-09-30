@@ -68,7 +68,6 @@ describe('PlayerController (e2e)', () => {
       expect(result.body.id).toEqual(steamId);
       expect(result.body.memberPointTotal).toEqual(100);
       expect(result.body.seasonPointTotal).toEqual(0);
-      // expect(result.body.secondSeasonLevel).toEqual(1); FIXME
     });
 
     it('赛季积分 500', async () => {
@@ -85,7 +84,6 @@ describe('PlayerController (e2e)', () => {
       expect(result.body.id).toEqual(steamId);
       expect(result.body.memberPointTotal).toEqual(100);
       expect(result.body.seasonPointTotal).toEqual(500);
-      // expect(result.body.secondSeasonLevel).toEqual(2);
     });
 
     it('赛季积分 29000', async () => {
@@ -102,7 +100,7 @@ describe('PlayerController (e2e)', () => {
       expect(result.body.id).toEqual(steamId);
       expect(result.body.memberPointTotal).toEqual(100);
       expect(result.body.seasonPointTotal).toEqual(14500);
-      expect(result.body.secondSeasonLevel).toEqual(24);
+      expect(result.body.thirdSeasonLevel).toEqual(24);
     });
   });
 
