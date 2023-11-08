@@ -100,13 +100,15 @@ export class PlayerService {
   }
 
   async findTop100SeasonPointSteamIds(): Promise<string[]> {
+    const rankingCount = 200;
+    const excludeSteamIds = ['424859328', '869192295'];
     const players = await this.playerRepository
       .orderByDescending('seasonPointTotal')
-      .limit(201)
+      .limit(rankingCount + excludeSteamIds.length)
       .find();
 
     return players
-      .filter((player) => player.id !== '424859328')
+      .filter((player) => !excludeSteamIds.includes(player.id))
       .map((player) => player.id);
   }
 
