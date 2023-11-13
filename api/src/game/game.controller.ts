@@ -43,7 +43,7 @@ export class GameController {
     apiKey: string,
     @Headers('x-country-code') countryCode: string,
   ): Promise<GameStart> {
-    this.gameService.assertApiKey(apiKey);
+    // this.gameService.assertApiKey(apiKey);
 
     steamIds = steamIds.filter((id) => id > 0);
     if (steamIds.length > 10) {
