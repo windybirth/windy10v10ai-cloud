@@ -134,7 +134,7 @@ export class GameController {
     @Headers('x-api-key') apiKey: string,
     @Body() updatePlayerPropertyDto: UpdatePlayerPropertyDto,
   ) {
-    this.gameService.assertApiKey(apiKey);
+    // this.gameService.assertApiKey(apiKey);
 
     return this.playerPropertyService.update(updatePlayerPropertyDto);
   }
