@@ -69,7 +69,7 @@ export class GameController {
     // 统计每日开始游戏数据
     await this.matchService.countGameStart();
 
-    // 创建新玩家,赋予各种积分，更新最后游戏时间
+    // 创建新玩家，赋予各种积分，更新最后游戏时间
     const eventRewardSteamIds = [];
     for (const steamId of steamIds) {
       const isMember = members.some((m) => m.steamId === steamId);
@@ -85,7 +85,7 @@ export class GameController {
     const players = await this.playerService.findBySteamIdsWithLevelInfo(
       steamIdsStr,
     );
-    // 添加玩家属性信息
+    // 获取玩家属性
     for (const player of players) {
       const property = await this.playerPropertyService.findBySteamId(
         +player.id,
@@ -97,17 +97,10 @@ export class GameController {
       }
     }
 
-    // 赛季前100名
-    const playerRank = await this.playerCountService.getPlayerRankToday();
-    if (playerRank) {
-      const top100SteamIds = playerRank.rankSteamIds;
-      return { members, players, top100SteamIds, eventRewardSteamIds };
-    } else {
-      const top100SteamIds =
-        await this.playerService.findTop100SeasonPointSteamIds();
-      await this.playerCountService.updatePlayerRankToday(top100SteamIds);
-      return { members, players, top100SteamIds, eventRewardSteamIds };
-    }
+    // 排行榜
+    const playerRank = await this.gameService.getPlayerRank();
+    const top100SteamIds = playerRank.rankSteamIds;
+    return { members, players, top100SteamIds, eventRewardSteamIds };
   }
 
   @ApiBody({ type: GameEnd })

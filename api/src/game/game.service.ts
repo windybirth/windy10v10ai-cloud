@@ -1,12 +1,17 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { logger } from 'firebase-functions';
 
+import { PlayerRank } from '../player-count/entities/player-rank.entity';
+import { PlayerCountService } from '../player-count/player-count.service';
 import { Player } from '../player/entities/player.entity';
 import { PlayerService } from '../player/player.service';
 
 @Injectable()
 export class GameService {
-  constructor(private readonly playerService: PlayerService) {}
+  constructor(
+    private readonly playerService: PlayerService,
+    private readonly playerCountService: PlayerCountService,
+  ) {}
 
   getOK(): string {
     return 'OK';
@@ -75,5 +80,17 @@ export class GameService {
       player.seasonPointTotal = seasonPoints;
     }
     return player.seasonPointTotal;
+  }
+
+  async getPlayerRank(): Promise<PlayerRank> {
+    const playerRank = await this.playerCountService.getPlayerRankToday();
+
+    if (playerRank) {
+      return playerRank;
+    } else {
+      const rankSteamIds =
+        await this.playerService.findTop100SeasonPointSteamIds();
+      return await this.playerCountService.updatePlayerRankToday(rankSteamIds);
+    }
   }
 }
