@@ -73,12 +73,32 @@ export class GameController {
     const eventRewardSteamIds = [];
     for (const steamId of steamIds) {
       const isMember = members.some((m) => m.steamId === steamId);
-      const eventRewardSteamId = this.gameService.upsertPlayerInfo(
+      const eventRewardSteamId = await this.gameService.upsertPlayerInfo(
         steamId,
         isMember,
       );
       eventRewardSteamIds.push(eventRewardSteamId);
     }
+
+    const pointInfo = [
+      {
+        steamId: 385130282,
+        title: {
+          cn: '赛季积分1000 会员积分0',
+          en: 'Event Points',
+        },
+        seasonPoint: 1000,
+        memberPoint: 0,
+      },
+      {
+        steamId: 385130282,
+        title: {
+          cn: '赛季积分undefined 会员积分999',
+          en: 'Event Points',
+        },
+        memberPoint: 999,
+      },
+    ];
 
     // 获取玩家信息
     const steamIdsStr = steamIds.map((id) => id.toString());
@@ -100,7 +120,7 @@ export class GameController {
     // 排行榜
     const playerRank = await this.gameService.getPlayerRank();
     const top100SteamIds = playerRank.rankSteamIds;
-    return { members, players, top100SteamIds, eventRewardSteamIds };
+    return { members, players, top100SteamIds, pointInfo };
   }
 
   @ApiBody({ type: GameEnd })
