@@ -114,13 +114,15 @@ export class PlayerService {
   }
 
   async findTop100SeasonPointSteamIds(): Promise<string[]> {
+    const rankingCount = 200;
+    const excludeSteamIds = ['424859328', '869192295'];
     const players = await this.playerRepository
       .orderByDescending('seasonPointTotal')
-      .limit(201)
+      .limit(rankingCount + excludeSteamIds.length)
       .find();
 
     return players
-      .filter((player) => player.id !== '424859328')
+      .filter((player) => !excludeSteamIds.includes(player.id))
       .map((player) => player.id);
   }
 
@@ -186,17 +188,18 @@ export class PlayerService {
       .find();
     const players = playersAll.filter(
       // FIXME 每个赛季需要修正
-      (player) => player.secondSeasonLevel === undefined,
+      (player) => player.thirdSeasonLevel === undefined,
     );
     const seasonPointPercent = resetPercent / 100;
 
+    console.info(`Reset user total: ${players.length}`);
     let count = 0;
     for (const player of players) {
       count++;
       console.info(`Reset user count: ${count}`);
 
       // FIXME 每个赛季需要修正
-      player.secondSeasonLevel = this.getSeasonLevelBuyPoint(
+      player.thirdSeasonLevel = this.getSeasonLevelBuyPoint(
         player.seasonPointTotal,
       );
       player.seasonPointTotal = Math.floor(

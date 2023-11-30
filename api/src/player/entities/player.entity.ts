@@ -32,4 +32,6 @@ export class Player {
   firstSeasonLevel?: number;
   @ApiPropertyOptional()
   secondSeasonLevel?: number;
+  @ApiPropertyOptional()
+  thirdSeasonLevel?: number;
 }

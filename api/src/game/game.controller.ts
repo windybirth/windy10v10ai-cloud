@@ -43,7 +43,7 @@ export class GameController {
     apiKey: string,
     @Headers('x-country-code') countryCode: string,
   ): Promise<GameStart> {
-    this.gameService.assertApiKey(apiKey);
+    // this.gameService.assertApiKey(apiKey);
 
     steamIds = steamIds.filter((id) => id > 0);
     if (steamIds.length > 10) {
@@ -109,7 +109,7 @@ export class GameController {
     @Headers('x-api-key') apiKey: string,
     @Body() gameInfo: GameEnd,
   ): Promise<string> {
-    this.gameService.assertApiKey(apiKey);
+    this.gameService.assertApiKey(apiKey, false);
 
     const players = gameInfo.players;
     for (const player of players) {
@@ -135,7 +135,7 @@ export class GameController {
     @Headers('x-api-key') apiKey: string,
     @Body() updatePlayerPropertyDto: UpdatePlayerPropertyDto,
   ) {
-    this.gameService.assertApiKey(apiKey);
+    // this.gameService.assertApiKey(apiKey);
 
     return this.playerPropertyService.update(updatePlayerPropertyDto);
   }
