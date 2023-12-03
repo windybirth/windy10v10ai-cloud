@@ -1,15 +1,24 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { logger } from 'firebase-functions';
 
+import { Member } from '../members/entities/members.entity';
+import { MembersService } from '../members/members.service';
 import { PlayerRank } from '../player-count/entities/player-rank.entity';
 import { PlayerCountService } from '../player-count/player-count.service';
 import { Player } from '../player/entities/player.entity';
 import { PlayerService } from '../player/player.service';
 
+import { PointInfoDto } from './dto/point-info.dto';
+
 @Injectable()
 export class GameService {
   constructor(
     private readonly playerService: PlayerService,
+    private readonly membersService: MembersService,
     private readonly playerCountService: PlayerCountService,
   ) {}
 
@@ -30,9 +39,49 @@ export class GameService {
     }
   }
 
-  // 创建并更新会员情报
-  async upsertPlayerInfo(steamId: number, isMember: boolean): Promise<number> {
-    // 获取会员信息
+  validateSteamIds(steamIds: number[]): number[] {
+    steamIds = steamIds.filter((id) => id > 0);
+    if (steamIds.length > 10) {
+      logger.warn(
+        `[Game Start] steamIds has length more than 10, ${steamIds}.`,
+      );
+      throw new BadRequestException();
+    }
+    return steamIds;
+  }
+
+  async addDailyMemberPoints(members: Member[]): Promise<PointInfoDto[]> {
+    const memberDailyPoint = +process.env.MEMBER_DAILY_POINT;
+    if (isNaN(memberDailyPoint)) {
+      logger.error(`[Game Start] MEMBER_DAILY_POINT is NaN.`);
+      return [];
+    }
+
+    const pointInfoDtos: PointInfoDto[] = [];
+    for (const member of members) {
+      const daliyMemberPoint = this.membersService.getDailyMemberPoint(member);
+      // 判断是否为会员
+      if (daliyMemberPoint > 0) {
+        await this.playerService.upsertAddPoint(member.steamId, {
+          memberPointTotal: memberDailyPoint,
+        });
+        await this.membersService.updateMemberLastDailyDate(member);
+        // 返回会员积分信息
+        pointInfoDtos.push({
+          steamId: member.steamId,
+          title: {
+            cn: '会员每日登录积分',
+            en: 'Member Daily Login Points',
+          },
+          memberPoint: memberDailyPoint,
+        });
+      }
+    }
+
+    return pointInfoDtos;
+  }
+
+  async upsertPlayerInfo(steamId: number): Promise<number> {
     const player = await this.playerService.findSteamIdAndNewPlayer(steamId);
 
     // 判断赋予多少活动积分
@@ -42,16 +91,11 @@ export class GameService {
       +process.env.EVENT_SEASON_POINT,
       player,
     );
-    // 判断赋予多少会员积分
-    const memberPointTobeAdd = this.playerService.upsertMemberPoint(
-      player,
-      isMember,
-    );
     // 更新Player
-    await this.playerService.updatePlayer(
+    await this.playerService.updatePlayerLastMatchTime(
       player,
       seasonPointTobeAdd,
-      memberPointTobeAdd,
+      0,
     );
 
     if (seasonPointTobeAdd > 0) {
@@ -67,7 +111,6 @@ export class GameService {
     seasonPoints: number,
     player: Player,
   ) {
-    // TODO env读取失败时 return
     if (isNaN(seasonPoints)) {
       return 0;
     }

@@ -42,3 +42,26 @@ export function patch(
 ): request.Test {
   return request(app.getHttpServer()).patch(url).send(body);
 }
+
+export function mockDate(date: string): void {
+  const fackTimer = getFakeTimer();
+  fackTimer.setSystemTime(new Date(date));
+}
+
+export function restoreDate(): void {
+  jest.useRealTimers();
+}
+
+function getFakeTimer(): typeof jest {
+  return jest.useFakeTimers({
+    doNotFake: [
+      'nextTick',
+      'setImmediate',
+      'clearImmediate',
+      'setInterval',
+      'clearInterval',
+      'setTimeout',
+      'clearTimeout',
+    ],
+  });
+}

@@ -1,5 +1,7 @@
 import { Test } from '@nestjs/testing';
 
+import { MembersService } from '../members/members.service';
+import { PlayerCountService } from '../player-count/player-count.service';
 import { PlayerService } from '../player/player.service';
 
 import { GameService } from './game.service';
@@ -19,6 +21,14 @@ describe('CatsController', () => {
             updateLastMatchTime: jest.fn(),
             upsertAddPoint: jest.fn(),
           },
+        },
+        {
+          provide: MembersService,
+          useValue: {},
+        },
+        {
+          provide: PlayerCountService,
+          useValue: {},
         },
       ],
     }).compile();

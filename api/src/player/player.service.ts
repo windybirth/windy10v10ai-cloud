@@ -25,28 +25,8 @@ export class PlayerService {
     return player;
   }
 
-  // 更新会员积分
-  upsertMemberPoint(player: Player, isMember: boolean) {
-    let memberDailyPoint = 0;
-    const todayZero = new Date();
-    todayZero.setHours(0, 0, 0, 0);
-
-    if (isMember) {
-      if (
-        !player?.lastMatchTime ||
-        player.lastMatchTime.getTime() < todayZero.getTime()
-      ) {
-        memberDailyPoint = +process.env.MEMBER_DAILY_POINT;
-      }
-      if (isNaN(memberDailyPoint)) {
-        memberDailyPoint = 0;
-      }
-    }
-    return memberDailyPoint;
-  }
-
   // 更新积分和最后游戏时间
-  async updatePlayer(
+  async updatePlayerLastMatchTime(
     player: Player,
     seasonPointTotal: number,
     memberPointTotal: number,

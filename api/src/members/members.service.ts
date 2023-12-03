@@ -4,7 +4,7 @@ import { InjectRepository } from 'nestjs-fireorm';
 
 import { CreateMemberDto } from './dto/create-member.dto';
 import { MemberDto } from './dto/member.dto';
-import { MemberOld } from './entities/member.entity';
+import { MemberOld } from './entities/memberOld.entity';
 import { Member } from './entities/members.entity';
 
 @Injectable()
@@ -19,48 +19,8 @@ export class MembersService {
   }
 
   // steamIds maxlength 10
-  async findBySteamIds(steamIds: number[]): Promise<MemberDto[]> {
-    const response: MemberDto[] = [];
-
-    await this.membersRepository
-      .whereIn('steamId', steamIds)
-      .find()
-      .then((members) => {
-        members.forEach((member) => {
-          response.push(new MemberDto(member));
-        });
-      });
-    // FIXME remove after 2nd anniversary
-    // if date from 2022-12-03 to 2022-12-05
-    const fromDate = new Date();
-    fromDate.setUTCFullYear(2022, 11, 3);
-    fromDate.setUTCHours(0, 0, 0, 0);
-    const toDate = new Date();
-    toDate.setUTCFullYear(2022, 11, 6);
-    toDate.setUTCHours(0, 0, 0, 0);
-    const now = new Date();
-    if (
-      now.getTime() > fromDate.getTime() &&
-      now.getTime() < toDate.getTime()
-    ) {
-      steamIds.forEach((steamId) => {
-        if (!response.find((member) => member.steamId === steamId)) {
-          response.push({
-            steamId,
-            enable: true,
-            expireDateString: '-',
-          });
-        }
-      });
-      response.forEach((member) => {
-        if (!member.enable) {
-          member.enable = true;
-          member.expireDateString = '-';
-        }
-      });
-    }
-    // FIXME END
-    return response;
+  async findBySteamIds(steamIds: number[]): Promise<Member[]> {
+    return await this.membersRepository.whereIn('steamId', steamIds).find();
   }
 
   async createMember(createMemberDto: CreateMemberDto) {
@@ -146,5 +106,33 @@ export class MembersService {
       });
     }
     return `This action create test members with init data`;
+  }
+
+  getDailyMemberPoint(member: Member) {
+    let memberDailyPoint = 0;
+    const todayZero = new Date();
+    todayZero.setHours(0, 0, 0, 0);
+
+    if (MembersService.IsMemberEnable(member)) {
+      // 判断是否为当日首次登陆
+      if (!member?.lastDailyDate || member.lastDailyDate < todayZero) {
+        memberDailyPoint = +process.env.MEMBER_DAILY_POINT;
+      }
+      if (isNaN(memberDailyPoint)) {
+        memberDailyPoint = 0;
+      }
+    }
+    return memberDailyPoint;
+  }
+
+  static IsMemberEnable(member: Member | MemberOld): boolean {
+    const oneDataAgo: Date = new Date();
+    oneDataAgo.setDate(oneDataAgo.getDate() - 1);
+    return member.expireDate > oneDataAgo;
+  }
+
+  async updateMemberLastDailyDate(member: Member) {
+    member.lastDailyDate = new Date();
+    await this.membersRepository.update(member);
   }
 }
