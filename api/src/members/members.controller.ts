@@ -21,7 +21,7 @@ export class MembersController {
   @ApiBody({ type: CreateMemberDto })
   @Post()
   create(@Body() createMemberDto: CreateMemberDto) {
-    return this.membersService.createMember(createMemberDto);
+    return this.membersService.addMember(createMemberDto);
   }
 
   @Get(':id')

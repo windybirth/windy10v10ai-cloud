@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 
 import { CountModule } from '../count/count.module';
+import { EventRewardsModule } from '../event-rewards/event-rewards.module';
 import { MembersModule } from '../members/members.module';
 import { PlayerCountModule } from '../player-count/player-count.module';
 import { PlayerPropertyModule } from '../player-property/player-property.module';
@@ -16,6 +17,7 @@ import { GameService } from './game.service';
     CountModule,
     PlayerModule,
     PlayerPropertyModule,
+    EventRewardsModule,
   ],
   controllers: [GameController],
   providers: [GameService],

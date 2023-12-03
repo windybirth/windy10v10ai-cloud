@@ -48,11 +48,52 @@ export class GameController {
 
     steamIds = this.gameService.validateSteamIds(steamIds);
 
-    const pointInfo: PointInfoDto[] = [];
+    const pointInfo: PointInfoDto[] = [
+      // TODO remove dummy
+      {
+        steamId: 385130282,
+        title: {
+          cn: 'DUMMY 标题',
+          en: 'Event Points',
+        },
+        seasonPoint: 1000,
+        memberPoint: 0,
+      },
+      {
+        steamId: 385130000,
+        title: {
+          cn: '其他人的积分',
+          en: 'Event Points',
+        },
+        memberPoint: 999,
+      },
+    ];
+
+    // 创建新玩家，更新最后游戏时间
+    const eventRewardSteamIds = [];
+    for (const steamId of steamIds) {
+      const eventRewardSteamId = await this.gameService.upsertPlayerInfo(
+        steamId,
+      );
+      eventRewardSteamIds.push(eventRewardSteamId);
+    }
+
+    // 三周年活动会员奖励
+    const thridAnniversaryEventRewardInfo =
+      await this.gameService.giveThridAnniversaryEventReward(steamIds);
+    pointInfo.push(...thridAnniversaryEventRewardInfo);
 
     // 获取会员 添加每日会员积分
     const members = await this.membersService.findBySteamIds(steamIds);
+    // 添加每日会员积分
+    const memberDailyPointInfo = await this.gameService.addDailyMemberPoints(
+      members,
+    );
+    pointInfo.push(...memberDailyPointInfo);
 
+    // ----------------- 以下为统计数据 -----------------
+    // 统计每日开始游戏数据
+    await this.matchService.countGameStart();
     // 统计会员游戏数据
     await this.playerCountService
       .update({
@@ -63,24 +104,6 @@ export class GameController {
       .catch((error) => {
         logger.warn(`[Game Start] playerCount Failed, ${steamIds}`, error);
       });
-
-    // 添加每日会员积分
-    const memberDailyPointInfo = await this.gameService.addDailyMemberPoints(
-      members,
-    );
-    pointInfo.push(...memberDailyPointInfo);
-
-    // 统计每日开始游戏数据
-    await this.matchService.countGameStart();
-
-    // 创建新玩家，更新最后游戏时间
-    const eventRewardSteamIds = [];
-    for (const steamId of steamIds) {
-      const eventRewardSteamId = await this.gameService.upsertPlayerInfo(
-        steamId,
-      );
-      eventRewardSteamIds.push(eventRewardSteamId);
-    }
 
     // ----------------- 以下为返回数据 -----------------
     // 获取玩家信息

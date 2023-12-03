@@ -24,9 +24,7 @@ export class AdminService {
           AFDIAN_MEMBER_MONTHLY_POINT * createAfdianMemberDto.month,
       },
     );
-    const member = await this.membersService.createMember(
-      createAfdianMemberDto,
-    );
+    const member = await this.membersService.addMember(createAfdianMemberDto);
     return {
       player,
       member,
@@ -49,7 +47,10 @@ export class AdminService {
       const player = await this.playerService.upsertAddPoint(steamId, {
         memberPointTotal: PATREON_MEMBER_MONTHLY_POINT,
       });
-      const member = await this.membersService.upsertMember(steamId, expireAt);
+      const member = await this.membersService.updateMemberExpireDate(
+        steamId,
+        expireAt,
+      );
       result.push({
         player,
         member,

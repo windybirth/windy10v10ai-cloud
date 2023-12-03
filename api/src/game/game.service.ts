@@ -5,6 +5,7 @@ import {
 } from '@nestjs/common';
 import { logger } from 'firebase-functions';
 
+import { EventRewardsService } from '../event-rewards/event-rewards.service';
 import { Member } from '../members/entities/members.entity';
 import { MembersService } from '../members/members.service';
 import { PlayerRank } from '../player-count/entities/player-rank.entity';
@@ -20,6 +21,7 @@ export class GameService {
     private readonly playerService: PlayerService,
     private readonly membersService: MembersService,
     private readonly playerCountService: PlayerCountService,
+    private readonly eventRewardsService: EventRewardsService,
   ) {}
 
   getOK(): string {
@@ -138,5 +140,47 @@ export class GameService {
         await this.playerService.findTop100SeasonPointSteamIds();
       return await this.playerCountService.updatePlayerRankToday(rankSteamIds);
     }
+  }
+
+  // 三周年活动奖励一个月会员
+  async giveThridAnniversaryEventReward(
+    steamIds: number[],
+  ): Promise<PointInfoDto[]> {
+    const pointInfoDtos: PointInfoDto[] = [];
+    const startTime = new Date('2023-12-03T15:00:00.000Z');
+    const endTime = new Date('2023-12-11T00:00:00.000Z');
+
+    const now = new Date();
+    if (now < startTime || now > endTime) {
+      return pointInfoDtos;
+    }
+
+    const rewardResults =
+      await this.eventRewardsService.getThridAnniversaryRewardResults(steamIds);
+    for (const rewardResult of rewardResults) {
+      if (rewardResult.result === false) {
+        // 奖励一个月会员
+        await this.membersService.addMember({
+          steamId: rewardResult.steamId,
+          month: 1,
+        });
+        // 奖励赛季积分5000
+        await this.playerService.upsertAddPoint(rewardResult.steamId, {
+          seasonPointTotal: 5000,
+        });
+        await this.eventRewardsService.setThridAnniversaryReward(
+          rewardResult.steamId,
+        );
+        pointInfoDtos.push({
+          steamId: rewardResult.steamId,
+          title: {
+            cn: '三周年庆典! 赠送一个月会员和5000赛季积分',
+            en: 'Thrid Anniversary! Gift one month membership and 5000 season points.',
+          },
+          seasonPoint: 5000,
+        });
+      }
+    }
+    return pointInfoDtos;
   }
 }

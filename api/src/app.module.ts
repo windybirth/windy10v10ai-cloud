@@ -8,6 +8,7 @@ import { AfdianModule } from './afdian/afdian.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { CountModule } from './count/count.module';
+import { EventRewardsModule } from './event-rewards/event-rewards.module';
 import { GameModule } from './game/game.module';
 import { MembersModule } from './members/members.module';
 import { OrdersModule } from './orders/orders.module';
@@ -43,6 +44,7 @@ const ENVIRONMENT = process.env.ENVIRONMENT ?? 'local';
     PlayerPropertyModule,
     TestModule,
     AdminModule,
+    EventRewardsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

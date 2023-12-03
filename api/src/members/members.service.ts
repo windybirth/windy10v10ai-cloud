@@ -23,7 +23,7 @@ export class MembersService {
     return await this.membersRepository.whereIn('steamId', steamIds).find();
   }
 
-  async createMember(createMemberDto: CreateMemberDto) {
+  async addMember(createMemberDto: CreateMemberDto) {
     const steamId = createMemberDto.steamId;
     const existMember = await this.findOne(steamId);
     const expireDate = new Date();
@@ -40,10 +40,10 @@ export class MembersService {
     );
     expireDate.setUTCHours(0, 0, 0, 0);
 
-    return this.upsertMember(steamId, expireDate);
+    return this.updateMemberExpireDate(steamId, expireDate);
   }
 
-  async upsertMember(steamId: number, expireDate: Date) {
+  async updateMemberExpireDate(steamId: number, expireDate: Date) {
     const existMember = await this.findOne(steamId);
     const member = { id: steamId.toString(), steamId, expireDate };
     if (existMember) {

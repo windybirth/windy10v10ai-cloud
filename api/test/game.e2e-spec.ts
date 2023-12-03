@@ -143,6 +143,33 @@ describe('PlayerController (e2e)', () => {
       );
     });
 
+    describe('三周年庆典', () => {
+      it.each([
+        ['普通玩家 活动开始前', '2023-12-03T14:59:00.000Z', 100000101, 0, 0],
+        ['普通玩家 活动开始', '2023-12-03T15:00:00.000Z', 100000102, 100, 5000],
+        [
+          '普通玩家 活动结束前',
+          '2023-12-10T23:59:00.000Z',
+          100000103,
+          100,
+          5000,
+        ],
+        ['普通玩家 活动结束后', '2023-12-11T00:01:00.000Z', 100000104, 0, 0],
+      ])(
+        '%s',
+        async (title, date, steamId, memberPointTotal, seasonPointTotal) => {
+          mockDate(date);
+          const result = await get(app, gameStartUrl, { steamIds: [steamId] });
+          expect(result.status).toEqual(200);
+          // assert player
+          const playerResult = await get(app, `${playerGetUrl}${steamId}`);
+          expect(playerResult.status).toEqual(200);
+          expect(playerResult.body.memberPointTotal).toEqual(memberPointTotal);
+          expect(playerResult.body.seasonPointTotal).toEqual(seasonPointTotal);
+        },
+      );
+    });
+
     describe('多人开始', () => {
       it('普通玩家 会员', async () => {
         await post(app, memberPostUrl, {

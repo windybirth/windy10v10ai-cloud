@@ -70,7 +70,7 @@ export class AfdianService {
           success = false;
         }
         if (success) {
-          await this.membersService.createMember({ steamId, month });
+          await this.membersService.addMember({ steamId, month });
           await this.playerService.upsertAddPoint(steamId, {
             memberPointTotal: AfdianService.MEMBER_MONTHLY_POINT * month,
           });
