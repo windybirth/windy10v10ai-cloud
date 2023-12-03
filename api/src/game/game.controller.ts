@@ -48,26 +48,7 @@ export class GameController {
 
     steamIds = this.gameService.validateSteamIds(steamIds);
 
-    const pointInfo: PointInfoDto[] = [
-      // TODO remove dummy
-      {
-        steamId: 385130282,
-        title: {
-          cn: 'DUMMY 标题',
-          en: 'Event Points',
-        },
-        seasonPoint: 1000,
-        memberPoint: 0,
-      },
-      {
-        steamId: 385130000,
-        title: {
-          cn: '其他人的积分',
-          en: 'Event Points',
-        },
-        memberPoint: 999,
-      },
-    ];
+    const pointInfo: PointInfoDto[] = [];
 
     // 创建新玩家，更新最后游戏时间
     const eventRewardSteamIds = [];
