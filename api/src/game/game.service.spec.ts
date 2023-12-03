@@ -1,5 +1,6 @@
 import { Test } from '@nestjs/testing';
 
+import { EventRewardsService } from '../event-rewards/event-rewards.service';
 import { MembersService } from '../members/members.service';
 import { PlayerCountService } from '../player-count/player-count.service';
 import { PlayerService } from '../player/player.service';
@@ -28,6 +29,10 @@ describe('CatsController', () => {
         },
         {
           provide: PlayerCountService,
+          useValue: {},
+        },
+        {
+          provide: EventRewardsService,
           useValue: {},
         },
       ],
