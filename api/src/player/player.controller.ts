@@ -19,7 +19,7 @@ export class PlayerController {
     @Param('steamId') steamId: number,
     @Body() updatePlayerDto: UpdatePlayerDto,
   ) {
-    return this.playerService.upsert(steamId, updatePlayerDto);
+    return this.playerService.upsertAddPoint(steamId, updatePlayerDto);
   }
 
   @Get('/all/csv')

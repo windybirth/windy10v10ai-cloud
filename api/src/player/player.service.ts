@@ -13,37 +13,31 @@ export class PlayerService {
     private readonly playerRepository: BaseFirestoreRepository<Player>,
   ) {}
 
-  async upsertGameStart(steamId: number, isMember: boolean) {
+  // 创建新玩家
+  async findSteamIdAndNewPlayer(steamId: number) {
     const existPlayer = await this.playerRepository.findById(
       steamId.toString(),
     );
     const player = existPlayer ?? this.genereNewPlayerEntity(steamId);
-
-    let memberDailyPoint = 0;
-
-    const todayZero = new Date();
-    todayZero.setHours(0, 0, 0, 0);
-    if (isMember) {
-      if (
-        !player?.lastMatchTime ||
-        player.lastMatchTime.getTime() < todayZero.getTime()
-      ) {
-        memberDailyPoint = +process.env.MEMBER_DAILY_POINT;
-      }
-      if (isNaN(memberDailyPoint)) {
-        memberDailyPoint = 0;
-      }
-    }
-
-    player.memberPointTotal += memberDailyPoint;
-    player.lastMatchTime = new Date();
-
-    if (existPlayer) {
-      await this.playerRepository.update(player);
-    } else {
+    if (!existPlayer) {
       await this.playerRepository.create(player);
     }
+    return player;
   }
+
+  // 更新积分和最后游戏时间
+  async updatePlayerLastMatchTime(
+    player: Player,
+    seasonPointTotal: number,
+    memberPointTotal: number,
+  ) {
+    player.lastMatchTime = new Date();
+    player.seasonPointTotal += seasonPointTotal;
+    player.memberPointTotal += memberPointTotal;
+    await this.playerRepository.update(player);
+    return player;
+  }
+
   async upsertGameEnd(
     steamId: number,
     isWinner: boolean,
@@ -141,7 +135,7 @@ export class PlayerService {
     return players;
   }
 
-  async upsert(steamId: number, updatePlayerDto: UpdatePlayerDto) {
+  async upsertAddPoint(steamId: number, updatePlayerDto: UpdatePlayerDto) {
     const existPlayer = await this.playerRepository.findById(
       steamId.toString(),
     );
