@@ -174,8 +174,8 @@ export class GameService {
         pointInfoDtos.push({
           steamId: rewardResult.steamId,
           title: {
-            cn: '三周年庆典! 赠送一个月会员和5000赛季积分',
-            en: 'Thrid Anniversary! Gift one month membership and 5000 season points.',
+            cn: '三周年庆典!<br>赠送一个月会员和5000赛季积分',
+            en: 'Thrid Anniversary!<br>Gift one month membership and 5000 season points.',
           },
           seasonPoint: 5000,
         });
