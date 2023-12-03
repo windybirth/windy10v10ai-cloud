@@ -5,6 +5,7 @@
         "github.vscode-pull-request-github",
         "eamodio.gitlens",
         "orta.vscode-jest",
-        "github.vscode-github-actions"
+        "github.vscode-github-actions",
+        "gruntfuggly.todo-tree"
     ]
 }

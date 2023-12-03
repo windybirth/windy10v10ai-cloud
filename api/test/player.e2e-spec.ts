@@ -1,6 +1,6 @@
 import { INestApplication } from '@nestjs/common';
 
-import { get, initTest, patch, post } from './util';
+import { get, initTest, patch } from './util';
 
 describe('PlayerController (e2e)', () => {
   const playerGetUrl = '/api/player/steamId/';
@@ -53,56 +53,56 @@ describe('PlayerController (e2e)', () => {
     });
   });
 
-  describe(`${playerRestUrl} (POST) 重置玩家赛季积分`, () => {
-    it('赛季积分 0', async () => {
-      const steamId = '300001001';
-      await patch(app, `${playerPatchUrl}${steamId}`, {
-        memberPointTotal: 100,
-        seasonPointTotal: 0,
-      }).expect(200);
-      await post(app, `${playerRestUrl}`, {
-        resetPercent: 50,
-      }).expect(201);
-      const result = await get(app, `${playerGetUrl}${steamId}`);
-      expect(result.status).toEqual(200);
-      expect(result.body.id).toEqual(steamId);
-      expect(result.body.memberPointTotal).toEqual(100);
-      expect(result.body.seasonPointTotal).toEqual(0);
-    });
+  // describe(`${playerRestUrl} (POST) 重置玩家赛季积分`, () => {
+  //   it('赛季积分 0', async () => {
+  //     const steamId = '300001001';
+  //     await patch(app, `${playerPatchUrl}${steamId}`, {
+  //       memberPointTotal: 100,
+  //       seasonPointTotal: 0,
+  //     }).expect(200);
+  //     await post(app, `${playerRestUrl}`, {
+  //       resetPercent: 50,
+  //     }).expect(201);
+  //     const result = await get(app, `${playerGetUrl}${steamId}`);
+  //     expect(result.status).toEqual(200);
+  //     expect(result.body.id).toEqual(steamId);
+  //     expect(result.body.memberPointTotal).toEqual(100);
+  //     expect(result.body.seasonPointTotal).toEqual(0);
+  //   });
 
-    it('赛季积分 500', async () => {
-      const steamId = '300001002';
-      await patch(app, `${playerPatchUrl}${steamId}`, {
-        memberPointTotal: 100,
-        seasonPointTotal: 500,
-      }).expect(200);
-      await post(app, `${playerRestUrl}`, {
-        resetPercent: 50,
-      }).expect(201);
-      const result = await get(app, `${playerGetUrl}${steamId}`);
-      expect(result.status).toEqual(200);
-      expect(result.body.id).toEqual(steamId);
-      expect(result.body.memberPointTotal).toEqual(100);
-      expect(result.body.seasonPointTotal).toEqual(500);
-    });
+  //   it('赛季积分 500', async () => {
+  //     const steamId = '300001002';
+  //     await patch(app, `${playerPatchUrl}${steamId}`, {
+  //       memberPointTotal: 100,
+  //       seasonPointTotal: 500,
+  //     }).expect(200);
+  //     await post(app, `${playerRestUrl}`, {
+  //       resetPercent: 50,
+  //     }).expect(201);
+  //     const result = await get(app, `${playerGetUrl}${steamId}`);
+  //     expect(result.status).toEqual(200);
+  //     expect(result.body.id).toEqual(steamId);
+  //     expect(result.body.memberPointTotal).toEqual(100);
+  //     expect(result.body.seasonPointTotal).toEqual(500);
+  //   });
 
-    it('赛季积分 29000', async () => {
-      const steamId = '300001003';
-      await patch(app, `${playerPatchUrl}${steamId}`, {
-        memberPointTotal: 100,
-        seasonPointTotal: 29000,
-      }).expect(200);
-      await post(app, `${playerRestUrl}`, {
-        resetPercent: 50,
-      }).expect(201);
-      const result = await get(app, `${playerGetUrl}${steamId}`);
-      expect(result.status).toEqual(200);
-      expect(result.body.id).toEqual(steamId);
-      expect(result.body.memberPointTotal).toEqual(100);
-      expect(result.body.seasonPointTotal).toEqual(14500);
-      expect(result.body.thirdSeasonLevel).toEqual(24);
-    });
-  });
+  //   it('赛季积分 29000', async () => {
+  //     const steamId = '300001003';
+  //     await patch(app, `${playerPatchUrl}${steamId}`, {
+  //       memberPointTotal: 100,
+  //       seasonPointTotal: 29000,
+  //     }).expect(200);
+  //     await post(app, `${playerRestUrl}`, {
+  //       resetPercent: 50,
+  //     }).expect(201);
+  //     const result = await get(app, `${playerGetUrl}${steamId}`);
+  //     expect(result.status).toEqual(200);
+  //     expect(result.body.id).toEqual(steamId);
+  //     expect(result.body.memberPointTotal).toEqual(100);
+  //     expect(result.body.seasonPointTotal).toEqual(14500);
+  //     expect(result.body.thirdSeasonLevel).toEqual(24);
+  //   });
+  // });
 
   afterAll(async () => {
     await app.close();

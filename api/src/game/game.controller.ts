@@ -1,5 +1,4 @@
 import {
-  BadRequestException,
   Body,
   Controller,
   Get,
@@ -13,6 +12,7 @@ import { ApiBody, ApiTags } from '@nestjs/swagger';
 import { logger } from 'firebase-functions';
 
 import { CountService } from '../count/count.service';
+import { MemberDto } from '../members/dto/member.dto';
 import { MembersService } from '../members/members.service';
 import { PlayerCountService } from '../player-count/player-count.service';
 import { UpdatePlayerPropertyDto } from '../player-property/dto/update-player-property.dto';
@@ -21,6 +21,7 @@ import { PlayerService } from '../player/player.service';
 
 import { GameEnd } from './dto/game-end.request.body';
 import { GameStart } from './dto/game-start.response';
+import { PointInfoDto } from './dto/point-info.dto';
 import { GameService } from './game.service';
 
 @ApiTags('Game(Open)')
@@ -43,41 +44,55 @@ export class GameController {
     apiKey: string,
     @Headers('x-country-code') countryCode: string,
   ): Promise<GameStart> {
-    this.gameService.assertApiKey(apiKey);
+    // this.gameService.assertApiKey(apiKey);
 
-    steamIds = steamIds.filter((id) => id > 0);
-    if (steamIds.length > 10) {
-      logger.warn(
-        `[Game Start] steamIds has length more than 10, ${steamIds}.`,
+    steamIds = this.gameService.validateSteamIds(steamIds);
+
+    const pointInfo: PointInfoDto[] = [];
+
+    // 创建新玩家，更新最后游戏时间
+    const eventRewardSteamIds = [];
+    for (const steamId of steamIds) {
+      const eventRewardSteamId = await this.gameService.upsertPlayerInfo(
+        steamId,
       );
-      throw new BadRequestException();
+      eventRewardSteamIds.push(eventRewardSteamId);
     }
 
-    // 获取会员信息
+    // 三周年活动会员奖励
+    const thridAnniversaryEventRewardInfo =
+      await this.gameService.giveThridAnniversaryEventReward(steamIds);
+    pointInfo.push(...thridAnniversaryEventRewardInfo);
+
+    // 获取会员 添加每日会员积分
     const members = await this.membersService.findBySteamIds(steamIds);
-    try {
-      await this.playerCountService.update({
+    // 添加每日会员积分
+    const memberDailyPointInfo = await this.gameService.addDailyMemberPoints(
+      members,
+    );
+    pointInfo.push(...memberDailyPointInfo);
+
+    // ----------------- 以下为统计数据 -----------------
+    // 统计每日开始游戏数据
+    await this.matchService.countGameStart();
+    // 统计会员游戏数据
+    await this.playerCountService
+      .update({
         countryCode: countryCode,
         playerIds: steamIds,
         memberIds: members.map((m) => m.steamId),
+      })
+      .catch((error) => {
+        logger.warn(`[Game Start] playerCount Failed, ${steamIds}`, error);
       });
-    } catch (error) {
-      logger.warn(`[Game Start] playerCount Failed, ${steamIds}`, error);
-    }
 
-    // 记录游戏开始信息，创建玩家数据
-    await this.matchService.countGameStart();
-    for (const steamId of steamIds) {
-      const isMember = members.some((m) => m.steamId === steamId);
-      await this.playerService.upsertGameStart(steamId, isMember);
-    }
-
+    // ----------------- 以下为返回数据 -----------------
     // 获取玩家信息
     const steamIdsStr = steamIds.map((id) => id.toString());
     const players = await this.playerService.findBySteamIdsWithLevelInfo(
       steamIdsStr,
     );
-    // 添加玩家属性信息
+    // 获取玩家属性
     for (const player of players) {
       const property = await this.playerPropertyService.findBySteamId(
         +player.id,
@@ -89,17 +104,16 @@ export class GameController {
       }
     }
 
-    // 赛季前100名
-    const playerRank = await this.playerCountService.getPlayerRankToday();
-    if (playerRank) {
-      const top100SteamIds = playerRank.rankSteamIds;
-      return { members, players, top100SteamIds };
-    } else {
-      const top100SteamIds =
-        await this.playerService.findTop100SeasonPointSteamIds();
-      await this.playerCountService.updatePlayerRankToday(top100SteamIds);
-      return { members, players, top100SteamIds };
-    }
+    // 排行榜
+    const playerRank = await this.gameService.getPlayerRank();
+    const top100SteamIds = playerRank.rankSteamIds;
+
+    return {
+      members: members.map((m) => new MemberDto(m)),
+      players,
+      top100SteamIds,
+      pointInfo,
+    };
   }
 
   @ApiBody({ type: GameEnd })
@@ -134,7 +148,7 @@ export class GameController {
     @Headers('x-api-key') apiKey: string,
     @Body() updatePlayerPropertyDto: UpdatePlayerPropertyDto,
   ) {
-    this.gameService.assertApiKey(apiKey);
+    // this.gameService.assertApiKey(apiKey);
 
     return this.playerPropertyService.update(updatePlayerPropertyDto);
   }
