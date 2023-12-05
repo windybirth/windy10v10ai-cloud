@@ -47,6 +47,9 @@ mkdir firestore-backup
 npm run start:with-data
 ```
 
+gsutil install && 运行 gcloud init login ad
+https://cloud.google.com/storage/docs/gsutil_install?hl=zh-cn#deb
+
 ### Run API
 ```bash
 # debug (need start firebase emulator)
