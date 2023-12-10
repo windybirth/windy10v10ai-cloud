@@ -12,7 +12,7 @@ Save windy 10v10ai data in cloud.
 
 ## Installation
 ### Need
-- NodeJs 16
+- NodeJs 20
 - java
 ```bash
 # firebase setting
