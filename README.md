@@ -1,5 +1,21 @@
 # windy10v10ai-cloud
-Save windy 10v10ai data in cloud.
+
+Windy 10v10ai data api
+
+- [Built With](#built-with)
+- [Get Start](#get-start)
+  - [Installation](#installation)
+  - [Running the app](#running-the-app)
+  - [Local end points](#local-end-points)
+- [Maintenance](#maintenance)
+  - [Deploy](#deploy)
+  - [Backup Firestore](#backup-firestore)
+  - [Update dependencies](#update-dependencies)
+- [Admin API](#admin-api)
+  - [Need](#need)
+  - [CLI](#cli)
+  - [Postman](#postman)
+
 
 # Built With
 - Firebase
@@ -94,7 +110,11 @@ firebase deploy --only hosting
 firebase deploy --only functions, hosting
 ```
 
-## Update
+## Backup Firestore
+
+https://console.cloud.google.com/firestore/databases/-default-/import-export?project=windy10v10ai
+
+## Update dependencies
 - Update package.json
 ```bash
 # install tool
@@ -109,7 +129,7 @@ npm update
 ```
 
 
-# Use Admin API
+# Admin API
 
 ## Need
 - gcloud cli
