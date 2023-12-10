@@ -76,8 +76,9 @@ https://cloud.google.com/storage/docs/gsutil_install?hl=zh-cn#deb
  - Firebase Emulator: http://localhost:4000/
  - OpenAPI Document (Swagger): http://localhost:3000/api-doc
 
+# Maintenance
 
-# Deploy
+## Deploy
 - Deploy function only
 ```bash
 # Deploy api function only
@@ -92,6 +93,22 @@ firebase deploy --only hosting
 # Deploy function and hosting
 firebase deploy --only functions, hosting
 ```
+
+## Update
+- Update package.json
+```bash
+# install tool
+`npm install -g npm-check-updates`
+
+# cd to dir
+cd api
+# update package.json
+ncu -u
+# update package-lock.json
+npm update
+```
+
+
 # Use Admin API
 
 ## Need
@@ -110,3 +127,4 @@ curl -H "Authorization: bearer $(gcloud auth print-identity-token)" https://wind
 echo $(gcloud auth print-identity-token)
 ```
 Import `api/swagger-spec.yaml` to postman with variable `baseUrl` : `https://asia-northeast1-windy10v10ai.cloudfunctions.net/admin`
+
