@@ -12,8 +12,9 @@ Save windy 10v10ai data in cloud.
 
 ## Installation
 ### Need
-- NodeJs 20
+- [nvm](https://github.com/nvm-sh/nvm?tab=readme-ov-file#installing-and-updating)
 - java
+
 ```bash
 # firebase setting
 npm install -g firebase-tools
