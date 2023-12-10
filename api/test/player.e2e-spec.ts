@@ -5,7 +5,6 @@ import { get, initTest, patch } from './util';
 describe('PlayerController (e2e)', () => {
   const playerGetUrl = '/api/player/steamId/';
   const playerPatchUrl = '/api/player/steamId/';
-  const playerRestUrl = '/api/admin/players/season/resetSeasonPoint';
 
   let app: INestApplication;
 

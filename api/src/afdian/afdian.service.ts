@@ -4,8 +4,8 @@ import { InjectRepository } from 'nestjs-fireorm';
 
 import { MembersService } from '../members/members.service';
 import { Order } from '../orders/entities/order.entity';
-import { PlayerPropertyService } from '../player-property/player-property.service';
 import { PlayerService } from '../player/player.service';
+import { PlayerPropertyService } from '../player-property/player-property.service';
 
 import { OrderDto } from './dto/afdian-webhook.dto';
 

@@ -1,5 +1,21 @@
 # windy10v10ai-cloud
-Save windy 10v10ai data in cloud.
+
+Windy 10v10ai data api
+
+- [Built With](#built-with)
+- [Get Start](#get-start)
+  - [Installation](#installation)
+  - [Running the app](#running-the-app)
+  - [Local end points](#local-end-points)
+- [Maintenance](#maintenance)
+  - [Deploy](#deploy)
+  - [Backup Firestore](#backup-firestore)
+  - [Update dependencies](#update-dependencies)
+- [Admin API](#admin-api)
+  - [Need](#need)
+  - [CLI](#cli)
+  - [Postman](#postman)
+
 
 # Built With
 - Firebase
@@ -12,8 +28,9 @@ Save windy 10v10ai data in cloud.
 
 ## Installation
 ### Need
-- NodeJs 16
+- [nvm](https://github.com/nvm-sh/nvm?tab=readme-ov-file#installing-and-updating)
 - java
+
 ```bash
 # firebase setting
 npm install -g firebase-tools
@@ -75,8 +92,15 @@ https://cloud.google.com/storage/docs/gsutil_install?hl=zh-cn#deb
  - Firebase Emulator: http://localhost:4000/
  - OpenAPI Document (Swagger): http://localhost:3000/api-doc
 
+# Maintenance
 
-# Deploy
+## Deploy
+
+- Deploy all
+```
+firebase deploy
+```
+
 - Deploy function only
 ```bash
 # Deploy api function only
@@ -91,7 +115,27 @@ firebase deploy --only hosting
 # Deploy function and hosting
 firebase deploy --only functions, hosting
 ```
-# Use Admin API
+
+## Backup Firestore
+
+https://console.cloud.google.com/firestore/databases/-default-/import-export?project=windy10v10ai
+
+## Update dependencies
+- Update package.json
+```bash
+# install tool
+`npm install -g npm-check-updates`
+
+# cd to dir
+cd api
+# update package.json
+ncu -u
+# update package-lock.json
+npm update
+```
+
+
+# Admin API
 
 ## Need
 - gcloud cli
@@ -109,3 +153,4 @@ curl -H "Authorization: bearer $(gcloud auth print-identity-token)" https://wind
 echo $(gcloud auth print-identity-token)
 ```
 Import `api/swagger-spec.yaml` to postman with variable `baseUrl` : `https://asia-northeast1-windy10v10ai.cloudfunctions.net/admin`
+

@@ -2,8 +2,8 @@ import { Test } from '@nestjs/testing';
 
 import { EventRewardsService } from '../event-rewards/event-rewards.service';
 import { MembersService } from '../members/members.service';
-import { PlayerCountService } from '../player-count/player-count.service';
 import { PlayerService } from '../player/player.service';
+import { PlayerCountService } from '../player-count/player-count.service';
 
 import { GameService } from './game.service';
 

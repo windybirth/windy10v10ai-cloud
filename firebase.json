@@ -9,10 +9,10 @@
       "npm --prefix \"$RESOURCE_DIR\" run build"
     ],
     "source": "api",
-    "runtime": "nodejs16"
+    "runtime": "nodejs20"
   },
   "hosting": {
-    "source": "web",
+    "public": "public",
     "ignore": [
       "firebase.json",
       "**/.*",
