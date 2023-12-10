@@ -47,9 +47,6 @@ export class PlayerService {
     if (isNaN(seasonPoint)) {
       seasonPoint = 0;
     }
-    if (steamId == 424859328) {
-      seasonPoint = 0;
-    }
     const existPlayer = await this.playerRepository.findById(
       steamId.toString(),
     );
