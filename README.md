@@ -95,6 +95,12 @@ https://cloud.google.com/storage/docs/gsutil_install?hl=zh-cn#deb
 # Maintenance
 
 ## Deploy
+
+- Deploy all
+```
+firebase deploy
+```
+
 - Deploy function only
 ```bash
 # Deploy api function only
