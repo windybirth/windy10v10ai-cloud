@@ -14,10 +14,10 @@ import { logger } from 'firebase-functions';
 import { CountService } from '../count/count.service';
 import { MemberDto } from '../members/dto/member.dto';
 import { MembersService } from '../members/members.service';
+import { PlayerService } from '../player/player.service';
 import { PlayerCountService } from '../player-count/player-count.service';
 import { UpdatePlayerPropertyDto } from '../player-property/dto/update-player-property.dto';
 import { PlayerPropertyService } from '../player-property/player-property.service';
-import { PlayerService } from '../player/player.service';
 
 import { GameEnd } from './dto/game-end.request.body';
 import { GameStart } from './dto/game-start.response';
@@ -53,9 +53,8 @@ export class GameController {
     // 创建新玩家，更新最后游戏时间
     const eventRewardSteamIds = [];
     for (const steamId of steamIds) {
-      const eventRewardSteamId = await this.gameService.upsertPlayerInfo(
-        steamId,
-      );
+      const eventRewardSteamId =
+        await this.gameService.upsertPlayerInfo(steamId);
       eventRewardSteamIds.push(eventRewardSteamId);
     }
 
@@ -67,9 +66,8 @@ export class GameController {
     // 获取会员 添加每日会员积分
     const members = await this.membersService.findBySteamIds(steamIds);
     // 添加每日会员积分
-    const memberDailyPointInfo = await this.gameService.addDailyMemberPoints(
-      members,
-    );
+    const memberDailyPointInfo =
+      await this.gameService.addDailyMemberPoints(members);
     pointInfo.push(...memberDailyPointInfo);
 
     // ----------------- 以下为统计数据 -----------------
@@ -89,9 +87,8 @@ export class GameController {
     // ----------------- 以下为返回数据 -----------------
     // 获取玩家信息
     const steamIdsStr = steamIds.map((id) => id.toString());
-    const players = await this.playerService.findBySteamIdsWithLevelInfo(
-      steamIdsStr,
-    );
+    const players =
+      await this.playerService.findBySteamIdsWithLevelInfo(steamIdsStr);
     // 获取玩家属性
     for (const player of players) {
       const property = await this.playerPropertyService.findBySteamId(
