@@ -72,8 +72,8 @@ export class GameService {
         pointInfoDtos.push({
           steamId: member.steamId,
           title: {
-            cn: '会员每日登录积分',
-            en: 'Member Daily Login Points',
+            cn: '获得会员每日登录积分',
+            en: 'Get Member Daily Login Points',
           },
           memberPoint: memberDailyPoint,
         });
