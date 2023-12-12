@@ -124,8 +124,8 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
-.firebase/hosting.cHVibGlj.cache
 api/swagger-spec.yaml
 
 # Firebase
+.firebase/
 firestore-backup/

@@ -8,10 +8,10 @@ import { logger } from 'firebase-functions';
 import { EventRewardsService } from '../event-rewards/event-rewards.service';
 import { Member } from '../members/entities/members.entity';
 import { MembersService } from '../members/members.service';
-import { PlayerRank } from '../player-count/entities/player-rank.entity';
-import { PlayerCountService } from '../player-count/player-count.service';
 import { Player } from '../player/entities/player.entity';
 import { PlayerService } from '../player/player.service';
+import { PlayerRank } from '../player-count/entities/player-rank.entity';
+import { PlayerCountService } from '../player-count/player-count.service';
 
 import { PointInfoDto } from './dto/point-info.dto';
 

@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 
-import { PlayerPropertyModule } from '../player-property/player-property.module';
 import { PlayerModule } from '../player/player.module';
+import { PlayerPropertyModule } from '../player-property/player-property.module';
 
 import { MembersModule } from './../members/members.module';
 import { OrdersModule } from './../orders/orders.module';
