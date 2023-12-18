@@ -88,14 +88,17 @@ export class GameController {
     const players =
       await this.playerService.findBySteamIdsWithLevelInfo(steamIdsStr);
     // 获取玩家属性
-    for (const player of players) {
-      const property = await this.playerPropertyService.findBySteamId(
-        +player.id,
-      );
-      if (property) {
-        player.properties = property;
-      } else {
-        player.properties = [];
+    // 测试服为纯净版 不获取玩家属性
+    if (!this.gameService.isTestServer(apiKey)) {
+      for (const player of players) {
+        const property = await this.playerPropertyService.findBySteamId(
+          +player.id,
+        );
+        if (property) {
+          player.properties = property;
+        } else {
+          player.properties = [];
+        }
       }
     }
 
