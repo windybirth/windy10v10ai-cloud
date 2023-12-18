@@ -28,17 +28,21 @@ export class GameService {
     return 'OK';
   }
 
-  assertApiKey(apiKey: string, allowTest = true): void {
-    const keys = [process.env.SERVER_APIKEY];
-
-    if (allowTest) {
-      keys.push(process.env.SERVER_APIKEY_TEST);
+  validateApiKey(apiKey: string, apiName: string): void {
+    if (this.isProductionServer(apiKey) || this.isTestServer(apiKey)) {
+      return;
     }
 
-    if (keys.indexOf(apiKey) === -1) {
-      logger.warn(`[Game Start] apiKey permission error with ${apiKey}.`);
-      throw new UnauthorizedException();
-    }
+    logger.warn(`[${apiName}] apiKey permission error with ${apiKey}.`);
+    throw new UnauthorizedException();
+  }
+
+  isProductionServer(apiKey: string): boolean {
+    return apiKey === process.env.SERVER_APIKEY;
+  }
+
+  isTestServer(apiKey: string): boolean {
+    return apiKey === process.env.SERVER_APIKEY_TEST;
   }
 
   validateSteamIds(steamIds: number[]): number[] {
