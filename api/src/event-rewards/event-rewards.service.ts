@@ -11,7 +11,7 @@ export class EventRewardsService {
     private readonly eventRewardsRepository: BaseFirestoreRepository<EventReward>,
   ) {}
 
-  async getThridAnniversaryRewardResults(steamIds: number[]): Promise<
+  async getRewardResults(steamIds: number[]): Promise<
     {
       steamId: number;
       result: boolean;
@@ -25,12 +25,11 @@ export class EventRewardsService {
     return steamIds.map((steamId) => ({
       steamId,
       result:
-        eventRewards.find((r) => r.steamId === steamId)?.thridAnniversary ??
-        false,
+        eventRewards.find((r) => r.steamId === steamId)?.newYear2024 ?? false,
     }));
   }
 
-  async setThridAnniversaryReward(steamId: number): Promise<void> {
+  async setReward(steamId: number): Promise<void> {
     const id = steamId.toString();
     const eventReward = await this.eventRewardsRepository.findById(id);
     if (!eventReward) {
@@ -38,11 +37,11 @@ export class EventRewardsService {
       await this.eventRewardsRepository.create({
         id,
         steamId,
-        thridAnniversary: true,
+        newYear2024: true,
       });
     } else {
       // update
-      eventReward.thridAnniversary = true;
+      eventReward.newYear2024 = true;
       await this.eventRewardsRepository.update(eventReward);
     }
   }

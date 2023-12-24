@@ -104,9 +104,8 @@ export class CountService {
 
   async countGameDifficult(gameEnd: GameEnd) {
     const id = `${gameEnd.version}#${gameEnd.gameOption.gameDifficulty}`;
-    const existMatchDifficult = await this.matchDifficultRepository.findById(
-      id,
-    );
+    const existMatchDifficult =
+      await this.matchDifficultRepository.findById(id);
     if (existMatchDifficult) {
       existMatchDifficult.add(gameEnd);
       await this.matchDifficultRepository.update(existMatchDifficult);

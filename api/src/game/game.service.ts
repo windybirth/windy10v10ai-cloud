@@ -28,17 +28,21 @@ export class GameService {
     return 'OK';
   }
 
-  assertApiKey(apiKey: string, allowTest = true): void {
-    const keys = [process.env.SERVER_APIKEY];
-
-    if (allowTest) {
-      keys.push(process.env.SERVER_APIKEY_TEST);
+  validateApiKey(apiKey: string, apiName: string): void {
+    if (this.isProductionServer(apiKey) || this.isTestServer(apiKey)) {
+      return;
     }
 
-    if (keys.indexOf(apiKey) === -1) {
-      logger.warn(`[Game Start] apiKey permission error with ${apiKey}.`);
-      throw new UnauthorizedException();
-    }
+    logger.warn(`[${apiName}] apiKey permission error with ${apiKey}.`);
+    throw new UnauthorizedException();
+  }
+
+  isProductionServer(apiKey: string): boolean {
+    return apiKey === process.env.SERVER_APIKEY;
+  }
+
+  isTestServer(apiKey: string): boolean {
+    return apiKey === process.env.SERVER_APIKEY_TEST;
   }
 
   validateSteamIds(steamIds: number[]): number[] {
@@ -72,8 +76,8 @@ export class GameService {
         pointInfoDtos.push({
           steamId: member.steamId,
           title: {
-            cn: '会员每日登录积分',
-            en: 'Member Daily Login Points',
+            cn: '获得会员积分',
+            en: 'Get Member Daily Points',
           },
           memberPoint: memberDailyPoint,
         });
@@ -142,13 +146,14 @@ export class GameService {
     }
   }
 
-  // 三周年活动奖励一个月会员
+  // 元旦活动3000赛季积分
   async giveThridAnniversaryEventReward(
     steamIds: number[],
   ): Promise<PointInfoDto[]> {
     const pointInfoDtos: PointInfoDto[] = [];
-    const startTime = new Date('2023-12-03T15:00:00.000Z');
-    const endTime = new Date('2023-12-11T00:00:00.000Z');
+    const startTime = new Date('2023-12-24T15:00:00.000Z');
+    const endTime = new Date('2024-01-04T00:00:00.000Z');
+    const rewordSeasonPoint = 3000;
 
     const now = new Date();
     if (now < startTime || now > endTime) {
@@ -156,28 +161,26 @@ export class GameService {
     }
 
     const rewardResults =
-      await this.eventRewardsService.getThridAnniversaryRewardResults(steamIds);
+      await this.eventRewardsService.getRewardResults(steamIds);
     for (const rewardResult of rewardResults) {
       if (rewardResult.result === false) {
         // 奖励一个月会员
-        await this.membersService.addMember({
-          steamId: rewardResult.steamId,
-          month: 1,
-        });
-        // 奖励赛季积分5000
+        // await this.membersService.addMember({
+        //   steamId: rewardResult.steamId,
+        //   month: 1,
+        // });
+        // 奖励赛季积分
         await this.playerService.upsertAddPoint(rewardResult.steamId, {
-          seasonPointTotal: 5000,
+          seasonPointTotal: rewordSeasonPoint,
         });
-        await this.eventRewardsService.setThridAnniversaryReward(
-          rewardResult.steamId,
-        );
+        await this.eventRewardsService.setReward(rewardResult.steamId);
         pointInfoDtos.push({
           steamId: rewardResult.steamId,
           title: {
-            cn: '三周年庆典!<br>赠送一个月会员和5000赛季积分',
-            en: 'Thrid Anniversary!<br>Gift one month membership and 5000 season points.',
+            cn: '圣诞・元旦 双旦快乐！',
+            en: 'Happy Christmas and New Year!',
           },
-          seasonPoint: 5000,
+          seasonPoint: rewordSeasonPoint,
         });
       }
     }

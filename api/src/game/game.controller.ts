@@ -44,8 +44,6 @@ export class GameController {
     apiKey: string,
     @Headers('x-country-code') countryCode: string,
   ): Promise<GameStart> {
-    // this.gameService.assertApiKey(apiKey);
-
     steamIds = this.gameService.validateSteamIds(steamIds);
 
     const pointInfo: PointInfoDto[] = [];
@@ -58,10 +56,9 @@ export class GameController {
       eventRewardSteamIds.push(eventRewardSteamId);
     }
 
-    // 三周年活动会员奖励
-    const thridAnniversaryEventRewardInfo =
+    const eventRewardInfo =
       await this.gameService.giveThridAnniversaryEventReward(steamIds);
-    pointInfo.push(...thridAnniversaryEventRewardInfo);
+    pointInfo.push(...eventRewardInfo);
 
     // 获取会员 添加每日会员积分
     const members = await this.membersService.findBySteamIds(steamIds);
@@ -90,14 +87,17 @@ export class GameController {
     const players =
       await this.playerService.findBySteamIdsWithLevelInfo(steamIdsStr);
     // 获取玩家属性
-    for (const player of players) {
-      const property = await this.playerPropertyService.findBySteamId(
-        +player.id,
-      );
-      if (property) {
-        player.properties = property;
-      } else {
-        player.properties = [];
+    // 测试服为纯净版 不获取玩家属性
+    if (!this.gameService.isTestServer(apiKey)) {
+      for (const player of players) {
+        const property = await this.playerPropertyService.findBySteamId(
+          +player.id,
+        );
+        if (property) {
+          player.properties = property;
+        } else {
+          player.properties = [];
+        }
       }
     }
 
@@ -119,7 +119,7 @@ export class GameController {
     @Headers('x-api-key') apiKey: string,
     @Body() gameInfo: GameEnd,
   ): Promise<string> {
-    this.gameService.assertApiKey(apiKey, false);
+    this.gameService.validateApiKey(apiKey, 'Game End');
 
     const players = gameInfo.players;
     for (const player of players) {
@@ -145,7 +145,7 @@ export class GameController {
     @Headers('x-api-key') apiKey: string,
     @Body() updatePlayerPropertyDto: UpdatePlayerPropertyDto,
   ) {
-    // this.gameService.assertApiKey(apiKey);
+    this.gameService.validateApiKey(apiKey, 'Add Player Property');
 
     return this.playerPropertyService.update(updatePlayerPropertyDto);
   }

@@ -5,4 +5,5 @@ export class EventReward {
   id!: string;
   steamId!: number;
   thridAnniversary?: boolean;
+  newYear2024?: boolean;
 }
