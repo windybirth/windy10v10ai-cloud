@@ -22,7 +22,7 @@ jobs:
         id: get_diff
         run: |
           git fetch origin main:main
-          echo "::set-output name=diff::$(git diff --name-only main...develop)"
+          echo "::set-output name=diff::$(git diff --name-only origin/main...origin/develop)"
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v5
