@@ -1,0 +1,35 @@
+name: Create Pull Request to develop
+on:
+  push:
+    branches:
+      - develop
+
+jobs:
+  create_pull_request:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Reset promotion branch
+        run: |
+          git fetch origin develop:develop
+          git reset --hard develop
+
+      - name: Get diff
+        id: get_diff
+        run: echo "diff=${git log --oneline --decorate --color=always --abbrev-commit --no-merges origin/main..develop}" >> $GITHUB_OUTPUT
+
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v5
+        with:
+          title: Merge develop into main
+          body: |
+            develop diff:
+            ${{ steps.get_diff.outputs.diff }}
+          branch: develop
+          base: main
+          reviewers: windybirth

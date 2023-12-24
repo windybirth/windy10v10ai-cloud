@@ -161,7 +161,7 @@ export class GameService {
     }
 
     const rewardResults =
-      await this.eventRewardsService.getThridAnniversaryRewardResults(steamIds);
+      await this.eventRewardsService.getRewardResults(steamIds);
     for (const rewardResult of rewardResults) {
       if (rewardResult.result === false) {
         // 奖励一个月会员
@@ -173,13 +173,11 @@ export class GameService {
         await this.playerService.upsertAddPoint(rewardResult.steamId, {
           seasonPointTotal: rewordSeasonPoint,
         });
-        await this.eventRewardsService.setThridAnniversaryReward(
-          rewardResult.steamId,
-        );
+        await this.eventRewardsService.setReward(rewardResult.steamId);
         pointInfoDtos.push({
           steamId: rewardResult.steamId,
           title: {
-            cn: '圣诞、元旦双节快乐！',
+            cn: '圣诞・元旦 双旦快乐！',
             en: 'Happy Christmas and New Year!',
           },
           seasonPoint: rewordSeasonPoint,
