@@ -56,10 +56,9 @@ export class GameController {
       eventRewardSteamIds.push(eventRewardSteamId);
     }
 
-    // 三周年活动会员奖励
-    const thridAnniversaryEventRewardInfo =
+    const eventRewardInfo =
       await this.gameService.giveThridAnniversaryEventReward(steamIds);
-    pointInfo.push(...thridAnniversaryEventRewardInfo);
+    pointInfo.push(...eventRewardInfo);
 
     // 获取会员 添加每日会员积分
     const members = await this.membersService.findBySteamIds(steamIds);
