@@ -44,6 +44,7 @@ export class GameController {
     apiKey: string,
     @Headers('x-country-code') countryCode: string,
   ): Promise<GameStart> {
+    logger.debug(`[Game Start] with steamIds ${JSON.stringify(steamIds)}`);
     steamIds = this.gameService.validateSteamIds(steamIds);
 
     const pointInfo: PointInfoDto[] = [];
@@ -119,6 +120,7 @@ export class GameController {
     @Headers('x-api-key') apiKey: string,
     @Body() gameInfo: GameEnd,
   ): Promise<string> {
+    logger.debug(`[Game End] ${JSON.stringify(gameInfo)}`);
     this.gameService.validateApiKey(apiKey, 'Game End');
 
     const players = gameInfo.players;
