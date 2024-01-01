@@ -1,4 +1,4 @@
-name: Create Pull Request to develop
+name: Release develop into main
 on:
   push:
     branches:
