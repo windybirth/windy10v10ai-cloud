@@ -15,6 +15,8 @@ import { PlayerProperty } from './entities/player-property.entity';
 export class PlayerPropertyService {
   static PROPERTY_NAME_LIST = [
     'property_cooldown_percentage',
+    'property_movespeed_bonus_constant',
+    'property_skill_points_bonus',
     'property_cast_range_bonus_stacking',
     'property_spell_amplify_percentage',
     'property_status_resistance_stacking',
@@ -28,11 +30,10 @@ export class PlayerPropertyService {
     'property_stats_strength_bonus',
     'property_stats_agility_bonus',
     'property_stats_intellect_bonus',
-    'property_health_regen_percentage',
-    'property_mana_regen_total_percentage',
     'property_lifesteal',
     'property_spell_lifesteal',
-    'property_movespeed_bonus_constant',
+    'property_health_regen_percentage',
+    'property_mana_regen_total_percentage',
     'property_ignore_movespeed_limit',
     'property_cannot_miss',
   ];
