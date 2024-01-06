@@ -197,6 +197,12 @@ export class PlayerService {
     return players.length;
   }
 
+  async addSeasonPoint(steamId: number, point: number) {
+    const player = await this.playerRepository.findById(steamId.toString());
+    player.seasonPointTotal += point;
+    await this.playerRepository.update(player);
+  }
+
   async setMemberLevel(steamId: number, level: number) {
     const point = this.getMemberTotalPoint(level);
     const existPlayer = await this.playerRepository.findById(

@@ -151,6 +151,11 @@ export class PlayerPropertyService {
     return usedLevel;
   }
 
+  async findByName(name: string): Promise<PlayerProperty[]> {
+    return this.playerPropertyRepository.whereEqualTo('name', name).find();
+  }
+
+  // ------------------ private ------------------
   private async cheakPlayerLevel(steamId: number, levelAdd: number) {
     const totalLevel = await this.playerService.getPlayerTotalLevel(steamId);
     const usedLevel = await this.getPlayerUsedLevel(steamId);
