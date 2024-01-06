@@ -6,4 +6,5 @@ export class EventReward {
   steamId!: number;
   thridAnniversary?: boolean;
   newYear2024?: boolean;
+  subscription50000?: boolean;
 }

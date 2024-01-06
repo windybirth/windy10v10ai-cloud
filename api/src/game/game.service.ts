@@ -146,20 +146,21 @@ export class GameService {
     }
   }
 
-  // 元旦活动3000赛季积分
+  // 活动赠送赛季积分
   async giveThridAnniversaryEventReward(
     steamIds: number[],
   ): Promise<PointInfoDto[]> {
     const pointInfoDtos: PointInfoDto[] = [];
-    const startTime = new Date('2023-12-24T15:00:00.000Z');
-    const endTime = new Date('2024-01-04T00:00:00.000Z');
-    const rewordSeasonPoint = 3000;
+    const startTime = new Date('2024-01-06T00:00:00.000Z');
+    const endTime = new Date('2024-01-31T00:00:00.000Z');
+    const rewordSeasonPoint = 2000;
 
     const now = new Date();
     if (now < startTime || now > endTime) {
       return pointInfoDtos;
     }
 
+    // FIXME 每次需要更新
     const rewardResults =
       await this.eventRewardsService.getRewardResults(steamIds);
     for (const rewardResult of rewardResults) {
@@ -173,12 +174,13 @@ export class GameService {
         await this.playerService.upsertAddPoint(rewardResult.steamId, {
           seasonPointTotal: rewordSeasonPoint,
         });
+        // FIXME 每次需要更新
         await this.eventRewardsService.setReward(rewardResult.steamId);
         pointInfoDtos.push({
           steamId: rewardResult.steamId,
           title: {
-            cn: '圣诞・元旦 双旦快乐！',
-            en: 'Happy Christmas and New Year!',
+            cn: '庆祝50000订阅!送2000积分。<br>评分上5星再送3000赛季积分',
+            en: 'Celebrating 50,000 subscriptions!<br>Give 2000 season points<br>If rating get 5 stars, <br>will give more 3,000 points.',
           },
           seasonPoint: rewordSeasonPoint,
         });
