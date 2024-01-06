@@ -179,8 +179,8 @@ export class GameService {
         pointInfoDtos.push({
           steamId: rewardResult.steamId,
           title: {
-            cn: '庆祝50000订阅!送2000积分。<br>评分上5星再送3000赛季积分',
-            en: 'Celebrating 50,000 subscriptions!<br>Give 2000 season points<br>If rating get 5 stars, <br>will give more 3,000 points.',
+            cn: '庆祝50000订阅! 送2000积分。<br>评分上5星再送3000赛季积分',
+            en: 'Celebrating 50,000 subscriptions!<br>If rating get 5 stars, give more 3,000 points.',
           },
           seasonPoint: rewordSeasonPoint,
         });
