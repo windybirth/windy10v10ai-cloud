@@ -48,10 +48,13 @@ export class AdminController {
     const propertys = await this.playerPropertyService.findByName(
       'property_incoming_damage_percentage',
     );
+    let count = 0;
     for (const property of propertys) {
       const steamId = property.steamId;
       await this.playerService.addSeasonPoint(steamId, 1000);
       logger.debug(`[Bug Fix] Add 1000 point to ${steamId}`);
+      count++;
     }
+    logger.debug(`[Bug Fix] End Add 1000 point to ${count} players`);
   }
 }
