@@ -26,4 +26,3 @@ jobs:
           args: deploy --only hosting
         env:
           FIREBASE_TOKEN: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_WINDY10V10AI }}
-          PROJECT_ID: windy10v10ai
