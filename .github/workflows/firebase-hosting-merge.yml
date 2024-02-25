@@ -27,6 +27,6 @@ jobs:
       - name: Deploy to Firebase
         uses: w9jds/firebase-action@master
         with:
-          args: deploy --only functions:admin, hosting --debug
+          args: deploy --only functions:admin --debug
         env:
           GCP_SA_KEY: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_WINDY10V10AI }}
