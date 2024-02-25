@@ -1,15 +1,5 @@
 {
   "projects": {
     "default": "windy10v10ai"
-  },
-  "targets": {
-    "windy10v10ai": {
-      "hosting": {
-        "windy10v10ai": [
-          "windy10v10ai"
-        ]
-      }
-    }
-  },
-  "etags": {}
+  }
 }
