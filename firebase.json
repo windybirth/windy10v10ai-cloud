@@ -12,6 +12,7 @@
     "runtime": "nodejs20"
   },
   "hosting": {
+    "target": "windy10v10ai",
     "public": "public",
     "ignore": [
       "firebase.json",
