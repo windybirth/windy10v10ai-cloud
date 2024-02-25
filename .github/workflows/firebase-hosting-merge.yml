@@ -6,12 +6,23 @@ on:
   push:
     branches:
       # - main
+      # TODO - Change to main when ready
       - 16-github-action-cd
 jobs:
   build_and_deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20.10.0
+
+      - name: Set API
+        run: (cd api && npm install)
+      - name: Set Web
+        run: (cd web && npm install)
+
+        # TODO
       - run: npm ci && npm run build
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
