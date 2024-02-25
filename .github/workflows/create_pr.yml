@@ -1,4 +1,4 @@
-name: Release develop into main
+name: Create PR develop to main
 on:
   push:
     branches:
