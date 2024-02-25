@@ -18,7 +18,7 @@ jobs:
       - name: Install Dependencies
         run: (cd api && npm install)
       - name: Build
-        run: (cd api && npm build)
+        run: (cd api && npm run build)
 
       - name: Deploy to Firebase
         uses: w9jds/firebase-action@master
