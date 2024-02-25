@@ -113,7 +113,7 @@ firebase deploy --only functions
 # Deploy hosting only
 firebase deploy --only hosting
 # Deploy function and hosting
-firebase deploy --only functions, hosting
+firebase deploy --only functions,hosting
 ```
 
 ## Backup Firestore
