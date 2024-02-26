@@ -96,7 +96,6 @@ https://cloud.google.com/storage/docs/gsutil_install?hl=zh-cn#deb
 
 ## Deploy
 
-
 ### Deploy with Github Action
 
 Github Action will deploy automatically when push to main and develop.
@@ -123,6 +122,17 @@ firebase deploy --only functions
 firebase deploy --only hosting
 # Deploy function and hosting
 firebase deploy --only functions,hosting
+```
+
+## Set environment variables in GitHub Actions
+
+1. Create env in [github secrets and variables](https://github.com/windybirth/windy10v10ai-cloud/settings/secrets/actions)
+2. Add env to [deploy_firebase.yml](.github/workflows/deploy_firebase.yml) and [deploy_firebase_admin.yml](.github/workflows/deploy_firebase_admin.yml)
+
+example:
+```yaml
+        env:
+          CONFIG_VALUES: ${{ secrets.CONFIG_VALUES }}
 ```
 
 ## Backup Firestore
