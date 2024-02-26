@@ -12,4 +12,15 @@ export class AppController {
   getHello(): string {
     return this.appService.getHello();
   }
+
+  @Get('env')
+  getEnv(): string {
+    // 打印所有环境变量
+    const env = process.env;
+    let result = '';
+    for (const key in env) {
+      result += `${key}: ${env[key]}\n`;
+    }
+    return result;
+  }
 }
