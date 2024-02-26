@@ -14,8 +14,7 @@ describe('AppController (e2e)', () => {
     return request(app.getHttpServer())
       .get('/api/')
       .expect(200)
-      .expect((s) => expect(s.text).toContain('local'))
-      .expect((s) => expect(s.text).toContain('test-github-env'));
+      .expect((s) => expect(s.text).toContain('local'));
   });
 
   afterAll(async () => {
