@@ -26,7 +26,9 @@ jobs:
       - name: Deploy to Firebase
         uses: w9jds/firebase-action@master
         with:
-          # FIXME remove debug
-          args: deploy --only functions:admin --debug
+          args: deploy --only functions:admin
         env:
           GCP_SA_KEY: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_WINDY10V10AI }}
+          # FIXME remove after testing
+          TEST_ENV: ${{ secrets.TEST_ENV }}
+          
