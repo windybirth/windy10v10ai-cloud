@@ -96,6 +96,15 @@ https://cloud.google.com/storage/docs/gsutil_install?hl=zh-cn#deb
 
 ## Deploy
 
+
+### Deploy with Github Action
+
+Github Action will deploy automatically when push to main and develop.
+
+- main: Deploy Firebase Functions and Hosting
+- develop: Deploy Firebase Functions:admin
+
+### Deploy Manually
 - Deploy all
 ```
 firebase deploy
