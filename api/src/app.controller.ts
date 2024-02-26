@@ -1,5 +1,6 @@
 import { Controller, Get } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
+import * as functions from 'firebase-functions';
 
 import { AppService } from './app.service';
 
@@ -16,11 +17,11 @@ export class AppController {
   @Get('env')
   getEnv(): string {
     // 打印所有环境变量
-    const env = process.env;
+    const test_env = functions.config().admin.test_env;
+    const test_env2 = functions.config().api.test_env2;
     let result = '';
-    for (const key in env) {
-      result += `${key}: ${env[key]}\n`;
-    }
+    result += `test_env: ${test_env}\n`;
+    result += `test_env2: ${test_env2}\n`;
     return result;
   }
 }
