@@ -26,10 +26,9 @@ jobs:
       - name: Deploy to Firebase
         uses: w9jds/firebase-action@master
         with:
-          args: functions:config:set admin.TEST_ENV=${{ secrets.TEST_ENV }}, admin.TEST_ENV2=${{ secrets.TEST_ENV2 }} && deploy --only functions:admin
+          args: deploy --only functions:admin
         env:
           GCP_SA_KEY: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_WINDY10V10AI }}
           # FIXME remove after testing
-          TEST_ENV: ${{ secrets.TEST_ENV }}
-          TEST_ENV2: ${{ secrets.TEST_ENV2 }}
+          CONFIG_VALUES: admin.test_env=${{ secrets.TEST_ENV }} api.test_env2=${{ secrets.TEST_ENV2 }}
           

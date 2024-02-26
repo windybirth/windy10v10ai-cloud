@@ -132,7 +132,7 @@ firebase deploy --only functions,hosting
 example:
 ```yaml
         env:
-          CONFIG_VALUES: ${{ secrets.CONFIG_VALUES }}
+          CONFIG_VALUES: someservice.key=${{ secrets.key }} someservice.id=${{ secrets.id }}
 ```
 
 ## Backup Firestore
