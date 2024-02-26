@@ -29,3 +29,6 @@ jobs:
           args: deploy --only functions,hosting
         env:
           GCP_SA_KEY: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_WINDY10V10AI }}
+          # FIXME remove after testing
+          TEST_ENV: ${{ secrets.TEST_ENV }}
+          TEST_ENV2: ${{ secrets.TEST_ENV2 }}
