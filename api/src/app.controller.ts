@@ -17,11 +17,7 @@ export class AppController {
   @Get('env')
   getEnv(): string {
     // 打印所有环境变量
-    const test_env = functions.config().admin.test_env;
-    const test_env2 = functions.config().api.test_env2;
-    let result = '';
-    result += `test_env: ${test_env}\n`;
-    result += `test_env2: ${test_env2}\n`;
-    return result;
+    const test_env = functions.config().admin?.test_env;
+    return `test_env: ${test_env}`;
   }
 }
