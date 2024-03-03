@@ -83,7 +83,11 @@ https://cloud.google.com/storage/docs/gsutil_install?hl=zh-cn#deb
 ```
 
 
-**_Tips: If debug or e2e test not working with address already used error, kill nodejs process by `pkill -f node`_**
+**_Tips: If debug or e2e test not working with address already used error, kill nodejs process by `pkill -f node`, or try to restart winnat_**
+```
+net stop winnat
+net start winnat
+```
 
 ## Local end points
  - Firebase Hosting: http://localhost:5000/api/
