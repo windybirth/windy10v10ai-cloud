@@ -3,9 +3,10 @@
 
 name: Deploy Firebase Functions Admin
 on:
-  push:
-    branches:
-      - develop
+  # push:
+  #   branches:
+  #     - develop
+  workflow_dispatch:
 
 jobs:
   build_and_deploy:
