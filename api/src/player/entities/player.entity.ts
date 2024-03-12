@@ -1,5 +1,4 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { Exclude } from 'class-transformer';
 import { IsNumber, IsOptional } from 'class-validator';
 import { Collection } from 'fireorm';
 
@@ -25,7 +24,7 @@ export class Player {
   @ApiProperty()
   conductPoint: number;
   // 最近一次游戏开始时间
-  @Exclude()
+  @ApiProperty()
   lastMatchTime: Date;
   // 赛季等级
   @ApiPropertyOptional()

@@ -18,7 +18,16 @@ jobs:
           git fetch origin develop:develop
           git reset --hard develop
 
+      - name: Check if PR exists
+        id: check_pr
+        run: |
+          pr_exists=$(gh pr list --base main --head develop --json number -q '.[0].number')
+          echo exists=$pr_exists >> $GITHUB_OUTPUT
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Create Pull Request
+        if: steps.check_pr.outputs.exists == ''
         uses: peter-evans/create-pull-request@v5
         with:
           title: Release develop into main

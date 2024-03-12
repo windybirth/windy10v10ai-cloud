@@ -11,13 +11,10 @@ describe('AppController (e2e)', () => {
   });
 
   it('/api/ (GET)', () => {
-    return (
-      request(app.getHttpServer())
-        .get('/api/')
-        .expect(200)
-        // contains the ENVIRONMENT: local
-        .expect((s) => expect(s.text).toContain('local'))
-    );
+    return request(app.getHttpServer())
+      .get('/api/')
+      .expect(200)
+      .expect((s) => expect(s.text).toContain('local'));
   });
 
   afterAll(async () => {

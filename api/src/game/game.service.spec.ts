@@ -7,7 +7,7 @@ import { PlayerCountService } from '../player-count/player-count.service';
 
 import { GameService } from './game.service';
 
-describe('CatsController', () => {
+describe('GameService', () => {
   let service: GameService;
 
   beforeEach(async () => {
@@ -56,7 +56,7 @@ describe('CatsController', () => {
         conductPoint: 100,
       };
 
-      const result = await service.giveEventPoints(
+      const result = service.giveEventPoints(
         startTime,
         endTime,
         seasonPoints,

@@ -87,26 +87,27 @@ export class GameService {
     return pointInfoDtos;
   }
 
-  async upsertPlayerInfo(steamId: number): Promise<number> {
+  async upsertPlayerInfo(steamId: number): Promise<void> {
     const player = await this.playerService.findSteamIdAndNewPlayer(steamId);
 
     // 判断赋予多少活动积分
-    const seasonPointTobeAdd = this.giveEventPoints(
-      new Date(process.env.EVENT_START_TIME),
-      new Date(process.env.EVENT_END_TIME),
-      +process.env.EVENT_SEASON_POINT,
-      player,
-    );
+    // const seasonPointTobeAdd = this.giveEventPoints(
+    //   new Date(process.env.EVENT_START_TIME),
+    //   new Date(process.env.EVENT_END_TIME),
+    //   +process.env.EVENT_SEASON_POINT,
+    //   player,
+    // );
     // 更新Player
     await this.playerService.updatePlayerLastMatchTime(
       player,
-      seasonPointTobeAdd,
+      // seasonPointTobeAdd,
+      0,
       0,
     );
 
-    if (seasonPointTobeAdd > 0) {
-      return steamId;
-    }
+    // if (seasonPointTobeAdd > 0) {
+    //   return steamId;
+    // }
   }
 
   // 活动积分赋予

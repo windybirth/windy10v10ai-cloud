@@ -83,7 +83,11 @@ https://cloud.google.com/storage/docs/gsutil_install?hl=zh-cn#deb
 ```
 
 
-**_Tips: If debug or e2e test not working with address already used error, kill nodejs process by `pkill -f node`_**
+**_Tips: If debug or e2e test not working with address already used error, kill nodejs process by `pkill -f node`, or try to restart winnat_**
+```
+net stop winnat
+net start winnat
+```
 
 ## Local end points
  - Firebase Hosting: http://localhost:5000/api/
@@ -96,6 +100,14 @@ https://cloud.google.com/storage/docs/gsutil_install?hl=zh-cn#deb
 
 ## Deploy
 
+### Deploy with Github Action
+
+Github Action will deploy automatically when push to main and develop.
+
+- main: Deploy Firebase Functions and Hosting
+- develop: Deploy Firebase Functions:admin
+
+### Deploy Manually
 - Deploy all
 ```
 firebase deploy
@@ -114,6 +126,17 @@ firebase deploy --only functions
 firebase deploy --only hosting
 # Deploy function and hosting
 firebase deploy --only functions,hosting
+```
+
+## Set environment variables in GitHub Actions
+
+1. Create env in [github secrets and variables](https://github.com/windybirth/windy10v10ai-cloud/settings/secrets/actions)
+2. Add env to [deploy_firebase.yml](.github/workflows/deploy_firebase.yml) and [deploy_firebase_admin.yml](.github/workflows/deploy_firebase_admin.yml)
+
+example:
+```yaml
+        env:
+          CONFIG_VALUES: someservice.key=${{ secrets.key }} someservice.id=${{ secrets.id }}
 ```
 
 ## Backup Firestore

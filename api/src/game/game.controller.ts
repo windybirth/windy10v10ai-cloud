@@ -50,11 +50,8 @@ export class GameController {
     const pointInfo: PointInfoDto[] = [];
 
     // 创建新玩家，更新最后游戏时间
-    const eventRewardSteamIds = [];
     for (const steamId of steamIds) {
-      const eventRewardSteamId =
-        await this.gameService.upsertPlayerInfo(steamId);
-      eventRewardSteamIds.push(eventRewardSteamId);
+      await this.gameService.upsertPlayerInfo(steamId);
     }
 
     const eventRewardInfo =
