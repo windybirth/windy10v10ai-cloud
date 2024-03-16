@@ -12,16 +12,20 @@ import { Player } from '../player/entities/player.entity';
 import { PlayerService } from '../player/player.service';
 import { PlayerRank } from '../player-count/entities/player-rank.entity';
 import { PlayerCountService } from '../player-count/player-count.service';
+import { PlayerPropertyService } from '../player-property/player-property.service';
 
+import { GameResetPlayerProperty } from './dto/game-reset-player-property';
 import { PointInfoDto } from './dto/point-info.dto';
 
 @Injectable()
 export class GameService {
+  private readonly resetPlayerPropertyMemberPoint = 1000;
   constructor(
     private readonly playerService: PlayerService,
     private readonly membersService: MembersService,
     private readonly playerCountService: PlayerCountService,
     private readonly eventRewardsService: EventRewardsService,
+    private readonly playerPropertyService: PlayerPropertyService,
   ) {}
 
   getOK(): string {
@@ -188,5 +192,42 @@ export class GameService {
       }
     }
     return pointInfoDtos;
+  }
+
+  async resetPlayerProperty(
+    gameResetPlayerProperty: GameResetPlayerProperty,
+  ): Promise<void> {
+    const { steamId, useMemberPoint } = gameResetPlayerProperty;
+
+    const player = (
+      await this.playerService.findBySteamIdsWithLevelInfo([steamId.toString()])
+    )[0];
+
+    if (!player) {
+      throw new BadRequestException();
+    }
+
+    // 消耗积分
+    if (useMemberPoint) {
+      const resetPlayerPropertyMemberPoint =
+        this.resetPlayerPropertyMemberPoint;
+      if (player.memberPointTotal < resetPlayerPropertyMemberPoint) {
+        throw new BadRequestException();
+      }
+      await this.playerService.upsertAddPoint(steamId, {
+        memberPointTotal: -resetPlayerPropertyMemberPoint,
+      });
+    } else {
+      const resetPlayerPropertySeasonPoint = player.seasonNextLevelPoint;
+      if (player.seasonPointTotal < resetPlayerPropertySeasonPoint) {
+        throw new BadRequestException();
+      }
+      await this.playerService.upsertAddPoint(steamId, {
+        seasonPointTotal: -resetPlayerPropertySeasonPoint,
+      });
+    }
+
+    // 重置玩家属性
+    await this.playerPropertyService.deleteBySteamId(steamId);
   }
 }

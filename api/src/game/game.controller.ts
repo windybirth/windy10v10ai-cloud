@@ -17,9 +17,11 @@ import { MembersService } from '../members/members.service';
 import { PlayerService } from '../player/player.service';
 import { PlayerCountService } from '../player-count/player-count.service';
 import { UpdatePlayerPropertyDto } from '../player-property/dto/update-player-property.dto';
+import { PlayerProperty } from '../player-property/entities/player-property.entity';
 import { PlayerPropertyService } from '../player-property/player-property.service';
 
 import { GameEnd } from './dto/game-end.request.body';
+import { GameResetPlayerProperty } from './dto/game-reset-player-property';
 import { GameStart } from './dto/game-start.response';
 import { PointInfoDto } from './dto/point-info.dto';
 import { GameService } from './game.service';
@@ -140,12 +142,26 @@ export class GameController {
   }
 
   @Put('addPlayerProperty')
-  addPlayerProperty(
+  async addPlayerProperty(
     @Headers('x-api-key') apiKey: string,
     @Body() updatePlayerPropertyDto: UpdatePlayerPropertyDto,
-  ) {
+  ): Promise<PlayerProperty> {
     this.gameService.validateApiKey(apiKey, 'Add Player Property');
 
-    return this.playerPropertyService.update(updatePlayerPropertyDto);
+    return await this.playerPropertyService.update(updatePlayerPropertyDto);
+  }
+
+  @Post('resetPlayerProperty')
+  async resetPlayerProperty(
+    @Headers('x-api-key') apiKey: string,
+    @Body() gameResetPlayerProperty: GameResetPlayerProperty,
+  ) {
+    this.gameService.validateApiKey(apiKey, 'Reset Player Property');
+
+    logger.debug(
+      `[Reset Player Property] ${JSON.stringify(gameResetPlayerProperty)}`,
+    );
+
+    await this.gameService.resetPlayerProperty(gameResetPlayerProperty);
   }
 }
