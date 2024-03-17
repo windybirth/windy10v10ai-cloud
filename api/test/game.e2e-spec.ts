@@ -1,11 +1,18 @@
 import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
 
-import { get, initTest, mockDate, post, restoreDate } from './util';
+import { get, initTest, mockDate, post, restoreDate } from './util/util-http';
+import {
+  addPlayerProperty,
+  createPlayer,
+  getPlayer,
+  getPlayerProperty,
+} from './util/util-player';
 
 const gameStartUrl = '/api/game/start/';
 const playerGetUrl = '/api/player/steamId/';
 const memberPostUrl = '/api/members/';
+const resetPlayerPropertyUrl = '/api/game/resetPlayerProperty';
 
 function callGameStart(
   app: INestApplication,
@@ -222,6 +229,207 @@ describe('PlayerController (e2e)', () => {
 
         const result = await callGameStart(app, steamIds);
         expect(result.status).toEqual(200);
+      });
+    });
+  });
+
+  describe('/api/game/resetPlayerProperty (Post) 重置玩家属性', () => {
+    describe('可以重置', () => {
+      it.each([
+        [
+          '使用赛季积分，积分不足',
+          {
+            body: {
+              steamId: 100000401,
+              useMemberPoint: false,
+            },
+            before: {
+              seasonPointTotal: 199,
+              memberPointTotal: 0,
+            },
+            after: {
+              seasonPointTotal: 199,
+              memberPointTotal: 0,
+            },
+            expected: {
+              status: 400,
+              propertyLength: 1,
+            },
+          },
+        ],
+        [
+          '使用赛季积分重置 level2',
+          {
+            body: {
+              steamId: 100000402,
+              useMemberPoint: false,
+            },
+            before: {
+              seasonPointTotal: 200,
+              memberPointTotal: 0,
+            },
+            after: {
+              seasonPointTotal: 0,
+              memberPointTotal: 0,
+            },
+            expected: {
+              status: 201,
+              propertyLength: 0,
+            },
+          },
+        ],
+        [
+          '使用赛季积分重置 level3',
+          {
+            body: {
+              steamId: 100000403,
+              useMemberPoint: false,
+            },
+            before: {
+              seasonPointTotal: 300,
+              memberPointTotal: 1000,
+            },
+            after: {
+              seasonPointTotal: 0,
+              memberPointTotal: 1000,
+            },
+            expected: {
+              status: 201,
+              propertyLength: 0,
+            },
+          },
+        ],
+        [
+          '使用会员积分，积分不足',
+          {
+            body: {
+              steamId: 100000411,
+              useMemberPoint: true,
+            },
+            before: {
+              seasonPointTotal: 0,
+              memberPointTotal: 999,
+            },
+            after: {
+              seasonPointTotal: 0,
+              memberPointTotal: 999,
+            },
+            expected: {
+              status: 400,
+              propertyLength: 1,
+            },
+          },
+        ],
+        [
+          '使用会员积分，重置',
+          {
+            body: {
+              steamId: 100000412,
+              useMemberPoint: true,
+            },
+            before: {
+              seasonPointTotal: 0,
+              memberPointTotal: 1000,
+            },
+            after: {
+              seasonPointTotal: 0,
+              memberPointTotal: 0,
+            },
+            expected: {
+              status: 201,
+              propertyLength: 0,
+            },
+          },
+        ],
+        [
+          '使用会员积分，重置',
+          {
+            body: {
+              steamId: 100000413,
+              useMemberPoint: true,
+            },
+            before: {
+              seasonPointTotal: 999,
+              memberPointTotal: 2000,
+            },
+            after: {
+              seasonPointTotal: 999,
+              memberPointTotal: 1000,
+            },
+            expected: {
+              status: 201,
+              propertyLength: 0,
+            },
+          },
+        ],
+      ])('%s', async (_, { body, before, after, expected }) => {
+        await createPlayer(app, {
+          steamId: body.steamId,
+          seasonPointTotal: before.seasonPointTotal,
+          memberPointTotal: before.memberPointTotal,
+        });
+
+        await addPlayerProperty(
+          app,
+          body.steamId,
+          'property_cooldown_percentage',
+          1,
+        );
+
+        // 重置玩家属性
+        const result = await post(app, resetPlayerPropertyUrl, body);
+        expect(result.status).toEqual(expected.status);
+
+        const player = await getPlayer(app, body.steamId);
+        expect(player.seasonPointTotal).toEqual(after.seasonPointTotal);
+        expect(player.memberPointTotal).toEqual(after.memberPointTotal);
+
+        const playerProperty = await getPlayerProperty(app, body.steamId);
+        expect(playerProperty).toHaveLength(expected.propertyLength);
+      });
+    });
+
+    describe('无法重置', () => {
+      // 不存在的玩家
+      it.each([
+        {
+          body: {
+            steamId: 100000421,
+            useMemberPoint: false,
+          },
+          status: 400,
+        },
+        {
+          body: {
+            steamId: 100000422,
+            useMemberPoint: true,
+          },
+          status: 400,
+        },
+      ])('%s', async ({ body, status }) => {
+        const result = await post(app, resetPlayerPropertyUrl, body);
+        expect(result.status).toEqual(status);
+      });
+      // 积分不足
+      it.each([
+        {
+          body: {
+            steamId: 100000423,
+            useMemberPoint: false,
+          },
+          status: 400,
+        },
+        {
+          body: {
+            steamId: 100000424,
+            useMemberPoint: true,
+          },
+          status: 400,
+        },
+      ])('%s', async ({ body, status }) => {
+        await get(app, gameStartUrl, { steamIds: [body.steamId] });
+        const result = await post(app, resetPlayerPropertyUrl, body);
+        expect(result.status).toEqual(status);
       });
     });
   });

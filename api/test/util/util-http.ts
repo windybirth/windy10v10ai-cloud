@@ -2,8 +2,8 @@ import { INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import * as request from 'supertest';
 
-import { AppModule } from './../src/app.module';
-import { AppGlobalSettings } from './../src/util/settings';
+import { AppModule } from '../../src/app.module';
+import { AppGlobalSettings } from '../../src/util/settings';
 
 export async function initTest(): Promise<INestApplication> {
   const moduleFixture: TestingModule = await Test.createTestingModule({
@@ -32,7 +32,18 @@ export function post(
   url: string,
   body: object,
 ): request.Test {
-  return request(app.getHttpServer()).post(url).send(body);
+  const headers = {
+    'x-api-key': 'apikey',
+  };
+  return request(app.getHttpServer()).post(url).send(body).set(headers);
+}
+
+export function put(
+  app: INestApplication,
+  url: string,
+  body: object,
+): request.Test {
+  return request(app.getHttpServer()).put(url).send(body);
 }
 
 export function patch(
