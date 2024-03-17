@@ -57,7 +57,9 @@ export class PlayerPropertyService {
       ...createPlayerPropertyDto,
     });
   }
-  async update(updatePlayerPropertyDto: UpdatePlayerPropertyDto) {
+  async update(
+    updatePlayerPropertyDto: UpdatePlayerPropertyDto,
+  ): Promise<PlayerProperty> {
     this.validatePropertyName(updatePlayerPropertyDto.name);
     const existPlayerProperty = await this.playerPropertyRepository.findById(
       this.buildId(
@@ -136,6 +138,7 @@ export class PlayerPropertyService {
   }
 
   async deleteBySteamId(steamId: number) {
+    logger.debug(`[Player Property] deleteBySteamId ${steamId}`);
     const playerPropertyList = await this.findBySteamId(steamId);
     for (const playerProperty of playerPropertyList) {
       await this.playerPropertyRepository.delete(playerProperty.id);

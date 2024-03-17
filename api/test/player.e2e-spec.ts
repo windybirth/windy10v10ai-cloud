@@ -1,6 +1,6 @@
 import { INestApplication } from '@nestjs/common';
 
-import { get, initTest, patch } from './util';
+import { get, initTest, patch } from './util/util-http';
 
 describe('PlayerController (e2e)', () => {
   const playerGetUrl = '/api/player/steamId/';

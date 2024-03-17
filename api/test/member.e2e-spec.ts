@@ -1,7 +1,7 @@
 import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
 
-import { initTest } from './util';
+import { initTest } from './util/util-http';
 
 describe('MemberController (e2e)', () => {
   let app: INestApplication;
