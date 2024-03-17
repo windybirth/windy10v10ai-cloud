@@ -163,5 +163,9 @@ export class GameController {
     );
 
     await this.gameService.resetPlayerProperty(gameResetPlayerProperty);
+
+    return await this.playerService.findBySteamIdsWithLevelInfo([
+      gameResetPlayerProperty.steamId.toString(),
+    ]);
   }
 }

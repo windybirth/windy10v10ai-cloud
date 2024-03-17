@@ -237,27 +237,6 @@ describe('PlayerController (e2e)', () => {
     describe('可以重置', () => {
       it.each([
         [
-          '使用赛季积分，积分不足',
-          {
-            body: {
-              steamId: 100000401,
-              useMemberPoint: false,
-            },
-            before: {
-              seasonPointTotal: 199,
-              memberPointTotal: 0,
-            },
-            after: {
-              seasonPointTotal: 199,
-              memberPointTotal: 0,
-            },
-            expected: {
-              status: 400,
-              propertyLength: 1,
-            },
-          },
-        ],
-        [
           '使用赛季积分重置 level2',
           {
             body: {
@@ -296,27 +275,6 @@ describe('PlayerController (e2e)', () => {
             expected: {
               status: 201,
               propertyLength: 0,
-            },
-          },
-        ],
-        [
-          '使用会员积分，积分不足',
-          {
-            body: {
-              steamId: 100000411,
-              useMemberPoint: true,
-            },
-            before: {
-              seasonPointTotal: 0,
-              memberPointTotal: 999,
-            },
-            after: {
-              seasonPointTotal: 0,
-              memberPointTotal: 999,
-            },
-            expected: {
-              status: 400,
-              propertyLength: 1,
             },
           },
         ],
@@ -380,9 +338,9 @@ describe('PlayerController (e2e)', () => {
         const result = await post(app, resetPlayerPropertyUrl, body);
         expect(result.status).toEqual(expected.status);
 
-        const player = await getPlayer(app, body.steamId);
-        expect(player.seasonPointTotal).toEqual(after.seasonPointTotal);
-        expect(player.memberPointTotal).toEqual(after.memberPointTotal);
+        const player = result.body[0];
+        expect(player?.seasonPointTotal).toEqual(after.seasonPointTotal);
+        expect(player?.memberPointTotal).toEqual(after.memberPointTotal);
 
         const playerProperty = await getPlayerProperty(app, body.steamId);
         expect(playerProperty).toHaveLength(expected.propertyLength);
@@ -412,24 +370,72 @@ describe('PlayerController (e2e)', () => {
       });
       // 积分不足
       it.each([
-        {
-          body: {
-            steamId: 100000423,
-            useMemberPoint: false,
+        [
+          '使用赛季积分，积分不足',
+          {
+            body: {
+              steamId: 100000401,
+              useMemberPoint: false,
+            },
+            before: {
+              seasonPointTotal: 199,
+              memberPointTotal: 0,
+            },
+            after: {
+              seasonPointTotal: 199,
+              memberPointTotal: 0,
+            },
+            expected: {
+              status: 400,
+              propertyLength: 1,
+            },
           },
-          status: 400,
-        },
-        {
-          body: {
-            steamId: 100000424,
-            useMemberPoint: true,
+        ],
+        [
+          '使用会员积分，积分不足',
+          {
+            body: {
+              steamId: 100000411,
+              useMemberPoint: true,
+            },
+            before: {
+              seasonPointTotal: 0,
+              memberPointTotal: 999,
+            },
+            after: {
+              seasonPointTotal: 0,
+              memberPointTotal: 999,
+            },
+            expected: {
+              status: 400,
+              propertyLength: 1,
+            },
           },
-          status: 400,
-        },
-      ])('%s', async ({ body, status }) => {
-        await get(app, gameStartUrl, { steamIds: [body.steamId] });
+        ],
+      ])('%s', async (_, { body, before, after, expected }) => {
+        await createPlayer(app, {
+          steamId: body.steamId,
+          seasonPointTotal: before.seasonPointTotal,
+          memberPointTotal: before.memberPointTotal,
+        });
+
+        await addPlayerProperty(
+          app,
+          body.steamId,
+          'property_cooldown_percentage',
+          1,
+        );
+
+        // 重置玩家属性
         const result = await post(app, resetPlayerPropertyUrl, body);
-        expect(result.status).toEqual(status);
+        expect(result.status).toEqual(expected.status);
+
+        const player = await getPlayer(app, body.steamId);
+        expect(player.seasonPointTotal).toEqual(after.seasonPointTotal);
+        expect(player.memberPointTotal).toEqual(after.memberPointTotal);
+
+        const playerProperty = await getPlayerProperty(app, body.steamId);
+        expect(playerProperty).toHaveLength(expected.propertyLength);
       });
     });
   });
