@@ -43,6 +43,7 @@ export class PlayerPropertyService {
     private readonly playerPropertyRepository: BaseFirestoreRepository<PlayerProperty>,
     private readonly playerService: PlayerService,
   ) {}
+
   async create(createPlayerPropertyDto: CreatePlayerPropertyDto) {
     this.validatePropertyName(createPlayerPropertyDto.name);
     await this.cheakPlayerLevel(
@@ -95,15 +96,6 @@ export class PlayerPropertyService {
       returnString += `${name}	${playerPropertys.length}	${totalLevel}\n`;
     }
     return returnString;
-  }
-
-  async initialLevel() {
-    for (const memberLevel of this.memberLevelList) {
-      await this.playerService.setMemberLevel(
-        memberLevel.steamId,
-        memberLevel.level,
-      );
-    }
   }
 
   async initialProperty() {
@@ -183,6 +175,4 @@ export class PlayerPropertyService {
   private buildId(steamId: number, name: string) {
     return steamId.toString() + '#' + name;
   }
-
-  memberLevelList = [{ steamId: 136407523, level: 32 }];
 }

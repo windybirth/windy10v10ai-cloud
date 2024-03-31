@@ -17,12 +17,12 @@ import { MembersService } from '../members/members.service';
 import { PlayerService } from '../player/player.service';
 import { PlayerCountService } from '../player-count/player-count.service';
 import { UpdatePlayerPropertyDto } from '../player-property/dto/update-player-property.dto';
-import { PlayerProperty } from '../player-property/entities/player-property.entity';
 import { PlayerPropertyService } from '../player-property/player-property.service';
 
 import { GameEnd } from './dto/game-end.request.body';
 import { GameResetPlayerProperty } from './dto/game-reset-player-property';
 import { GameStart } from './dto/game-start.response';
+import { PlayerDto } from './dto/player.dto';
 import { PointInfoDto } from './dto/point-info.dto';
 import { GameService } from './game.service';
 
@@ -84,22 +84,7 @@ export class GameController {
     // ----------------- 以下为返回数据 -----------------
     // 获取玩家信息
     const steamIdsStr = steamIds.map((id) => id.toString());
-    const players =
-      await this.playerService.findBySteamIdsWithLevelInfo(steamIdsStr);
-    // 获取玩家属性
-    // 测试服为纯净版 不获取玩家属性
-    if (!this.gameService.isTestServer(apiKey)) {
-      for (const player of players) {
-        const property = await this.playerPropertyService.findBySteamId(
-          +player.id,
-        );
-        if (property) {
-          player.properties = property;
-        } else {
-          player.properties = [];
-        }
-      }
-    }
+    const players = await this.gameService.findPlayerDtoBySteamIds(steamIdsStr);
 
     // 排行榜
     const playerRank = await this.gameService.getPlayerRank();
@@ -145,10 +130,14 @@ export class GameController {
   async addPlayerProperty(
     @Headers('x-api-key') apiKey: string,
     @Body() updatePlayerPropertyDto: UpdatePlayerPropertyDto,
-  ): Promise<PlayerProperty> {
+  ): Promise<PlayerDto> {
     this.gameService.validateApiKey(apiKey, 'Add Player Property');
 
-    return await this.playerPropertyService.update(updatePlayerPropertyDto);
+    await this.playerPropertyService.update(updatePlayerPropertyDto);
+
+    return await this.gameService.findPlayerDtoBySteamId(
+      updatePlayerPropertyDto.steamId,
+    );
   }
 
   @Post('resetPlayerProperty')
@@ -164,8 +153,8 @@ export class GameController {
 
     await this.gameService.resetPlayerProperty(gameResetPlayerProperty);
 
-    return await this.playerService.findBySteamIdsWithLevelInfo([
-      gameResetPlayerProperty.steamId.toString(),
-    ]);
+    return await this.gameService.findPlayerDtoBySteamId(
+      gameResetPlayerProperty.steamId,
+    );
   }
 }

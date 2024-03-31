@@ -1,7 +1,7 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 
+import { Player } from '../../player/entities/player.entity';
 import { PlayerProperty } from '../../player-property/entities/player-property.entity';
-import { Player } from '../entities/player.entity';
 
 export class PlayerDto extends Player {
   @ApiProperty()
@@ -16,6 +16,10 @@ export class PlayerDto extends Player {
   memberCurrentLevelPoint: number;
   @ApiProperty()
   memberNextLevelPoint: number;
+  @ApiProperty()
+  totalLevel: number;
+  @ApiProperty()
+  useableLevel: number;
   @ApiPropertyOptional()
   properties?: PlayerProperty[];
 }

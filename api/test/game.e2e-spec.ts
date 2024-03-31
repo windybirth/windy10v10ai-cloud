@@ -338,7 +338,7 @@ describe('PlayerController (e2e)', () => {
         const result = await post(app, resetPlayerPropertyUrl, body);
         expect(result.status).toEqual(expected.status);
 
-        const player = result.body[0];
+        const player = result.body;
         expect(player?.seasonPointTotal).toEqual(after.seasonPointTotal);
         expect(player?.memberPointTotal).toEqual(after.memberPointTotal);
 
