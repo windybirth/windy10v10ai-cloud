@@ -268,7 +268,11 @@ export class GameService {
         this.playerService.getMemberNextLevelPoint(memberLevel);
       player.totalLevel = seasonLevel + memberLevel;
 
-      player.useableLevel = player.totalLevel - player.properties.length;
+      const usedLevel = player.properties.reduce(
+        (prev, curr) => prev + curr.level,
+        0,
+      );
+      player.useableLevel = player.totalLevel - usedLevel;
     }
     return players;
   }
