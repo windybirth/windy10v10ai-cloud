@@ -201,7 +201,7 @@ export class GameService {
     const { steamId, useMemberPoint } = gameResetPlayerProperty;
 
     const player = (
-      await this.findBySteamIdsWithProperty([steamId.toString()])
+      await this.findPlayerDtoBySteamIds([steamId.toString()])
     )[0];
 
     if (!player) {
@@ -232,7 +232,12 @@ export class GameService {
     await this.playerPropertyService.deleteBySteamId(steamId);
   }
 
-  async findBySteamIdsWithProperty(ids: string[]): Promise<PlayerDto[]> {
+  async findPlayerDtoBySteamId(steamId: number): Promise<PlayerDto> {
+    const players = await this.findPlayerDtoBySteamIds([steamId.toString()]);
+    return players[0];
+  }
+
+  async findPlayerDtoBySteamIds(ids: string[]): Promise<PlayerDto[]> {
     const players = (await this.playerService.findByIds(ids)) as PlayerDto[];
     for (const player of players) {
       const properties = await this.playerPropertyService.findBySteamId(
