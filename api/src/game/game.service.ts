@@ -8,6 +8,7 @@ import { logger } from 'firebase-functions';
 import { EventRewardsService } from '../event-rewards/event-rewards.service';
 import { Member } from '../members/entities/members.entity';
 import { MembersService } from '../members/members.service';
+import { PlayerDto } from '../player/dto/player.dto';
 import { Player } from '../player/entities/player.entity';
 import { PlayerService } from '../player/player.service';
 import { PlayerRank } from '../player-count/entities/player-rank.entity';
@@ -200,7 +201,7 @@ export class GameService {
     const { steamId, useMemberPoint } = gameResetPlayerProperty;
 
     const player = (
-      await this.playerService.findBySteamIdsWithLevelInfo([steamId.toString()])
+      await this.findBySteamIdsWithProperty([steamId.toString()])
     )[0];
 
     if (!player) {
@@ -229,5 +230,41 @@ export class GameService {
 
     // 重置玩家属性
     await this.playerPropertyService.deleteBySteamId(steamId);
+  }
+
+  async findBySteamIdsWithProperty(ids: string[]): Promise<PlayerDto[]> {
+    const players = (await this.playerService.findByIds(ids)) as PlayerDto[];
+    for (const player of players) {
+      const properties = await this.playerPropertyService.findBySteamId(
+        +player.id,
+      );
+      if (properties) {
+        player.properties = properties;
+      } else {
+        player.properties = [];
+      }
+
+      const seasonPoint = player.seasonPointTotal;
+      const seasonLevel =
+        this.playerService.getSeasonLevelBuyPoint(seasonPoint);
+      player.seasonLevel = seasonLevel;
+      player.seasonCurrrentLevelPoint =
+        seasonPoint - this.playerService.getSeasonTotalPoint(seasonLevel);
+      player.seasonNextLevelPoint =
+        this.playerService.getSeasonNextLevelPoint(seasonLevel);
+
+      const memberPoint = player.memberPointTotal;
+      const memberLevel =
+        this.playerService.getMemberLevelBuyPoint(memberPoint);
+      player.memberLevel = memberLevel;
+      player.memberCurrentLevelPoint =
+        memberPoint - this.playerService.getMemberTotalPoint(memberLevel);
+      player.memberNextLevelPoint =
+        this.playerService.getMemberNextLevelPoint(memberLevel);
+      player.totalLevel = seasonLevel + memberLevel;
+
+      player.useableLevel = player.totalLevel - player.properties.length;
+    }
+    return players;
   }
 }

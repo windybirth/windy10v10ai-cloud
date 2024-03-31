@@ -85,21 +85,7 @@ export class GameController {
     // 获取玩家信息
     const steamIdsStr = steamIds.map((id) => id.toString());
     const players =
-      await this.playerService.findBySteamIdsWithLevelInfo(steamIdsStr);
-    // 获取玩家属性
-    // 测试服为纯净版 不获取玩家属性
-    if (!this.gameService.isTestServer(apiKey)) {
-      for (const player of players) {
-        const property = await this.playerPropertyService.findBySteamId(
-          +player.id,
-        );
-        if (property) {
-          player.properties = property;
-        } else {
-          player.properties = [];
-        }
-      }
-    }
+      await this.gameService.findBySteamIdsWithProperty(steamIdsStr);
 
     // 排行榜
     const playerRank = await this.gameService.getPlayerRank();
@@ -164,7 +150,7 @@ export class GameController {
 
     await this.gameService.resetPlayerProperty(gameResetPlayerProperty);
 
-    return await this.playerService.findBySteamIdsWithLevelInfo([
+    return await this.gameService.findBySteamIdsWithProperty([
       gameResetPlayerProperty.steamId.toString(),
     ]);
   }

@@ -16,6 +16,10 @@ export class PlayerDto extends Player {
   memberCurrentLevelPoint: number;
   @ApiProperty()
   memberNextLevelPoint: number;
+  @ApiProperty()
+  totalLevel: number;
+  @ApiProperty()
+  useableLevel: number;
   @ApiPropertyOptional()
   properties?: PlayerProperty[];
 }

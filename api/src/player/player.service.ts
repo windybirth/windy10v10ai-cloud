@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { BaseFirestoreRepository } from 'fireorm';
 import { InjectRepository } from 'nestjs-fireorm';
 
-import { PlayerDto } from './dto/player.dto';
 import { UpdatePlayerDto } from './dto/update-player.dto';
 import { Player } from './entities/player.entity';
 
@@ -109,26 +108,6 @@ export class PlayerService {
 
   async findByIds(ids: string[]): Promise<Player[]> {
     const players = await this.playerRepository.whereIn('id', ids).find();
-    return players;
-  }
-
-  async findBySteamIdsWithLevelInfo(ids: string[]): Promise<PlayerDto[]> {
-    const players = (await this.findByIds(ids)) as PlayerDto[];
-    for (const player of players) {
-      const seasonPoint = player.seasonPointTotal;
-      const seasonLevel = this.getSeasonLevelBuyPoint(seasonPoint);
-      player.seasonLevel = seasonLevel;
-      player.seasonCurrrentLevelPoint =
-        seasonPoint - this.getSeasonTotalPoint(seasonLevel);
-      player.seasonNextLevelPoint = this.getSeasonNextLevelPoint(seasonLevel);
-
-      const memberPoint = player.memberPointTotal;
-      const memberLevel = this.getMemberLevelBuyPoint(memberPoint);
-      player.memberLevel = memberLevel;
-      player.memberCurrentLevelPoint =
-        memberPoint - this.getMemberTotalPoint(memberLevel);
-      player.memberNextLevelPoint = this.getMemberNextLevelPoint(memberLevel);
-    }
     return players;
   }
 
@@ -285,5 +264,13 @@ export class PlayerService {
   // 根据积分获取当前等级
   getMemberLevelBuyPoint(point: number) {
     return Math.floor(Math.sqrt(point / 25 + 380.25) - 19.5) + 1;
+  }
+
+  // ------------------ test code ------------------
+  memberLevelList = [{ steamId: 136407523, level: 32 }];
+  async initialLevel() {
+    for (const memberLevel of this.memberLevelList) {
+      await this.setMemberLevel(memberLevel.steamId, memberLevel.level);
+    }
   }
 }
