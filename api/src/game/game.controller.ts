@@ -3,6 +3,7 @@ import {
   Controller,
   Get,
   Headers,
+  Param,
   ParseArrayPipe,
   Post,
   Put,
@@ -156,5 +157,17 @@ export class GameController {
     return await this.gameService.findPlayerDtoBySteamId(
       gameResetPlayerProperty.steamId,
     );
+  }
+
+  @Get('player/steamId/:steamId')
+  async getPlayerInfo(
+    @Headers('x-api-key') apiKey: string,
+    @Param('steamId') steamId: number,
+  ): Promise<PlayerDto> {
+    this.gameService.validateApiKey(apiKey, 'Reset Player Property');
+
+    logger.debug(`[Get Player Info] ${steamId}`);
+
+    return await this.gameService.findPlayerDtoBySteamId(steamId);
   }
 }
