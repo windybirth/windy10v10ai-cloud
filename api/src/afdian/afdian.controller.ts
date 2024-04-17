@@ -7,6 +7,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
+import { logger } from 'firebase-functions/v1';
 
 import { AfdianService } from './afdian.service';
 import { AfdianWebhookDto } from './dto/afdian-webhook.dto';
@@ -22,8 +23,10 @@ export class AfdianController {
     @Query('token') token: string,
   ) {
     if (token !== process.env.AFDIAN_TOKEN) {
+      logger.error('afdian token error');
       throw new UnauthorizedException();
     }
+    logger.info('Afdian webhook called with:', afdianWebhookDto);
     const order = afdianWebhookDto?.data?.order;
     if (!order) {
       throw new BadRequestException();
