@@ -46,10 +46,8 @@ export class GameService {
     return apiKey === process.env.SERVER_APIKEY;
   }
 
-  isTestServer(_apiKey: string): boolean {
-    // return apiKey === process.env.SERVER_APIKEY_TEST;
-    // 禁用测试服数据
-    return false;
+  isTestServer(apiKey: string): boolean {
+    return apiKey === process.env.SERVER_APIKEY_TEST;
   }
 
   validateSteamIds(steamIds: number[]): number[] {
