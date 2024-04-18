@@ -18,7 +18,7 @@ function callGameStart(
   app: INestApplication,
   steamIds: number[],
 ): request.Test {
-  const apiKey = 'apikey';
+  const apiKey = 'Invalid_NotOnDedicatedServer';
   const countryCode = 'CN';
   const headers = {
     'x-api-key': apiKey,

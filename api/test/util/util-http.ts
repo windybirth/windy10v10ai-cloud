@@ -21,7 +21,7 @@ export function get(
   query: object = {},
 ): request.Test {
   const headers = {
-    'x-api-key': 'apikey',
+    'x-api-key': 'Invalid_NotOnDedicatedServer',
     'x-country-code': 'CN',
   };
   return request(app.getHttpServer()).get(url).query(query).set(headers);
@@ -33,7 +33,7 @@ export function post(
   body: object,
 ): request.Test {
   const headers = {
-    'x-api-key': 'apikey',
+    'x-api-key': 'Invalid_NotOnDedicatedServer',
   };
   return request(app.getHttpServer()).post(url).send(body).set(headers);
 }
