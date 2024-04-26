@@ -24,7 +24,7 @@ jobs:
         run: (cd api && npm run build)
 
       - name: Deploy to Firebase
-        uses: w9jds/firebase-action@master
+        uses: w9jds/firebase-action@v13.7.4 # FIXME update to latest version
         with:
           args: deploy --only functions,hosting
         env:
