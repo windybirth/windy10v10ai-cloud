@@ -7,4 +7,5 @@ export class EventReward {
   thridAnniversary?: boolean;
   newYear2024?: boolean;
   subscription50000?: boolean;
+  mayDay2024?: boolean;
 }

@@ -25,8 +25,7 @@ export class EventRewardsService {
     return steamIds.map((steamId) => ({
       steamId,
       result:
-        eventRewards.find((r) => r.steamId === steamId)?.subscription50000 ??
-        false,
+        eventRewards.find((r) => r.steamId === steamId)?.mayDay2024 ?? false,
     }));
   }
 
@@ -38,11 +37,11 @@ export class EventRewardsService {
       await this.eventRewardsRepository.create({
         id,
         steamId,
-        subscription50000: true,
+        mayDay2024: true,
       });
     } else {
       // update
-      eventReward.subscription50000 = true;
+      eventReward.mayDay2024 = true;
       await this.eventRewardsRepository.update(eventReward);
     }
   }

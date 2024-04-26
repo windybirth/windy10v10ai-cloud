@@ -157,9 +157,9 @@ export class GameService {
     steamIds: number[],
   ): Promise<PointInfoDto[]> {
     const pointInfoDtos: PointInfoDto[] = [];
-    const startTime = new Date('2024-01-06T00:00:00.000Z');
-    const endTime = new Date('2024-01-31T00:00:00.000Z');
-    const rewordSeasonPoint = 2000;
+    const startTime = new Date('2024-04-26T00:00:00.000Z');
+    const endTime = new Date('2024-05-05T00:00:00.000Z');
+    const rewordSeasonPoint = 5000;
 
     const now = new Date();
     if (now < startTime || now > endTime) {
@@ -185,8 +185,8 @@ export class GameService {
         pointInfoDtos.push({
           steamId: rewardResult.steamId,
           title: {
-            cn: '庆祝50000订阅! 送2000积分。<br>评分上5星再送3000赛季积分',
-            en: 'Celebrating 50,000 subscriptions!<br>If rating get 5 stars, give more 3,000 points.',
+            cn: '五一快乐！',
+            en: 'Happye May Day!',
           },
           seasonPoint: rewordSeasonPoint,
         });
