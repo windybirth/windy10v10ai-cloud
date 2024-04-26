@@ -158,8 +158,8 @@ export class GameService {
   ): Promise<PointInfoDto[]> {
     const pointInfoDtos: PointInfoDto[] = [];
     const startTime = new Date('2024-04-26T00:00:00.000Z');
-    const endTime = new Date('2024-05-05T00:00:00.000Z');
-    const rewordSeasonPoint = 5000;
+    const endTime = new Date('2024-05-06T00:00:00.000Z');
+    const rewardSeasonPoint = 5000;
 
     const now = new Date();
     if (now < startTime || now > endTime) {
@@ -178,7 +178,7 @@ export class GameService {
         // });
         // 奖励赛季积分
         await this.playerService.upsertAddPoint(rewardResult.steamId, {
-          seasonPointTotal: rewordSeasonPoint,
+          seasonPointTotal: rewardSeasonPoint,
         });
         // FIXME 每次需要更新
         await this.eventRewardsService.setReward(rewardResult.steamId);
@@ -188,7 +188,7 @@ export class GameService {
             cn: '五一快乐！',
             en: 'Happye May Day!',
           },
-          seasonPoint: rewordSeasonPoint,
+          seasonPoint: rewardSeasonPoint,
         });
       }
     }
