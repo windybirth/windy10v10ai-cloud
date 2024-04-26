@@ -157,7 +157,7 @@ export class GameService {
     steamIds: number[],
   ): Promise<PointInfoDto[]> {
     const pointInfoDtos: PointInfoDto[] = [];
-    const startTime = new Date('2024-04-26T00:00:00.000Z');
+    const startTime = new Date('2024-04-26T18:00:00.000Z');
     const endTime = new Date('2024-05-06T00:00:00.000Z');
     const rewardSeasonPoint = 5000;
 

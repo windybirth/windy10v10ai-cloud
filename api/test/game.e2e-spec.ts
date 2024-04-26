@@ -153,7 +153,7 @@ describe('PlayerController (e2e)', () => {
     describe('活动', () => {
       const rewardSeasonPoint = 5000;
       const before = '2024-04-25T23:59:00.000Z';
-      const start = '2024-04-26T00:01:00.000Z';
+      const start = '2024-04-27T00:01:00.000Z';
       const end = '2024-05-05T23:59:00.000Z';
       const after = '2024-05-06T00:01:00.000Z';
       it.each([
