@@ -15,6 +15,7 @@ async function bootstrap() {
     const config = new DocumentBuilder()
       .setTitle('Windy10v10 Cloud API')
       .setVersion('1.0')
+      .addBearerAuth()
       .build();
     const document = SwaggerModule.createDocument(app, config);
 
