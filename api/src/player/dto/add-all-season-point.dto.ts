@@ -3,11 +3,17 @@ import { Type } from 'class-transformer';
 import { IsDate, IsNumber } from 'class-validator';
 
 export class AddAllSeasonPointDto {
-  @ApiProperty()
+  @ApiProperty({ default: 1000 })
   @IsNumber()
   point: number;
 
-  @ApiProperty()
+  @ApiProperty({
+    default: (() => {
+      const now = new Date();
+      now.setUTCHours(0, 0, 0, 0);
+      return now;
+    })(),
+  })
   @Type(() => Date)
   @IsDate()
   startFrom: Date;
