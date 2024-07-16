@@ -8,7 +8,6 @@ import { logger } from 'firebase-functions';
 import { EventRewardsService } from '../event-rewards/event-rewards.service';
 import { Member } from '../members/entities/members.entity';
 import { MembersService } from '../members/members.service';
-import { Player } from '../player/entities/player.entity';
 import { PlayerService } from '../player/player.service';
 import { PlayerRank } from '../player-count/entities/player-rank.entity';
 import { PlayerCountService } from '../player-count/player-count.service';
@@ -115,31 +114,6 @@ export class GameService {
     // }
   }
 
-  // 活动积分赋予
-  // 参数 活动期间（开始，结束），发放赛季积分数量
-  giveEventPoints(
-    startTime: Date,
-    endTime: Date,
-    seasonPoints: number,
-    player: Player,
-  ) {
-    if (isNaN(seasonPoints)) {
-      return 0;
-    }
-    // if now is not in the event time, return
-    const now = new Date();
-    if (now < startTime || now > endTime) {
-      return 0;
-    }
-
-    // 检测用户是否为活动期间首次登陆 player.lastMatchTime
-    if (player.lastMatchTime < startTime) {
-      // 发放积分（赛季 player.seasonPointTotal
-      player.seasonPointTotal = seasonPoints;
-    }
-    return player.seasonPointTotal;
-  }
-
   async getPlayerRank(): Promise<PlayerRank> {
     const playerRank = await this.playerCountService.getPlayerRankToday();
 
@@ -157,9 +131,9 @@ export class GameService {
     steamIds: number[],
   ): Promise<PointInfoDto[]> {
     const pointInfoDtos: PointInfoDto[] = [];
-    const startTime = new Date('2024-04-26T18:00:00.000Z');
-    const endTime = new Date('2024-05-06T00:00:00.000Z');
-    const rewardSeasonPoint = 5000;
+    const startTime = new Date('2024-07-16T00:00:00.000Z');
+    const endTime = new Date('2024-07-22T00:00:00.000Z');
+    // const rewardSeasonPoint = 5000;
 
     const now = new Date();
     if (now < startTime || now > endTime) {
@@ -171,24 +145,24 @@ export class GameService {
       await this.eventRewardsService.getRewardResults(steamIds);
     for (const rewardResult of rewardResults) {
       if (rewardResult.result === false) {
-        // 奖励一个月会员
-        // await this.membersService.addMember({
-        //   steamId: rewardResult.steamId,
-        //   month: 1,
-        // });
-        // 奖励赛季积分
-        await this.playerService.upsertAddPoint(rewardResult.steamId, {
-          seasonPointTotal: rewardSeasonPoint,
+        // 奖励一周会员
+        await this.membersService.addMember({
+          steamId: rewardResult.steamId,
+          month: 0.25,
         });
+        // 奖励赛季积分
+        // await this.playerService.upsertAddPoint(rewardResult.steamId, {
+        //   seasonPointTotal: rewardSeasonPoint,
+        // });
         // FIXME 每次需要更新
         await this.eventRewardsService.setReward(rewardResult.steamId);
         pointInfoDtos.push({
           steamId: rewardResult.steamId,
           title: {
-            cn: '五一快乐！',
-            en: 'Happye May Day!',
+            cn: '恭喜你获赠一周会员!',
+            en: 'Get one week free membership!',
           },
-          seasonPoint: rewardSeasonPoint,
+          // seasonPoint: rewardSeasonPoint,
         });
       }
     }
