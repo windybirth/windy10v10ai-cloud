@@ -114,31 +114,6 @@ export class GameService {
     // }
   }
 
-  // 活动积分赋予
-  // 参数 活动期间（开始，结束），发放赛季积分数量
-  // giveEventPoints(
-  //   startTime: Date,
-  //   endTime: Date,
-  //   seasonPoints: number,
-  //   player: Player,
-  // ) {
-  //   if (isNaN(seasonPoints)) {
-  //     return 0;
-  //   }
-  //   // if now is not in the event time, return
-  //   const now = new Date();
-  //   if (now < startTime || now > endTime) {
-  //     return 0;
-  //   }
-
-  //   // 检测用户是否为活动期间首次登陆 player.lastMatchTime
-  //   if (player.lastMatchTime < startTime) {
-  //     // 发放积分（赛季 player.seasonPointTotal
-  //     player.seasonPointTotal = seasonPoints;
-  //   }
-  //   return player.seasonPointTotal;
-  // }
-
   async getPlayerRank(): Promise<PlayerRank> {
     const playerRank = await this.playerCountService.getPlayerRankToday();
 
@@ -185,7 +160,7 @@ export class GameService {
           steamId: rewardResult.steamId,
           title: {
             cn: '恭喜你获赠一周会员!',
-            en: 'You get one week membership for free!',
+            en: 'Get one week free membership!',
           },
           // seasonPoint: rewardSeasonPoint,
         });

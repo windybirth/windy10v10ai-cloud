@@ -45,30 +45,9 @@ describe('GameService', () => {
 
     service = moduleRef.get<GameService>(GameService);
   });
-  describe('giveEventPoints', () => {
-    it('活动期间内', async () => {
-      const startTime = new Date('2021-01-01 00:00:00');
-      const endTime = new Date('2025-01-01 00:00:00');
-      const seasonPoints = 100;
-      const player = {
-        id: '1',
-        matchCount: 0,
-        winCount: 0,
-        disconnectCount: 0,
-        seasonPointTotal: 0,
-        memberPointTotal: 0,
-        lastMatchTime: null,
-        conductPoint: 100,
-      };
-
-      const result = service.giveEventPoints(
-        startTime,
-        endTime,
-        seasonPoints,
-        player,
-      );
-
-      expect(result).toBe(100);
+  describe('getOK', () => {
+    it('should return OK', () => {
+      expect(service.getOK()).toBe('OK');
     });
   });
 });
