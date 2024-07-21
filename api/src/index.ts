@@ -20,7 +20,10 @@ const promiseApplicationReady = NestFactory.create(
 });
 
 // Secrets
-const secrets = [defineSecret(SECRET.SERVER_APIKEY_TEST)];
+const secrets = [
+  defineSecret(SECRET.SERVER_APIKEY),
+  defineSecret(SECRET.SERVER_APIKEY_TEST),
+];
 
 // Cloud Functions
 export const api = functions
