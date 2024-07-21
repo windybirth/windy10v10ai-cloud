@@ -5,8 +5,10 @@ import * as functions from 'firebase-functions';
 import { defineSecret } from 'firebase-functions/params';
 
 import { AppModule } from './app.module';
+import { SECRET } from './util/secrets';
 import { AppGlobalSettings } from './util/settings';
 
+// NestJS app
 const server = express();
 
 const promiseApplicationReady = NestFactory.create(
@@ -17,9 +19,13 @@ const promiseApplicationReady = NestFactory.create(
   return app.init();
 });
 
+// Secrets
+const secrets = [defineSecret(SECRET.SERVER_APIKEY_TEST)];
+
+// Cloud Functions
 export const api = functions
   .region('asia-northeast1')
-  .runWith({ minInstances: 0, maxInstances: 10, timeoutSeconds: 10 })
+  .runWith({ minInstances: 0, maxInstances: 10, timeoutSeconds: 10, secrets })
   .https.onRequest(async (...args) => {
     const regex = '^/api/(game|afdian).*';
     const path = args[0].path;
@@ -34,15 +40,13 @@ export const api = functions
     }
   });
 
-const discordApiKey = defineSecret('TEST_SECRET');
-
 export const admin = functions
   .region('asia-northeast1')
   .runWith({
     minInstances: 0,
     maxInstances: 2,
     timeoutSeconds: 540,
-    secrets: [discordApiKey],
+    secrets,
   })
   .https.onRequest(async (...args) => {
     await promiseApplicationReady;
