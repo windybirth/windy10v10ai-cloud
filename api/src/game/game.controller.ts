@@ -164,7 +164,7 @@ export class GameController {
     @Headers('x-api-key') apiKey: string,
     @Param('steamId') steamId: number,
   ): Promise<PlayerDto> {
-    this.gameService.validateApiKey(apiKey, 'Reset Player Property');
+    this.gameService.validateApiKey(apiKey, 'Get Player Info');
 
     logger.debug(`[Get Player Info] ${steamId}`);
 

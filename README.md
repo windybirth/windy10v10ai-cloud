@@ -128,10 +128,11 @@ firebase deploy --only hosting
 firebase deploy --only functions,hosting
 ```
 
-## Set environment variables in GitHub Actions
+## Set secret environment variables 
 
-1. Create env in [github secrets and variables](https://github.com/windybirth/windy10v10ai-cloud/settings/secrets/actions)
-2. Add env to [deploy_firebase.yml](.github/workflows/deploy_firebase.yml) and [deploy_firebase_admin.yml](.github/workflows/deploy_firebase_admin.yml)
+1. Create env in [secret manager](https://console.cloud.google.com/security/secret-manager?project=windy10v10ai)
+2. Set function run with secrets in [index.ts](api/src/index.ts)
+3. Use secrets as `process.env.SECRET_NAME` in code
 
 example:
 ```yaml
