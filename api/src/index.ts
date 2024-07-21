@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { ExpressAdapter } from '@nestjs/platform-express';
 import * as express from 'express';
 import * as functions from 'firebase-functions';
+import { defineSecret } from 'firebase-functions/params';
 
 import { AppModule } from './app.module';
 import { AppGlobalSettings } from './util/settings';
@@ -33,9 +34,16 @@ export const api = functions
     }
   });
 
+const discordApiKey = defineSecret('TEST_SECRET');
+
 export const admin = functions
   .region('asia-northeast1')
-  .runWith({ minInstances: 0, maxInstances: 2, timeoutSeconds: 540 })
+  .runWith({
+    minInstances: 0,
+    maxInstances: 2,
+    timeoutSeconds: 540,
+    secrets: [discordApiKey],
+  })
   .https.onRequest(async (...args) => {
     await promiseApplicationReady;
     server(...args);
