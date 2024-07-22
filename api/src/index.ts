@@ -59,6 +59,7 @@ export const admin = functions
 
 export const patreon = onRequest(
   {
+    region: 'asia-northeast1',
     minInstances: 0,
     maxInstances: 1,
     timeoutSeconds: 60,
