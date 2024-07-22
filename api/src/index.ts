@@ -3,6 +3,7 @@ import { ExpressAdapter } from '@nestjs/platform-express';
 import * as express from 'express';
 import * as functions from 'firebase-functions';
 import { defineSecret } from 'firebase-functions/params';
+import { onRequest } from 'firebase-functions/v2/https';
 
 import { AppModule } from './app.module';
 import { SECRET } from './util/secrets';
@@ -55,3 +56,32 @@ export const admin = functions
     await promiseApplicationReady;
     server(...args);
   });
+
+export const patreon = onRequest(
+  {
+    minInstances: 0,
+    maxInstances: 1,
+    timeoutSeconds: 60,
+    secrets: [defineSecret(SECRET.TEST_SECRET)],
+  },
+  (req, res) => {
+    const regex = '^/api/patreon.*';
+    callServerWithRegex(regex, req, res);
+  },
+);
+
+async function callServerWithRegex(
+  regex: string,
+  ...args: [req: functions.https.Request, resp: functions.Response<any>]
+) {
+  const path = args[0].path;
+  if (path.match(regex)) {
+    await promiseApplicationReady;
+    server(...args);
+  } else {
+    functions.logger.warn(
+      `Abnormal requeston API Cloud Function! Path: ${path}`,
+    );
+    args[1].status(403).send('Invalid path');
+  }
+}
