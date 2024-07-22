@@ -56,4 +56,4 @@ jobs:
 
             - [ ] fix #${{ steps.get_issue.outputs.number }}
           base: develop
-          draft: true
+        #   draft: true # FIXME repository公开后启用
