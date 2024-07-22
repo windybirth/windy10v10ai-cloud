@@ -1,4 +1,4 @@
-name: Create PR develop to main
+name: Create Release PR
 on:
   push:
     branches:
