@@ -16,6 +16,7 @@ export class PatreonController {
     //   logger.error('Patreon token error');
     //   throw new UnauthorizedException();
     // }
+    console.log('Patreon webhook called with:', patreonWebhookDto);
     logger.info('Patreon webhook called with:', patreonWebhookDto);
   }
 }
