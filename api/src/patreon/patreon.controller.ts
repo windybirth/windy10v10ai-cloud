@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Headers, Post } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { logger } from 'firebase-functions/v1';
 
@@ -11,12 +11,17 @@ export class PatreonController {
   constructor(private readonly patreonService: PatreonService) {}
 
   @Post('/webhook')
-  async patreonWebhook(@Body() patreonWebhookDto: PatreonWebhookDto) {
+  async patreonWebhook(
+    @Body() patreonWebhookDto: PatreonWebhookDto,
+    @Headers('X-Patreon-Event') event: string,
+    @Headers('X-Patreon-Signature') signature: string,
+  ) {
     // if (token !== process.env.AFDIAN_TOKEN) {
     //   logger.error('Patreon token error');
     //   throw new UnauthorizedException();
     // }
-    console.log('Patreon webhook called with:', patreonWebhookDto);
-    logger.info('Patreon webhook called with:', patreonWebhookDto);
+    logger.debug('Patreon webhook called with:', patreonWebhookDto);
+    logger.debug('X-Patreon-Event:', event);
+    logger.debug('X-Patreon-Signature:', signature);
   }
 }
