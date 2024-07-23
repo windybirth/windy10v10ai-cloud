@@ -63,7 +63,7 @@ export const patreon = onRequest(
     minInstances: 0,
     maxInstances: 1,
     timeoutSeconds: 60,
-    secrets: [defineSecret(SECRET.TEST_SECRET)],
+    secrets: [defineSecret(SECRET.PATREON_SECRET)],
   },
   (req, res) => {
     const regex = '^/api/patreon.*';

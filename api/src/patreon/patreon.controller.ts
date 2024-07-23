@@ -1,4 +1,12 @@
-import { Body, Controller, Headers, Post } from '@nestjs/common';
+import * as crypto from 'crypto';
+
+import {
+  Body,
+  Controller,
+  ForbiddenException,
+  Headers,
+  Post,
+} from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { logger } from 'firebase-functions/v1';
 
@@ -16,12 +24,20 @@ export class PatreonController {
     @Headers('X-Patreon-Event') event: string,
     @Headers('X-Patreon-Signature') signature: string,
   ) {
-    // if (token !== process.env.AFDIAN_TOKEN) {
-    //   logger.error('Patreon token error');
-    //   throw new UnauthorizedException();
-    // }
+    // 使用相同的密钥和MD5算法对请求体进行HMAC签名
+    const secret = process.env.PATREON_SECRET; // 你的密钥
+    const hash = crypto
+      .createHmac('md5', secret)
+      .update(JSON.stringify(patreonWebhookDto))
+      .digest('hex');
+    // 如果签名不匹配，返回403
     logger.debug('Patreon webhook called with:', patreonWebhookDto);
     logger.debug('X-Patreon-Event:', event);
     logger.debug('X-Patreon-Signature:', signature);
+    logger.debug('Hash:', hash);
+
+    if (hash !== signature) {
+      throw new ForbiddenException('Invalid signature');
+    }
   }
 }
