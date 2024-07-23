@@ -117,8 +117,8 @@ firebase deploy
 ```bash
 # Deploy api function only
 firebase deploy --only functions:api
-# Deploy admin function only
 firebase deploy --only functions:admin
+firebase deploy --only functions:patreon
 # Deploy all function
 firebase deploy --only functions
 
@@ -133,12 +133,6 @@ firebase deploy --only functions,hosting
 1. Create env in [secret manager](https://console.cloud.google.com/security/secret-manager?project=windy10v10ai)
 2. Set function run with secrets in [index.ts](api/src/index.ts)
 3. Use secrets as `process.env.SECRET_NAME` in code
-
-example:
-```yaml
-        env:
-          CONFIG_VALUES: someservice.key=${{ secrets.key }} someservice.id=${{ secrets.id }}
-```
 
 ## Backup Firestore
 
