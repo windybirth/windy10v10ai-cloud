@@ -4,22 +4,13 @@ import { InjectRepository } from 'nestjs-fireorm';
 
 import { MembersService } from '../members/members.service';
 import { Order } from '../orders/entities/order.entity';
+import { OrderType } from '../orders/enums/order-type.enum';
+import { Platfrom } from '../orders/enums/platfrom.enum';
 import { PlayerService } from '../player/player.service';
 import { PlayerPropertyService } from '../player-property/player-property.service';
 
 import { OrderDto } from './dto/afdian-webhook.dto';
 
-enum Platfrom {
-  afdian = 'afdian',
-}
-enum OrderType {
-  member = 'member',
-  goods1 = 'pointTire1',
-  goods2 = 'pointTire2',
-  goods3 = 'pointTire3',
-  initialAttribute = 'initialAttribute',
-  others = 'others',
-}
 enum ProductType {
   member = 0,
   goods = 1,
