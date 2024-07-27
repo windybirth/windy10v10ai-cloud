@@ -1,6 +1,6 @@
 # windy10v10ai-cloud
 
-Windy 10v10ai data api
+Backend for [Windy 10v10ai](https://github.com/windybirth/windy10v10ai) with Firebase
 
 - [Built With](#built-with)
 - [Get Start](#get-start)
