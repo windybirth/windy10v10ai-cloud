@@ -1,12 +1,13 @@
 import { Collection } from 'fireorm';
 import { OrderDto } from 'src/afdian/dto/afdian-webhook.dto';
 
+import { OrderType } from '../enums/order-type.enum';
+
 @Collection()
 export class Order {
   id: string;
   platform: string;
-  // member:会员订单,others:其他订单
-  orderType: string;
+  orderType: OrderType;
   success: boolean;
   steamId: number;
   createdAt: Date;
