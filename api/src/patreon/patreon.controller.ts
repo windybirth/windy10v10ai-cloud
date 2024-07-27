@@ -4,6 +4,7 @@ import {
   Body,
   Controller,
   ForbiddenException,
+  Get,
   Headers,
   Post,
 } from '@nestjs/common';
@@ -17,6 +18,11 @@ import { PatreonService } from './patreon.service';
 @Controller('patreon')
 export class PatreonController {
   constructor(private readonly patreonService: PatreonService) {}
+
+  @Get()
+  async patreon() {
+    return 'Hello Patreon!';
+  }
 
   @Post('/webhook')
   async patreonWebhook(
@@ -36,6 +42,7 @@ export class PatreonController {
     logger.debug('X-Patreon-Signature:', signature);
     logger.debug('Hash:', hash);
 
+    // FIXME: 总是返回403，因为签名不匹配
     if (hash !== signature) {
       throw new ForbiddenException('Invalid signature');
     }
