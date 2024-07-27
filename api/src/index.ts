@@ -35,7 +35,21 @@ export const client = onRequest(
     secrets: clientSecrets,
   },
   async (req, res) => {
-    const regex = '^/api/(game|afdian).*';
+    const regex = '^/api/game.*';
+    callServerWithRegex(regex, req, res);
+  },
+);
+
+export const afdian = onRequest(
+  {
+    region: 'asia-northeast1',
+    minInstances: 0,
+    maxInstances: 1,
+    timeoutSeconds: 60,
+    secrets: [defineSecret(SECRET.AFDIAN_TOKEN)],
+  },
+  async (req, res) => {
+    const regex = '^/api/afdian.*';
     callServerWithRegex(regex, req, res);
   },
 );
