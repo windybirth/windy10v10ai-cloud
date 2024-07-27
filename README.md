@@ -116,9 +116,9 @@ firebase deploy
 - Deploy function only
 ```bash
 # Deploy api function only
-firebase deploy --only functions:api
+firebase deploy --only functions:client
 firebase deploy --only functions:admin
-firebase deploy --only functions:patreon --no-allow-unauthenticated
+firebase deploy --only functions:patreon
 # Deploy all function
 firebase deploy --only functions
 

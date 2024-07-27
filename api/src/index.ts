@@ -20,16 +20,21 @@ const promiseApplicationReady = NestFactory.create(
   return app.init();
 });
 
-// Secrets
-const secrets = [
+// Cloud Functions
+const clientSecrets = [
   defineSecret(SECRET.SERVER_APIKEY),
   defineSecret(SECRET.SERVER_APIKEY_TEST),
 ];
 
-// Cloud Functions
+// TODO delete
 export const api = functions
   .region('asia-northeast1')
-  .runWith({ minInstances: 0, maxInstances: 10, timeoutSeconds: 10, secrets })
+  .runWith({
+    minInstances: 0,
+    maxInstances: 10,
+    timeoutSeconds: 10,
+    secrets: clientSecrets,
+  })
   .https.onRequest(async (...args) => {
     const regex = '^/api/(game|afdian).*';
     const path = args[0].path;
@@ -44,18 +49,19 @@ export const api = functions
     }
   });
 
-export const admin = functions
-  .region('asia-northeast1')
-  .runWith({
+export const client = onRequest(
+  {
+    region: 'asia-northeast1',
     minInstances: 0,
-    maxInstances: 2,
-    timeoutSeconds: 540,
-    secrets,
-  })
-  .https.onRequest(async (...args) => {
-    await promiseApplicationReady;
-    server(...args);
-  });
+    maxInstances: 10,
+    timeoutSeconds: 10,
+    secrets: clientSecrets,
+  },
+  async (req, res) => {
+    const regex = '^/api/(game|afdian).*';
+    callServerWithRegex(regex, req, res);
+  },
+);
 
 export const patreon = onRequest(
   {
@@ -65,7 +71,7 @@ export const patreon = onRequest(
     timeoutSeconds: 60,
     secrets: [defineSecret(SECRET.PATREON_SECRET)],
   },
-  (req, res) => {
+  async (req, res) => {
     const regex = '^/api/patreon.*';
     callServerWithRegex(regex, req, res);
   },
@@ -86,3 +92,17 @@ async function callServerWithRegex(
     args[1].status(403).send('Invalid path');
   }
 }
+
+// function need authenticated
+export const admin = onRequest(
+  {
+    region: 'asia-northeast1',
+    minInstances: 0,
+    maxInstances: 1,
+    timeoutSeconds: 1800,
+  },
+  async (req, res) => {
+    await promiseApplicationReady;
+    server(req, res);
+  },
+);
