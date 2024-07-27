@@ -116,9 +116,9 @@ firebase deploy
 - Deploy function only
 ```bash
 # Deploy api function only
-firebase deploy --only functions:api
-# Deploy admin function only
+firebase deploy --only functions:client
 firebase deploy --only functions:admin
+firebase deploy --only functions:patreon
 # Deploy all function
 firebase deploy --only functions
 
@@ -134,11 +134,9 @@ firebase deploy --only functions,hosting
 2. Set function run with secrets in [index.ts](api/src/index.ts)
 3. Use secrets as `process.env.SECRET_NAME` in code
 
-example:
-```yaml
-        env:
-          CONFIG_VALUES: someservice.key=${{ secrets.key }} someservice.id=${{ secrets.id }}
-```
+## Allow/Disable unauthenticated HTTP function invocation
+
+https://cloud.google.com/functions/docs/securing/managing-access-iam#allowing_unauthenticated_http_function_invocation
 
 ## Backup Firestore
 
@@ -159,7 +157,7 @@ npm update
 ```
 
 
-# Admin API
+# Use Admin API
 
 ## Need
 - gcloud cli
