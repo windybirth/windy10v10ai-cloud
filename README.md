@@ -1,6 +1,6 @@
 # windy10v10ai-cloud
 
-Windy 10v10ai data api
+Backend for [Windy 10v10ai](https://github.com/windybirth/windy10v10ai) with Firebase
 
 - [Built With](#built-with)
 - [Get Start](#get-start)
@@ -92,7 +92,7 @@ net start winnat
 ## Local end points
  - Firebase Hosting: http://localhost:5000/api/
  - Debug end points: http://localhost:3000/api/
- - Function (Not used): http://localhost:5001/windy10v10ai/asia-northeast1/api/api/
+ - Function (Not used): http://localhost:5001/windy10v10ai/asia-northeast1/client/api/
  - Firebase Emulator: http://localhost:4000/
  - OpenAPI Document (Swagger): http://localhost:3000/api-doc
 
@@ -117,8 +117,9 @@ firebase deploy
 ```bash
 # Deploy api function only
 firebase deploy --only functions:client
-firebase deploy --only functions:admin
+firebase deploy --only functions:afdian
 firebase deploy --only functions:patreon
+firebase deploy --only functions:admin
 # Deploy all function
 firebase deploy --only functions
 

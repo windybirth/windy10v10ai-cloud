@@ -12,4 +12,5 @@ export class Order {
   steamId: number;
   createdAt: Date;
   orderDto: OrderDto;
+  outTradeNo: string;
 }

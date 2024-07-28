@@ -26,29 +26,6 @@ const clientSecrets = [
   defineSecret(SECRET.SERVER_APIKEY_TEST),
 ];
 
-// TODO delete
-export const api = functions
-  .region('asia-northeast1')
-  .runWith({
-    minInstances: 0,
-    maxInstances: 10,
-    timeoutSeconds: 10,
-    secrets: clientSecrets,
-  })
-  .https.onRequest(async (...args) => {
-    const regex = '^/api/(game|afdian).*';
-    const path = args[0].path;
-    if (!path.match(regex)) {
-      functions.logger.warn(
-        `Abnormal requeston API Cloud Function! Path: ${path}`,
-      );
-      args[1].status(403).send('Invalid path');
-    } else {
-      await promiseApplicationReady;
-      server(...args);
-    }
-  });
-
 export const client = onRequest(
   {
     region: 'asia-northeast1',
@@ -58,7 +35,21 @@ export const client = onRequest(
     secrets: clientSecrets,
   },
   async (req, res) => {
-    const regex = '^/api/(game|afdian).*';
+    const regex = '^/api/game.*';
+    callServerWithRegex(regex, req, res);
+  },
+);
+
+export const afdian = onRequest(
+  {
+    region: 'asia-northeast1',
+    minInstances: 0,
+    maxInstances: 1,
+    timeoutSeconds: 60,
+    secrets: [defineSecret(SECRET.AFDIAN_TOKEN)],
+  },
+  async (req, res) => {
+    const regex = '^/api/afdian.*';
     callServerWithRegex(regex, req, res);
   },
 );

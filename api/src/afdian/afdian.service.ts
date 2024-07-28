@@ -41,6 +41,14 @@ export class AfdianService {
   ) {}
 
   async processAfdianOrder(orderDto: OrderDto) {
+    // 检测重复订单
+    const existOrder = await this.orderRepository
+      .whereEqualTo('outTradeNo', orderDto.out_trade_no)
+      .findOne();
+    if (existOrder) {
+      return existOrder;
+    }
+
     let success = true;
     let orderType = OrderType.others;
     // status = 2（交易成功） and product_type = 0（常规方案）and month > 0（订阅1个月以上）
@@ -119,6 +127,7 @@ export class AfdianService {
       steamId,
       createdAt: new Date(),
       orderDto: orderDto,
+      outTradeNo: orderDto.out_trade_no,
     };
     return this.orderRepository.create(orderEntity);
   }
