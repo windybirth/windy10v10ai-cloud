@@ -5,7 +5,8 @@ on:
 jobs:
   create_pull_request:
     if: |
-      github.ref_name != 'main'
+      github.actor == 'windybirth'
+      && github.ref_name != 'main'
       && github.ref_name != 'develop'
     runs-on: ubuntu-latest
     steps:
@@ -56,4 +57,5 @@ jobs:
 
             - [ ] fix #${{ steps.get_issue.outputs.number }}
           base: develop
+          token: ${{ secrets.WINDY_PR_PAT }}
           draft: true
