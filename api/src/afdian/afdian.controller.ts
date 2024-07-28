@@ -23,7 +23,7 @@ export class AfdianController {
     @Query('token') token: string,
   ) {
     if (token !== process.env.AFDIAN_TOKEN) {
-      logger.error('Afdian token error');
+      logger.error(`Afdian token error with: ${token}`);
       throw new UnauthorizedException();
     }
     logger.info('Afdian webhook called with:', afdianWebhookDto);
