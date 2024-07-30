@@ -37,7 +37,6 @@ npm install -g firebase-tools
 firebase login
 
 # api setting
-npm install -g @nestjs/cli
 (cd api && npm install)
 
 # web setting
