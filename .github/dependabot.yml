@@ -15,6 +15,13 @@ updates:
       day: "saturday"
       time: "12:00"
       timezone: "Asia/Tokyo"
+    ignore:
+      - dependency-name: "*"
+        update-types: ["version-update:semver-major", "version-update:semver-minor", "version-update:semver-patch"]
+        # Wait for 7 days before creating a pull request for new versions
+        ignore-versions: ">=0"
+        allow: true
+        delay: "7 days"
 
   - package-ecosystem: "github-actions"
     # Workflow files stored in the default location of `.github/workflows`. (You don't need to specify `/.github/workflows` for `directory`. You can use `directory: "/"`.)
