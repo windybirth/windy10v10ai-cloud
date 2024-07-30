@@ -1,4 +1,4 @@
-name: Enable Pull Request Squash Automerge to Develop
+name: Automerge Pull Request to Develop
 on:
   pull_request:
     types: [opened, synchronize, reopened, ready_for_review]
