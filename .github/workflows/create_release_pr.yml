@@ -28,8 +28,8 @@ jobs:
 
       - name: Create Pull Request
         id: cpr
-        if: steps.check_pr.outputs.exist_pr_number == ''
-        uses: peter-evans/create-pull-request@v5
+        if: steps.check_pr.outputs.exists == ''
+        uses: peter-evans/create-pull-request@v6
         with:
           title: Release develop into main
           branch: develop
