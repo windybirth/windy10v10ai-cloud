@@ -36,11 +36,10 @@ Backend for [Windy 10v10ai](https://github.com/windybirth/windy10v10ai) with Fir
 npm install -g firebase-tools
 firebase login
 
-# api setting
-(cd api && npm install)
+# setup package
+npm install
 
 # web setting
-(cd web && npm install)
 firebase experiments:enable webframeworks
 ```
 
