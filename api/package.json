@@ -30,7 +30,7 @@
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.0",
     "csv-parse": "^5.5.3",
-    "firebase-admin": "^11.11.1",
+    "firebase-admin": "^12.3.0",
     "firebase-functions": "^4.5.0",
     "nestjs-fireorm": "^1.1.0",
     "rimraf": "^5.0.5",
