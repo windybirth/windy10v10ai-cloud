@@ -28,18 +28,11 @@ jobs:
 
       - name: Create Pull Request
         id: cpr
-        if: steps.check_pr.outputs.exist_pr_number == ''
-        uses: peter-evans/create-pull-request@v5
+        if: steps.check_pr.outputs.exists == ''
+        uses: peter-evans/create-pull-request@v6
         with:
           title: Release develop into main
           branch: develop
           base: main
           reviewers: windybirth
           labels: release
-
-      - name: Enable Pull Request Automerge
-        if: steps.check_pr.outputs.exist_pr_number == ''
-        uses: peter-evans/enable-pull-request-automerge@v3
-        with:
-          pull-request-number: ${{ steps.cpr.outputs.pull-request-number }}
-          merge-method: merge
