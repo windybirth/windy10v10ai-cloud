@@ -1,0 +1,26 @@
+name: Enable Pull Request Squash Automerge to Develop
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
+
+jobs:
+    auto_merge_develop_pr:
+        if: |
+          github.base_ref == 'develop'
+          && github.event.pull_request.draft == false
+        runs-on: ubuntu-latest
+        steps:
+          - name: Check if PR exist_pr_number
+            id: check_pr
+            run: |
+              pr_number=$(gh pr list --base main --head develop --json number -q '.[0].number')
+              echo exist_pr_number=$pr_number >> $GITHUB_OUTPUT
+            env:
+              GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+          - name: Enable Pull Request Squash Automerge
+            if: steps.check_pr.outputs.exist_pr_number != ''
+            uses: peter-evans/enable-pull-request-automerge@v3
+            with:
+              pull-request-number: ${{ steps.check_pr.outputs.exist_pr_number }}
+              merge-method: squash
