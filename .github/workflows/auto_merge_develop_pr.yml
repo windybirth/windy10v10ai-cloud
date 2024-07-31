@@ -3,10 +3,6 @@ on:
   pull_request:
     types: [opened, synchronize, reopened, ready_for_review]
 
-permissions:
-  contents: write
-  pull-requests: write
-
 jobs:
     auto_squash:
         if: |
@@ -19,3 +15,4 @@ jobs:
             with:
               pull-request-number: ${{ github.event.pull_request.number }}
               merge-method: squash
+              token: ${{ secrets.WINDY_PR_PAT }}
