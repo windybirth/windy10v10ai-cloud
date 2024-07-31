@@ -1,4 +1,4 @@
-name: Automerge Pull Request to Release
+name: Automerge Release PR
 on:
   pull_request:
     types: [opened, synchronize, reopened, ready_for_review]

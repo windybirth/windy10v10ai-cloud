@@ -34,5 +34,5 @@ jobs:
           title: Release
           branch: develop
           base: main
-          token: ${{ secrets.WINDY_PR_PAT }}
+          reviewers: windybirth
           labels: release
