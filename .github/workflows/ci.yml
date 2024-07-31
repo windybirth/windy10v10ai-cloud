@@ -1,14 +1,14 @@
 name: CI
 
 on:
-  push:
-    branches:
-      - develop
   pull_request:
     types: [opened, synchronize, reopened]
     branches:
       - develop
       - main
+  push:
+    branches:
+      - develop
 
 jobs:
   ci:
