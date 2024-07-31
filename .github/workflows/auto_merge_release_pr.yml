@@ -1,4 +1,4 @@
-name: Automerge Pull Request to Release
+name: Automerge Release PR
 on:
   pull_request:
     types: [opened, synchronize, reopened, ready_for_review]
@@ -15,4 +15,3 @@ jobs:
             with:
               pull-request-number: ${{ github.event.pull_request.number }}
               merge-method: merge
-              token: ${{ secrets.WINDY_PR_PAT }}
