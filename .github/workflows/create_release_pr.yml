@@ -4,10 +4,6 @@ on:
     branches:
       - develop
 
-permissions:
-  contents: write
-  pull-requests: write
-
 jobs:
   create_pull_request:
     runs-on: ubuntu-latest

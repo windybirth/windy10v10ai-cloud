@@ -19,3 +19,4 @@ jobs:
             with:
               pull-request-number: ${{ github.event.pull_request.number }}
               merge-method: squash
+              token: ${{ secrets.WINDY_PR_PAT }}
