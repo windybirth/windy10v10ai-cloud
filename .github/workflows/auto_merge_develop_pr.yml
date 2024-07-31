@@ -9,10 +9,11 @@ jobs:
           github.base_ref == 'develop'
           && github.event.pull_request.draft == false
         runs-on: ubuntu-latest
+        permissions:
+          pull-requests: write
         steps:
           - name: Enable Pull Request Squash Automerge
             uses: peter-evans/enable-pull-request-automerge@v3
             with:
               pull-request-number: ${{ github.event.pull_request.number }}
               merge-method: squash
-              token: ${{ secrets.WINDY_PR_PAT }}
