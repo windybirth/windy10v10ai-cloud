@@ -31,8 +31,8 @@ jobs:
         if: steps.check_pr.outputs.exists == ''
         uses: peter-evans/create-pull-request@v6
         with:
-          title: Release develop into main
+          title: Release
           branch: develop
           base: main
-          reviewers: windybirth
+          token: ${{ secrets.WINDY_PR_PAT }}
           labels: release
