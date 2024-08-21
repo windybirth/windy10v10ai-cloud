@@ -5,8 +5,8 @@ import { logger } from 'firebase-functions';
 export class AnalyticsService {
   private measurementProtocolUrl =
     'https://www.google-analytics.com/mp/collect';
-  private measurementId = 'G-XXXXXXXXXX';
-  private apiSecret = 'YOUR_API_SECRET';
+  private measurementId = process.env.GA_MEASUREMENT_ID;
+  private apiSecret = process.env.GA_API_SECRET;
 
   constructor() {}
   login(steamId: number) {

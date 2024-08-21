@@ -4,6 +4,8 @@ export const SECRET = {
   SERVER_APIKEY: 'SERVER_APIKEY',
   SERVER_APIKEY_TEST: 'SERVER_APIKEY_TEST',
   TEST_SECRET: 'TEST_SECRET',
+  GA4_MEASUREMENT_ID: 'GA4_MEASUREMENT_ID',
+  GA4_API_SECRET: 'GA4_API_SECRET',
 };
 
 export const GetSecretValue = (key: string): string => {
