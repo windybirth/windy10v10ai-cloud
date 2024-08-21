@@ -9,6 +9,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { CountModule } from './count/count.module';
 import { EventRewardsModule } from './event-rewards/event-rewards.module';
+import { Ga4Module } from './ga4/ga4.module';
 import { GameModule } from './game/game.module';
 import { MembersModule } from './members/members.module';
 import { OrdersModule } from './orders/orders.module';
@@ -47,6 +48,7 @@ const ENVIRONMENT = process.env.ENVIRONMENT ?? 'local';
     TestModule,
     AdminModule,
     EventRewardsModule,
+    Ga4Module,
   ],
   controllers: [AppController],
   providers: [AppService],

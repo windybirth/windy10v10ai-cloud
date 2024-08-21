@@ -39,6 +39,9 @@ firebase login
 # setup package
 npm install
 
+# Install NestJS CLI
+npm install -g @nestjs/cli
+
 # web setting
 firebase experiments:enable webframeworks
 ```
