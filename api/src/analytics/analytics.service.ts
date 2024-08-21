@@ -1,9 +1,12 @@
 import { Injectable } from '@nestjs/common';
+import { logger } from 'firebase-functions';
 
 @Injectable()
 export class AnalyticsService {
   private measurementProtocolUrl =
     'https://www.google-analytics.com/mp/collect';
+  private measurementId = 'G-XXXXXXXXXX';
+  private apiSecret = 'YOUR_API_SECRET';
 
   constructor() {}
   login(steamId: number) {
@@ -31,7 +34,7 @@ export class AnalyticsService {
 
     try {
       const response = await fetch(
-        `${this.measurementProtocolUrl}?measurement_id=G-XXXXXXXXXX&api_secret=YOUR_API_SECRET`,
+        `${this.measurementProtocolUrl}?measurement_id=${this.measurementId}&api_secret=${this.apiSecret}`,
         {
           method: 'POST',
           body: JSON.stringify(payload),
@@ -42,7 +45,7 @@ export class AnalyticsService {
       );
       return response.body;
     } catch (error) {
-      console.error('Error sending event to GA4:', error);
+      logger.error('Error sending event to GA4:', error);
       throw error;
     }
   }
