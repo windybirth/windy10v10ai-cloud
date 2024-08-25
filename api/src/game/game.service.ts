@@ -94,13 +94,6 @@ export class GameService {
   async upsertPlayerInfo(steamId: number): Promise<void> {
     const player = await this.playerService.findSteamIdAndNewPlayer(steamId);
 
-    // 判断赋予多少活动积分
-    // const seasonPointTobeAdd = this.giveEventPoints(
-    //   new Date(process.env.EVENT_START_TIME),
-    //   new Date(process.env.EVENT_END_TIME),
-    //   +process.env.EVENT_SEASON_POINT,
-    //   player,
-    // );
     // 更新Player
     await this.playerService.updatePlayerLastMatchTime(
       player,
@@ -108,10 +101,6 @@ export class GameService {
       0,
       0,
     );
-
-    // if (seasonPointTobeAdd > 0) {
-    //   return steamId;
-    // }
   }
 
   async getPlayerRank(): Promise<PlayerRank> {
