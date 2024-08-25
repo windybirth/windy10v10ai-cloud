@@ -1,5 +1,6 @@
 name: Create Release PR
 on:
+  workflow_dispatch:
   push:
     branches:
       - develop
