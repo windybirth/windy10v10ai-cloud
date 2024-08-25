@@ -1,8 +1,7 @@
 name: Create Release PR
 on:
-  push:
-    branches:
-      - develop
+  # 手动执行
+  workflow_dispatch:
 
 jobs:
   create_pull_request:
@@ -36,3 +35,9 @@ jobs:
           base: main
           reviewers: windybirth
           labels: release
+
+      - name: Enable Pull Request Squash Automerge
+        uses: peter-evans/enable-pull-request-automerge@v3
+        with:
+          pull-request-number: ${{ steps.cpr.outputs.pull-request-number }}
+          merge-method: merge
