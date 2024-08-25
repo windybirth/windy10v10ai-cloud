@@ -41,6 +41,6 @@ jobs:
       - name: Enable Pull Request Squash Automerge
         uses: peter-evans/enable-pull-request-automerge@v3
         with:
-          pull-request-number: ${{ steps.cpr.outputs.pull-request-number }}
-          merge-method: merge
           token: ${{ secrets.WINDY_PR_PAT }}
+          pull-request-number: 229
+          merge-method: merge
