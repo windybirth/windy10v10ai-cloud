@@ -17,6 +17,7 @@ import { PlayerModule } from './player/player.module';
 import { PlayerCountModule } from './player-count/player-count.module';
 import { PlayerPropertyModule } from './player-property/player-property.module';
 import { TestModule } from './test/test.module';
+import { MatchModule } from './match/match.module';
 
 const ENVIRONMENT = process.env.ENVIRONMENT ?? 'local';
 
@@ -47,6 +48,7 @@ const ENVIRONMENT = process.env.ENVIRONMENT ?? 'local';
     TestModule,
     AdminModule,
     EventRewardsModule,
+    MatchModule,
   ],
   controllers: [AppController],
   providers: [AppService],
