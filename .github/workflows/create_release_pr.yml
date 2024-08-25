@@ -43,3 +43,4 @@ jobs:
         with:
           pull-request-number: ${{ steps.cpr.outputs.pull-request-number }}
           merge-method: merge
+          token: ${{ secrets.WINDY_PR_PAT }}
