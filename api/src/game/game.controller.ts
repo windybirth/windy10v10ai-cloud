@@ -13,6 +13,7 @@ import { ApiBody, ApiTags } from '@nestjs/swagger';
 import { logger } from 'firebase-functions';
 
 import { CountService } from '../count/count.service';
+import { MatchService } from '../match/match.service';
 import { MemberDto } from '../members/dto/member.dto';
 import { MembersService } from '../members/members.service';
 import { PlayerService } from '../player/player.service';
@@ -34,9 +35,10 @@ export class GameController {
     private readonly gameService: GameService,
     private readonly membersService: MembersService,
     private readonly playerCountService: PlayerCountService,
-    private readonly matchService: CountService,
+    private readonly countService: CountService,
     private readonly playerService: PlayerService,
     private readonly playerPropertyService: PlayerPropertyService,
+    private readonly matchService: MatchService,
   ) {}
 
   @Get(['start'])
@@ -70,7 +72,7 @@ export class GameController {
 
     // ----------------- 以下为统计数据 -----------------
     // 统计每日开始游戏数据
-    await this.matchService.countGameStart();
+    await this.countService.countGameStart();
     // 统计会员游戏数据
     await this.playerCountService
       .update({
@@ -120,9 +122,10 @@ export class GameController {
       }
     }
 
-    await this.matchService.countGameEnd(gameInfo);
-    await this.matchService.countGameDifficult(gameInfo);
-    await this.matchService.countHeroes(gameInfo);
+    await this.countService.countGameEnd(gameInfo);
+    await this.countService.countGameDifficult(gameInfo);
+    await this.countService.countHeroes(gameInfo);
+    await this.matchService.recordMatch(gameInfo);
 
     return this.gameService.getOK();
   }
