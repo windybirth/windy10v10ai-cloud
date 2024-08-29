@@ -100,10 +100,9 @@ net start winnat
 
 ### Deploy with Github Action
 
-Github Action will deploy automatically when push to main and develop.
+Github Action will deploy automatically when push to main branch.
 
 - main: Deploy Firebase Functions and Hosting
-- develop: Deploy Firebase Functions:admin
 
 ### Deploy Manually
 - Deploy all
@@ -111,7 +110,7 @@ Github Action will deploy automatically when push to main and develop.
 firebase deploy
 ```
 
-- Deploy function only
+- Deploy part
 ```bash
 # Deploy api function only
 firebase deploy --only functions:client
@@ -155,8 +154,7 @@ ncu -u
 npm update
 ```
 
-
-# Use Admin API
+## Use Admin API
 
 ## Need
 - gcloud cli
@@ -175,3 +173,25 @@ echo $(gcloud auth print-identity-token)
 ```
 Import `api/swagger-spec.yaml` to postman with variable `baseUrl` : `https://asia-northeast1-windy10v10ai.cloudfunctions.net/admin`
 
+# Extension
+
+## Export Firestore to Bigquery
+
+### Setup Stream Firestore to BigQuery
+
+```bash
+firebase ext:install firebase/firestore-bigquery-export
+```
+
+or Edit [firebase.json](/firebase.json) and `extensions/firestore-bigquery-export-xxx.env`
+```json
+  "extensions": {
+    "firestore-bigquery-export-test": "firebase/firestore-bigquery-export@0.1.53"
+  }
+```
+
+### Deploy Firestore to BigQuery
+
+```bash
+firebase deploy --only extensions
+```
