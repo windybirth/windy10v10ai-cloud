@@ -224,7 +224,6 @@ Example:
 npx @firebaseextensions/fs-bq-schema-views \
   --non-interactive \
   --project=windy10v10ai \
-  --big-query-project=windy10v10ai \
   --dataset=firestore_export \
   --table-name-prefix=test \
   --schema-files=./extensions/test_schema.json
