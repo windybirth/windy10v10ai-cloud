@@ -217,3 +217,15 @@ Example:
 ? Would you like to run the import across multiple threads? Yes<br>
 ? Would you like to use the new optimized snapshot query script? Yes<br>
 ? Would you like to use a local firestore emulator? No<br>
+
+### Generate schema views
+
+```bash
+npx @firebaseextensions/fs-bq-schema-views \
+  --non-interactive \
+  --project=windy10v10ai \
+  --big-query-project=windy10v10ai \
+  --dataset=firestore_export \
+  --table-name-prefix=test \
+  --schema-files=./extensions/test_schema.json
+```
