@@ -271,5 +271,7 @@ export class CountService {
     'npc_dota_hero_dawnbreaker',
     'npc_dota_hero_marci',
     'npc_dota_hero_primal_beast',
+    'npc_dota_hero_muerta',
+    'npc_dota_hero_ringmaster',
   ];
 }

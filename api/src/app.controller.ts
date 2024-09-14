@@ -20,10 +20,4 @@ export class AppController {
     const test_env = functions.config().admin?.test_env;
     return `test_env: ${test_env}`;
   }
-
-  // get secrets from firebase
-  @Get('secrets')
-  getSecrets(): string {
-    return this.appService.getSecrets();
-  }
 }
