@@ -43,5 +43,8 @@
   },
   "database": {
     "rules": "database.rules.json"
+  },
+  "extensions": {
+    "firestore-bigquery-export-test": "firebase/firestore-bigquery-export@0.1.53"
   }
 }

@@ -1,5 +1,17 @@
 {
   "projects": {
     "default": "windy10v10ai"
-  }
+  },
+  "targets": {},
+  "etags": {
+    "windy10v10ai": {
+      "extensionInstances": {
+        "firestore-bigquery-export": "eb9dcf4470f3d9c8eba5d1fea575d238db114a3c5be666e01aa696e9a4415265",
+        "firestore-bigquery-export-matches": "42a2a857df92bd11f01eef87bb7066fb4065f0840897b015e6b5c3568f16cacf",
+        "firestore-bigquery-export-players": "462098aae991b61729afc654f19e1b3d7d3523f6aa171acdaf7eadd75e4e6365",
+        "firestore-bigquery-export-test": "9e486223ca4c8d0e8967d0bf625677387d62129ce805ea7bb6ad6c0ccc181700"
+      }
+    }
+  },
+  "dataconnectEmulatorConfig": {}
 }

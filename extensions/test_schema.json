@@ -1,0 +1,35 @@
+{
+  "fields": [
+    {
+      "name": "name",
+      "type": "string"
+    },
+    {
+      "name": "value",
+      "type": "number",
+      "column_name": "column_value"
+    },
+    {
+      "name": "version",
+      "type": "string"
+    },
+    {
+      "name": "list",
+      "type": "array",
+      "mode": "REPEATED",
+      "items": {
+        "type": "map",
+        "fields": [
+          {
+            "name": "hero",
+            "type": "string"
+          },
+          {
+            "name": "score",
+            "type": "number"
+          }
+        ]
+      }
+    }
+  ]
+}
