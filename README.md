@@ -230,7 +230,9 @@ sh ./extensions/import-firestore-to-bigquery.sh
 
 ### Generate schema views
 
-Create schema file `table_name_schema.json` and run command
+Create schema file `table_name_schema.json` and run command.
+
+[How to create schema file](https://github.com/firebase/extensions/blob/next/firestore-bigquery-export/guides/GENERATE_SCHEMA_VIEWS.md#how-to-configure-schema-files)
 
 ```bash
 sh ./extensions/generate-schema-views.sh
