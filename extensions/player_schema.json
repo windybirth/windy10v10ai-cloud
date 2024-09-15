@@ -36,7 +36,7 @@
     },
     {
       "name": "lastMatchTime",
-      "type": "date",
+      "type": "timestamp",
       "column_name": "last_match_time"
     }
   ]
