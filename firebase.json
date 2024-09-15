@@ -41,6 +41,6 @@
     "rules": "database.rules.json"
   },
   "extensions": {
-    "firestore-bigquery-export-player": "firebase/firestore-bigquery-export@0.1.54"
+    "firestore-bigquery-export-players": "firebase/firestore-bigquery-export@0.1.54"
   }
 }
