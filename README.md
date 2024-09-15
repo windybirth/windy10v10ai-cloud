@@ -200,10 +200,10 @@ Import `api/swagger-spec.yaml` to postman with variable `baseUrl` : `https://asi
 firebase ext:install firebase/firestore-bigquery-export
 ```
 
-or Edit [firebase.json](/firebase.json) and `extensions/firestore-bigquery-export-xxx.env`
+or Edit [firebase.json](/firebase.json) and create `extensions/firestore-bigquery-export-xxx.env`
 ```json
   "extensions": {
-    "firestore-bigquery-export-test": "firebase/firestore-bigquery-export@0.1.54"
+    "firestore-bigquery-export-xxx": "firebase/firestore-bigquery-export@0.1.54"
   }
 ```
 
