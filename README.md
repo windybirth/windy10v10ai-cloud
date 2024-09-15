@@ -28,8 +28,9 @@ Backend for [Windy 10v10ai](https://github.com/windybirth/windy10v10ai) with Fir
 
 ## Installation
 ### Need
-- [nvm](https://github.com/nvm-sh/nvm?tab=readme-ov-file#installing-and-updating)
-- java
+- Java
+- Node v20
+  - Recommend install node use [nvm](https://github.com/nvm-sh/nvm?tab=readme-ov-file#installing-and-updating)
 
 ```bash
 # firebase setting
