@@ -44,14 +44,28 @@ npm install
 firebase experiments:enable webframeworks
 ```
 
+### Set GCP (Optional)
+
+Install gCloud SDK: https://cloud.google.com/sdk/docs/install
+
+```bash
+# Authenticate with gcloud
+gcloud auth login
+```
+
 ## Running the app
 
 ### Start Firebase Emulator
 ```bash
 npm run start
+```
 
-# download data from storage (need auth)
-# (run only once)
+### Start Firebase Emulator with data
+
+Need Authenticate with gcloud
+
+```bash
+# download data from storage (run only once)
 rm -rf firestore-backup
 mkdir firestore-backup
 (cd firestore-backup && gsutil -m cp -r \
@@ -59,9 +73,11 @@ mkdir firestore-backup
   "gs://windy10v10ai.appspot.com/firestore-backup/20240529/all_namespaces" \
   .)
 
-# start firebase with data
+# start emulator with data
 npm run start:with-data
 ```
+
+
 
 gsutil install && 运行 gcloud init login ad
 https://cloud.google.com/storage/docs/gsutil_install?hl=zh-cn#deb
@@ -187,7 +203,7 @@ firebase ext:install firebase/firestore-bigquery-export
 or Edit [firebase.json](/firebase.json) and `extensions/firestore-bigquery-export-xxx.env`
 ```json
   "extensions": {
-    "firestore-bigquery-export-test": "firebase/firestore-bigquery-export@0.1.53"
+    "firestore-bigquery-export-test": "firebase/firestore-bigquery-export@0.1.54"
   }
 ```
 
@@ -197,10 +213,16 @@ or Edit [firebase.json](/firebase.json) and `extensions/firestore-bigquery-expor
 firebase deploy --only extensions
 ```
 
-### Import existing documents
+### Import existing documents (need gcp auth)
 
 [Guides](https://github.com/firebase/extensions/blob/master/firestore-bigquery-export/guides/IMPORT_EXISTING_DOCUMENTS.md)
 
+Setup gcloud default auth
+```bash
+gcloud auth application-default login
+```
+
+Run import command
 ```bash
 npx @firebaseextensions/fs-bq-import-collection
 ```
