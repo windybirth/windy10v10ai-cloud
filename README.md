@@ -231,10 +231,10 @@ Example:
 
 > ? What is your Firebase project ID? windy10v10ai<br>
  ? What is your BigQuery project ID? windy10v10ai<br>
-? What is the path of the the Cloud Firestore Collection you would like to import from? (This may, or may not, be the same Collection for which you plan to mirror changes.) test<br>
+? What is the path of the the Cloud Firestore Collection you would like to import from? (This may, or may not, be the same Collection for which you plan to mirror changes.) COLLECTION_NAME<br>
 ? Would you like to import documents via a Collection Group query? No<br>
 ? What is the ID of the BigQuery dataset that you would like to use? (A dataset will be created if it doesn't already exist) firestore_export<br>
-? What is the identifying prefix of the BigQuery table that you would like to import to? (A table will be created if one doesn't already exist) test<br>
+? What is the identifying prefix of the BigQuery table that you would like to import to? (A table will be created if one doesn't already exist) table_name<br>
 ? How many documents should the import stream into BigQuery at once? 300<br>
 ? Where would you like the BigQuery dataset to be located? asia-northeast1<br>
 ? Would you like to run the import across multiple threads? Yes<br>
@@ -248,6 +248,6 @@ npx @firebaseextensions/fs-bq-schema-views \
   --non-interactive \
   --project=windy10v10ai \
   --dataset=firestore_export \
-  --table-name-prefix=test \
-  --schema-files=./extensions/test_schema.json
+  --table-name-prefix=table_name \
+  --schema-files=./extensions/table_schema.json
 ```

@@ -1,0 +1,43 @@
+{
+  "fields": [
+    {
+      "name": "id",
+      "type": "string"
+    },
+    {
+      "name": "matchCount",
+      "type": "number",
+      "column_name": "match_count"
+    },
+    {
+      "name": "winCount",
+      "type": "number",
+      "column_name": "win_count"
+    },
+    {
+      "name": "disconnectCount",
+      "type": "number",
+      "column_name": "disconnect_count"
+    },
+    {
+      "name": "seasonPointTotal",
+      "type": "number",
+      "column_name": "season_point_total"
+    },
+    {
+      "name": "memberPointTotal",
+      "type": "number",
+      "column_name": "member_point_total"
+    },
+    {
+      "name": "conductPoint",
+      "type": "number",
+      "column_name": "conduct_point"
+    },
+    {
+      "name": "lastMatchTime",
+      "type": "date",
+      "column_name": "last_match_time"
+    }
+  ]
+}
