@@ -127,5 +127,6 @@ dist
 api/swagger-spec.yaml
 
 # Firebase
+.firebaserc
 .firebase/
 firestore-backup/
