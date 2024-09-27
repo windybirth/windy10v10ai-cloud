@@ -25,8 +25,7 @@ export class EventRewardsService {
     return steamIds.map((steamId) => ({
       steamId,
       result:
-        eventRewards.find((r) => r.steamId === steamId)?.member20240716 ??
-        false,
+        eventRewards.find((r) => r.steamId === steamId)?.point20240927 ?? false,
     }));
   }
 
@@ -38,11 +37,11 @@ export class EventRewardsService {
       await this.eventRewardsRepository.create({
         id,
         steamId,
-        member20240716: true,
+        point20240927: true,
       });
     } else {
       // update
-      eventReward.member20240716 = true;
+      eventReward.point20240927 = true;
       await this.eventRewardsRepository.update(eventReward);
     }
   }
