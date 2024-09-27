@@ -10,6 +10,7 @@ import { AppService } from './app.service';
 import { CountModule } from './count/count.module';
 import { EventRewardsModule } from './event-rewards/event-rewards.module';
 import { GameModule } from './game/game.module';
+import { MatchModule } from './match/match.module';
 import { MembersModule } from './members/members.module';
 import { OrdersModule } from './orders/orders.module';
 import { PatreonModule } from './patreon/patreon.module';
@@ -17,7 +18,6 @@ import { PlayerModule } from './player/player.module';
 import { PlayerCountModule } from './player-count/player-count.module';
 import { PlayerPropertyModule } from './player-property/player-property.module';
 import { TestModule } from './test/test.module';
-import { MatchModule } from './match/match.module';
 
 const ENVIRONMENT = process.env.ENVIRONMENT ?? 'local';
 

@@ -28,8 +28,9 @@ Backend for [Windy 10v10ai](https://github.com/windybirth/windy10v10ai) with Fir
 
 ## Installation
 ### Need
-- [nvm](https://github.com/nvm-sh/nvm?tab=readme-ov-file#installing-and-updating)
-- java
+- Java
+- Node v20
+  - Recommend install node use [nvm](https://github.com/nvm-sh/nvm?tab=readme-ov-file#installing-and-updating)
 
 ```bash
 # firebase setting
@@ -43,14 +44,28 @@ npm install
 firebase experiments:enable webframeworks
 ```
 
+### Set GCP (Optional)
+
+Install gCloud SDK: https://cloud.google.com/sdk/docs/install
+
+```bash
+# Authenticate with gcloud
+gcloud auth login
+```
+
 ## Running the app
 
 ### Start Firebase Emulator
 ```bash
 npm run start
+```
 
-# download data from storage (need auth)
-# (run only once)
+### Start Firebase Emulator with data
+
+Need Authenticate with gcloud
+
+```bash
+# download data from storage (run only once)
 rm -rf firestore-backup
 mkdir firestore-backup
 (cd firestore-backup && gsutil -m cp -r \
@@ -58,9 +73,11 @@ mkdir firestore-backup
   "gs://windy10v10ai.appspot.com/firestore-backup/20240529/all_namespaces" \
   .)
 
-# start firebase with data
+# start emulator with data
 npm run start:with-data
 ```
+
+
 
 gsutil install && 运行 gcloud init login ad
 https://cloud.google.com/storage/docs/gsutil_install?hl=zh-cn#deb
@@ -100,10 +117,9 @@ net start winnat
 
 ### Deploy with Github Action
 
-Github Action will deploy automatically when push to main and develop.
+Github Action will deploy automatically when push to main branch.
 
 - main: Deploy Firebase Functions and Hosting
-- develop: Deploy Firebase Functions:admin
 
 ### Deploy Manually
 - Deploy all
@@ -111,7 +127,7 @@ Github Action will deploy automatically when push to main and develop.
 firebase deploy
 ```
 
-- Deploy function only
+- Deploy part
 ```bash
 # Deploy api function only
 firebase deploy --only functions:client
@@ -155,8 +171,7 @@ ncu -u
 npm update
 ```
 
-
-# Use Admin API
+## Use Admin API
 
 ## Need
 - gcloud cli
@@ -175,3 +190,50 @@ echo $(gcloud auth print-identity-token)
 ```
 Import `api/swagger-spec.yaml` to postman with variable `baseUrl` : `https://asia-northeast1-windy10v10ai.cloudfunctions.net/admin`
 
+# Extension
+
+## Export Firestore to Bigquery
+
+### Setup Stream Firestore to BigQuery
+
+```bash
+firebase ext:install firebase/firestore-bigquery-export
+```
+
+or Edit [firebase.json](/firebase.json) and create `extensions/firestore-bigquery-export-xxx.env`
+```json
+  "extensions": {
+    "firestore-bigquery-export-xxx": "firebase/firestore-bigquery-export@0.1.54"
+  }
+```
+
+### Deploy Firestore to BigQuery
+
+```bash
+firebase deploy --only extensions
+```
+
+### Import existing documents (need gcp auth)
+
+[Guides](https://github.com/firebase/extensions/blob/master/firestore-bigquery-export/guides/IMPORT_EXISTING_DOCUMENTS.md)
+
+Setup gcloud default auth
+```bash
+gcloud auth application-default login
+```
+
+Run import command
+```bash
+sh ./extensions/import-firestore-to-bigquery.sh
+```
+
+
+### Generate schema views
+
+Create schema file `table_name_schema.json` and run command.
+
+[How to create schema file](https://github.com/firebase/extensions/blob/next/firestore-bigquery-export/guides/GENERATE_SCHEMA_VIEWS.md#how-to-configure-schema-files)
+
+```bash
+sh ./extensions/generate-schema-views.sh
+```

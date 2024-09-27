@@ -14,11 +14,7 @@
   "hosting": {
     "site": "windy10v10ai",
     "public": "public",
-    "ignore": [
-      "firebase.json",
-      "**/.*",
-      "**/node_modules/**"
-    ],
+    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
     "rewrites": [
       {
         "regex": "^/api/(game|afdian).*",
@@ -43,5 +39,10 @@
   },
   "database": {
     "rules": "database.rules.json"
+  },
+  "extensions": {
+    "firestore-bigquery-export-players": "firebase/firestore-bigquery-export@0.1.54",
+    "firestore-bigquery-export-members": "firebase/firestore-bigquery-export@0.1.54",
+    "firestore-bigquery-export-matches": "firebase/firestore-bigquery-export@0.1.54"
   }
 }

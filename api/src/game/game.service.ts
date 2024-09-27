@@ -120,9 +120,9 @@ export class GameService {
     steamIds: number[],
   ): Promise<PointInfoDto[]> {
     const pointInfoDtos: PointInfoDto[] = [];
-    const startTime = new Date('2024-07-16T00:00:00.000Z');
-    const endTime = new Date('2024-07-22T00:00:00.000Z');
-    // const rewardSeasonPoint = 5000;
+    const startTime = new Date('2024-09-27T00:00:00.000Z');
+    const endTime = new Date('2024-10-09T00:00:00.000Z');
+    const rewardSeasonPoint = 5000;
 
     const now = new Date();
     if (now < startTime || now > endTime) {
@@ -135,23 +135,23 @@ export class GameService {
     for (const rewardResult of rewardResults) {
       if (rewardResult.result === false) {
         // 奖励一周会员
-        await this.membersService.addMember({
-          steamId: rewardResult.steamId,
-          month: 0.25,
-        });
-        // 奖励赛季积分
-        // await this.playerService.upsertAddPoint(rewardResult.steamId, {
-        //   seasonPointTotal: rewardSeasonPoint,
+        // await this.membersService.addMember({
+        //   steamId: rewardResult.steamId,
+        //   month: 0.25,
         // });
+        // 奖励赛季积分
+        await this.playerService.upsertAddPoint(rewardResult.steamId, {
+          seasonPointTotal: rewardSeasonPoint,
+        });
         // FIXME 每次需要更新
         await this.eventRewardsService.setReward(rewardResult.steamId);
         pointInfoDtos.push({
           steamId: rewardResult.steamId,
           title: {
-            cn: '恭喜你获赠一周会员!',
-            en: 'Get one week free membership!',
+            cn: '祝大家欢度国庆!',
+            en: 'Get 5000 battle points!',
           },
-          // seasonPoint: rewardSeasonPoint,
+          seasonPoint: rewardSeasonPoint,
         });
       }
     }
