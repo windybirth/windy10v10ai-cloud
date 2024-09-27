@@ -3,6 +3,7 @@
 
 name: Deploy Firebase Functions and Hosting
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
@@ -29,3 +30,4 @@ jobs:
           args: deploy --only functions,hosting
         env:
           GCP_SA_KEY: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_WINDY10V10AI }}
+          PROJECT_ID: windy10v10ai
