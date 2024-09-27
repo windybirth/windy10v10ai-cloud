@@ -3,10 +3,10 @@
 
 name: Deploy Firebase Functions and Hosting
 on:
-  workflow_dispatch:
   push:
     branches:
       - main
+      - fix-deploy-use-project
 
 jobs:
   build_and_deploy:
