@@ -59,8 +59,3 @@ jobs:
             - [ ] fix #${{ steps.get_issue.outputs.number }}
           token: ${{ secrets.WINDY_PR_PAT }}
           draft: true
-
-      - name: Ready Pull Request
-        run: gh pr ready ${{ steps.cpr.outputs.pull-request-number }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.WINDY_PR_PAT }}
