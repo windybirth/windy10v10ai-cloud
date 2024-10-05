@@ -32,7 +32,7 @@ export class GameEnd {
   @ApiProperty()
   winnerTeamId: number;
   @ApiProperty()
-  matchId: string;
+  matchId: number;
   @ApiProperty()
   version: string;
   @ApiProperty()

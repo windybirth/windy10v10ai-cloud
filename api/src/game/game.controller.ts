@@ -5,6 +5,7 @@ import {
   Headers,
   Param,
   ParseArrayPipe,
+  ParseIntPipe,
   Post,
   Put,
   Query,
@@ -45,8 +46,7 @@ export class GameController {
   async start(
     @Query('steamIds', new ParseArrayPipe({ items: Number, separator: ',' }))
     steamIds: number[],
-    @Headers('x-api-key')
-    apiKey: string,
+    @Query('matchId', new ParseIntPipe()) matchId: number,
     @Headers('x-country-code') countryCode: string,
   ): Promise<GameStart> {
     logger.debug(`[Game Start] with steamIds ${JSON.stringify(steamIds)}`);
@@ -83,6 +83,9 @@ export class GameController {
       .catch((error) => {
         logger.warn(`[Game Start] playerCount Failed, ${steamIds}`, error);
       });
+
+    // 统计数据发送至GA4
+    await this.gameService.sendStartGameAnalytics(steamIds, matchId);
 
     // ----------------- 以下为返回数据 -----------------
     // 获取玩家信息

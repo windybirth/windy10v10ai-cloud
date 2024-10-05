@@ -25,6 +25,7 @@ const clientSecrets = [
   defineSecret(SECRET.SERVER_APIKEY),
   defineSecret(SECRET.SERVER_APIKEY_TEST),
   defineSecret(SECRET.AFDIAN_TOKEN),
+  defineSecret(SECRET.GA4_API_SECRET),
 ];
 
 export const client = onRequest(
