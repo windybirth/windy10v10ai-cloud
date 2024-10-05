@@ -5,6 +5,7 @@ import {
 } from '@nestjs/common';
 import { logger } from 'firebase-functions';
 
+import { AnalyticsService } from '../analytics/analytics.service';
 import { EventRewardsService } from '../event-rewards/event-rewards.service';
 import { Member } from '../members/entities/members.entity';
 import { MembersService } from '../members/members.service';
@@ -26,6 +27,7 @@ export class GameService {
     private readonly playerCountService: PlayerCountService,
     private readonly eventRewardsService: EventRewardsService,
     private readonly playerPropertyService: PlayerPropertyService,
+    private readonly analyticsService: AnalyticsService,
   ) {}
 
   getOK(): string {
@@ -158,6 +160,16 @@ export class GameService {
     return pointInfoDtos;
   }
 
+  async sendStartGameAnalytics(
+    steamIds: number[],
+    matchId: number,
+  ): Promise<void> {
+    for (const steamId of steamIds) {
+      await this.analyticsService.login(steamId, matchId);
+    }
+  }
+
+  // 重置玩家属性
   async resetPlayerProperty(
     gameResetPlayerProperty: GameResetPlayerProperty,
   ): Promise<void> {
