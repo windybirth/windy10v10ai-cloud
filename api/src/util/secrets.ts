@@ -1,3 +1,6 @@
+import { InternalServerErrorException } from '@nestjs/common';
+import { logger } from 'firebase-functions';
+
 export enum SECRET {
   AFDIAN_TOKEN = 'AFDIAN_TOKEN',
   PATREON_SECRET = 'PATREON_SECRET',
@@ -9,7 +12,8 @@ export enum SECRET {
 export const GetSecretValue = (key: SECRET): string => {
   const value = process.env[key];
   if (!value) {
-    throw new Error(`Secret value for ${key} is not defined`);
+    logger.error(`Secret value for ${key} is not defined`);
+    throw new InternalServerErrorException('Secret value is not defined');
   }
   return value;
 };
