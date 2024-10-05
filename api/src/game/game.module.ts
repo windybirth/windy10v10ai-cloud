@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 
+import { AnalyticsModule } from '../analytics/analytics.module';
 import { CountModule } from '../count/count.module';
 import { EventRewardsModule } from '../event-rewards/event-rewards.module';
 import { MatchModule } from '../match/match.module';
@@ -20,6 +21,7 @@ import { GameService } from './game.service';
     PlayerPropertyModule,
     EventRewardsModule,
     MatchModule,
+    AnalyticsModule,
   ],
   controllers: [GameController],
   providers: [GameService],

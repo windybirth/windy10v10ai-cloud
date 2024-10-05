@@ -18,7 +18,7 @@ export class MatchService {
    */
   async recordMatch(gameInfo: GameEnd) {
     const match = new Match();
-    match.id = gameInfo.matchId;
+    match.id = gameInfo.matchId.toString();
     match.version = gameInfo.version;
     match.difficulty = gameInfo.gameOption.gameDifficulty;
     match.winnerTeamId = gameInfo.winnerTeamId;

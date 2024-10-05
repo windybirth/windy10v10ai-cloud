@@ -27,7 +27,7 @@ function callGameStart(
 
   return request(app.getHttpServer())
     .get(gameStartUrl)
-    .query({ steamIds })
+    .query({ steamIds, matchId: 1 })
     .set(headers);
 }
 
@@ -43,12 +43,13 @@ describe('PlayerController (e2e)', () => {
   });
 
   describe(`${gameStartUrl} (Get)`, () => {
+    const matchId = 1;
     describe('单人开始', () => {
       it('普通玩家 新玩家 首次', async () => {
         mockDate('2023-12-01T00:00:00.000Z');
         const steamIds = [100000001];
 
-        const result = await get(app, gameStartUrl, { steamIds });
+        const result = await get(app, gameStartUrl, { steamIds, matchId });
         expect(result.status).toEqual(200);
         // assert player
         const playerResult = await get(app, `${playerGetUrl}100000001`);
@@ -61,7 +62,7 @@ describe('PlayerController (e2e)', () => {
         const steamIds = [100000002];
 
         mockDate('2023-12-01T00:00:00.000Z');
-        const result = await get(app, gameStartUrl, { steamIds });
+        const result = await get(app, gameStartUrl, { steamIds, matchId });
         expect(result.status).toEqual(200);
         // assert player
         const playerResult = await get(app, `${playerGetUrl}100000002`);
@@ -69,7 +70,7 @@ describe('PlayerController (e2e)', () => {
         expect(playerResult.body.seasonPointTotal).toEqual(0);
 
         mockDate('2023-12-02T00:00:00.000Z');
-        const result2 = await get(app, gameStartUrl, { steamIds });
+        const result2 = await get(app, gameStartUrl, { steamIds, matchId });
         expect(result2.status).toEqual(200);
         // assert player
         const playerResult2 = await get(app, `${playerGetUrl}100000002`);
@@ -132,7 +133,10 @@ describe('PlayerController (e2e)', () => {
           });
 
           mockDate(date1);
-          const result = await get(app, gameStartUrl, { steamIds: [steamId] });
+          const result = await get(app, gameStartUrl, {
+            steamIds: [steamId],
+            matchId,
+          });
           expect(result.status).toEqual(200);
           // assert player
           const playerResult = await get(app, `${playerGetUrl}${steamId}`);
@@ -140,7 +144,10 @@ describe('PlayerController (e2e)', () => {
           expect(playerResult.body.seasonPointTotal).toEqual(0);
 
           mockDate(date2);
-          const result2 = await get(app, gameStartUrl, { steamIds: [steamId] });
+          const result2 = await get(app, gameStartUrl, {
+            steamIds: [steamId],
+            matchId,
+          });
           expect(result2.status).toEqual(200);
           // assert player
           const playerResult2 = await get(app, `${playerGetUrl}${steamId}`);
@@ -149,87 +156,6 @@ describe('PlayerController (e2e)', () => {
         },
       );
     });
-
-    // describe('活动', () => {
-    //   const rewardSeasonPoint = 5000;
-    //   const before = '2024-04-25T23:59:00.000Z';
-    //   const start = '2024-04-27T00:01:00.000Z';
-    //   const end = '2024-05-05T23:59:00.000Z';
-    //   const after = '2024-05-06T00:01:00.000Z';
-    //   it.each([
-    //     ['活动开始前', before, 100000101, 0, 0],
-    //     ['活动开始时', start, 100000102, 0, rewardSeasonPoint],
-    //     ['活动结束前', end, 100000103, 0, rewardSeasonPoint],
-    //     ['活动结束后', after, 100000104, 0, 0],
-    //   ])(
-    //     '%s',
-    //     async (title, date, steamId, memberPointTotal, seasonPointTotal) => {
-    //       mockDate(date);
-    //       const result = await get(app, gameStartUrl, { steamIds: [steamId] });
-    //       expect(result.status).toEqual(200);
-    //       // assert player
-    //       const playerResult = await get(app, `${playerGetUrl}${steamId}`);
-    //       expect(playerResult.status).toEqual(200);
-    //       expect(playerResult.body.memberPointTotal).toEqual(memberPointTotal);
-    //       expect(playerResult.body.seasonPointTotal).toEqual(seasonPointTotal);
-    //     },
-    //   );
-
-    //   describe('活动重复领取', () => {
-    //     it.each([
-    //       [
-    //         '活动开始前 活动开始中',
-    //         100000111,
-    //         before,
-    //         0,
-    //         start,
-    //         rewardSeasonPoint,
-    //       ],
-    //       [
-    //         '活动开始中 活动开始中',
-    //         100000112,
-    //         start,
-    //         rewardSeasonPoint,
-    //         end,
-    //         rewardSeasonPoint,
-    //       ],
-    //     ])(
-    //       '%s',
-    //       async (
-    //         title,
-    //         steamId,
-    //         date1,
-    //         seasonPointTotal1,
-    //         date2,
-    //         seasonPointTotal2,
-    //       ) => {
-    //         mockDate(date1);
-    //         const result = await get(app, gameStartUrl, {
-    //           steamIds: [steamId],
-    //         });
-    //         expect(result.status).toEqual(200);
-    //         // assert player
-    //         const playerResult = await get(app, `${playerGetUrl}${steamId}`);
-    //         expect(playerResult.status).toEqual(200);
-    //         expect(playerResult.body.seasonPointTotal).toEqual(
-    //           seasonPointTotal1,
-    //         );
-
-    //         mockDate(date2);
-    //         const result2 = await get(app, gameStartUrl, {
-    //           steamIds: [steamId],
-    //         });
-    //         expect(result2.status).toEqual(200);
-    //         // assert player
-    //         const playerResult2 = await get(app, `${playerGetUrl}${steamId}`);
-    //         expect(playerResult2.status).toEqual(200);
-    //         expect(playerResult2.body.seasonPointTotal).toEqual(
-    //           seasonPointTotal2,
-    //         );
-    //       },
-    //     );
-    //   });
-    // });
 
     describe('多人开始', () => {
       it('普通玩家 会员', async () => {
