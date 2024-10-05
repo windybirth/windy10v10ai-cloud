@@ -2,10 +2,13 @@ import { Injectable } from '@nestjs/common';
 
 import { GetSecretValue, SECRET } from '../util/secrets';
 
-interface EventParams {
-  [key: string]: number | string | boolean;
-  session_id?: number;
-  engagement_time_msec?: number;
+interface Event {
+  name: string;
+  params: {
+    [key: string]: number | string | boolean;
+    session_id?: number;
+    engagement_time_msec?: number;
+  };
 }
 
 @Injectable()
@@ -17,29 +20,27 @@ export class AnalyticsService {
 
   constructor() {}
   async login(steamId: number, matchId: number) {
-    await this.sendEvent(steamId.toString(), 'login', {
-      method: 'steam',
-      session_id: matchId,
-      engagement_time_msec: 1200,
-    });
+    const event = {
+      name: 'login',
+      params: {
+        method: 'steam',
+        session_id: matchId,
+        match_id: matchId,
+        debug_mode: process.env.ENVIRONMENT === 'local',
+      },
+    };
+
+    await this.sendEvent(steamId.toString(), event);
   }
 
-  async sendEvent(userId: string, eventName: string, eventParams: EventParams) {
+  async sendEvent(userId: string, event: Event) {
     const apiSecret = GetSecretValue(SECRET.GA4_API_SECRET);
-    if (process.env.ENVIRONMENT === 'local') {
-      eventParams['debug_mode'] = true;
-    }
 
     const payload = {
       client_id: this.clientId,
       user_id: userId,
       non_personalized_ads: false,
-      events: [
-        {
-          name: eventName,
-          params: eventParams,
-        },
-      ],
+      events: [event],
     };
 
     const response = await fetch(
