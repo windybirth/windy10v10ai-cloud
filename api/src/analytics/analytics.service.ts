@@ -16,7 +16,6 @@ export class AnalyticsService {
   private readonly measurementProtocolUrl =
     'https://www.google-analytics.com/mp/collect';
   private measurementId = process.env.GA_MEASUREMENT_ID;
-  private clientId = process.env.GA_CLIENT_ID;
 
   constructor() {}
   async login(steamId: number, matchId: number) {
@@ -27,6 +26,7 @@ export class AnalyticsService {
         session_id: matchId,
         match_id: matchId,
         debug_mode: process.env.ENVIRONMENT === 'local',
+        engagement_time_msec: 1000,
       },
     };
 
@@ -37,7 +37,7 @@ export class AnalyticsService {
     const apiSecret = GetSecretValue(SECRET.GA4_API_SECRET);
 
     const payload = {
-      client_id: this.clientId,
+      client_id: userId,
       user_id: userId,
       non_personalized_ads: false,
       events: [event],
