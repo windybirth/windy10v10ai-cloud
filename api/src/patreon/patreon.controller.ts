@@ -9,7 +9,7 @@ import {
   Post,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { logger } from 'firebase-functions/v1';
+import { logger } from 'firebase-functions';
 
 import { PatreonWebhookDto } from './dto/patreon-webhook.dto';
 import { PatreonService } from './patreon.service';

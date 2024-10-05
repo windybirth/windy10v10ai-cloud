@@ -1,5 +1,6 @@
 import { Test } from '@nestjs/testing';
 
+import { AnalyticsService } from '../analytics/analytics.service';
 import { EventRewardsService } from '../event-rewards/event-rewards.service';
 import { MembersService } from '../members/members.service';
 import { PlayerService } from '../player/player.service';
@@ -38,6 +39,10 @@ describe('GameService', () => {
         },
         {
           provide: PlayerPropertyService,
+          useValue: {},
+        },
+        {
+          provide: AnalyticsService,
           useValue: {},
         },
       ],

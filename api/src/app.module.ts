@@ -5,6 +5,7 @@ import { FireormModule } from 'nestjs-fireorm';
 
 import { AdminModule } from './admin/admin.module';
 import { AfdianModule } from './afdian/afdian.module';
+import { AnalyticsModule } from './analytics/analytics.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { CountModule } from './count/count.module';
@@ -49,6 +50,7 @@ const ENVIRONMENT = process.env.ENVIRONMENT ?? 'local';
     AdminModule,
     EventRewardsModule,
     MatchModule,
+    AnalyticsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
