@@ -13,6 +13,7 @@ import {
 import { ApiBody, ApiTags } from '@nestjs/swagger';
 import { logger } from 'firebase-functions';
 
+import { AnalyticsService } from '../analytics/analytics.service';
 import { CountService } from '../count/count.service';
 import { MatchService } from '../match/match.service';
 import { MemberDto } from '../members/dto/member.dto';
@@ -22,7 +23,7 @@ import { PlayerCountService } from '../player-count/player-count.service';
 import { UpdatePlayerPropertyDto } from '../player-property/dto/update-player-property.dto';
 import { PlayerPropertyService } from '../player-property/player-property.service';
 
-import { GameEnd } from './dto/game-end.request.body';
+import { GameEndDto } from './dto/game-end.request.body';
 import { GameResetPlayerProperty } from './dto/game-reset-player-property';
 import { GameStart } from './dto/game-start.response';
 import { PlayerDto } from './dto/player.dto';
@@ -40,6 +41,7 @@ export class GameController {
     private readonly playerService: PlayerService,
     private readonly playerPropertyService: PlayerPropertyService,
     private readonly matchService: MatchService,
+    private readonly analyticsService: AnalyticsService,
   ) {}
 
   @Get(['start'])
@@ -85,7 +87,7 @@ export class GameController {
       });
 
     // 统计数据发送至GA4
-    await this.gameService.sendStartGameAnalytics(steamIds, matchId);
+    await this.analyticsService.gameStart(steamIds, matchId);
 
     // ----------------- 以下为返回数据 -----------------
     // 获取玩家信息
@@ -104,31 +106,32 @@ export class GameController {
     };
   }
 
-  @ApiBody({ type: GameEnd })
+  @ApiBody({ type: GameEndDto })
   @Post('end')
   async end(
     @Headers('x-api-key') apiKey: string,
-    @Body() gameInfo: GameEnd,
+    @Body() gameEnd: GameEndDto,
   ): Promise<string> {
-    logger.debug(`[Game End] ${JSON.stringify(gameInfo)}`);
+    logger.debug(`[Game End] ${JSON.stringify(gameEnd)}`);
     this.gameService.validateApiKey(apiKey, 'Game End');
 
-    const players = gameInfo.players;
+    const players = gameEnd.players;
     for (const player of players) {
       if (player.steamId > 0) {
         await this.playerService.upsertGameEnd(
           player.steamId,
-          player.teamId == gameInfo.winnerTeamId,
+          player.teamId == gameEnd.winnerTeamId,
           player.points,
           player.isDisconnect,
         );
       }
     }
 
-    await this.countService.countGameEnd(gameInfo);
-    await this.countService.countGameDifficult(gameInfo);
-    await this.countService.countHeroes(gameInfo);
-    await this.matchService.recordMatch(gameInfo);
+    await this.countService.countGameEnd(gameEnd);
+    await this.countService.countGameDifficult(gameEnd);
+    await this.countService.countHeroes(gameEnd);
+    await this.matchService.recordMatch(gameEnd);
+    await this.analyticsService.gameEnd(gameEnd);
 
     return this.gameService.getOK();
   }
