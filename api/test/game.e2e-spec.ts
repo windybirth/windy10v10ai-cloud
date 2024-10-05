@@ -27,7 +27,7 @@ function callGameStart(
 
   return request(app.getHttpServer())
     .get(gameStartUrl)
-    .query({ steamIds })
+    .query({ steamIds, matchId: 1 })
     .set(headers);
 }
 
