@@ -26,7 +26,7 @@ export class GameOption {
   towerEndure: number;
 }
 
-export class GameEnd {
+export class GameEndDto {
   @ApiProperty({ type: [PlayerGameEnd] })
   players: PlayerGameEnd[];
   @ApiProperty()
@@ -35,6 +35,8 @@ export class GameEnd {
   matchId: number;
   @ApiProperty()
   version: string;
+  @ApiProperty()
+  gameTimeMsec: number;
   @ApiProperty()
   gameOption?: GameOption;
 }

@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { BaseFirestoreRepository } from 'fireorm';
 import { InjectRepository } from 'nestjs-fireorm';
 
-import { GameEnd } from '../game/dto/game-end.request.body';
+import { GameEndDto } from '../game/dto/game-end.request.body';
 
 import { HeroWinrate } from './dto/hero-winrate.entity';
 import { CountDifficult } from './entities/count-difficult.entity';
@@ -87,7 +87,7 @@ export class CountService {
     }
   }
 
-  async countGameEnd(gameEnd: GameEnd) {
+  async countGameEnd(gameEnd: GameEndDto) {
     const isWinner = gameEnd.winnerTeamId == 2;
     const id = this.getDateString();
     const existMatchCount = await this.countMatchRepository.findById(id);
@@ -102,7 +102,7 @@ export class CountService {
     }
   }
 
-  async countGameDifficult(gameEnd: GameEnd) {
+  async countGameDifficult(gameEnd: GameEndDto) {
     const id = `${gameEnd.version}#${gameEnd.gameOption.gameDifficulty}`;
     const existMatchDifficult =
       await this.countDifficultRepository.findById(id);
@@ -117,7 +117,7 @@ export class CountService {
     }
   }
 
-  async countHeroes(gameEnd: GameEnd) {
+  async countHeroes(gameEnd: GameEndDto) {
     for (const player of gameEnd.players) {
       let heroType: HeroType;
       if (player.steamId != 0) {
