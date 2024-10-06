@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
+import { logger } from 'firebase-functions/v1';
 
 import { GameEndDto } from '../game/dto/game-end.request.body';
-import { GetSecretValue, SECRET } from '../util/secrets';
+import { SECRET, SecretService } from '../util/secret/secret.service';
 
 interface Event {
   name: string;
@@ -18,7 +19,7 @@ export class AnalyticsService {
     'https://www.google-analytics.com/mp/collect';
   private readonly measurementId = process.env.GA_MEASUREMENT_ID;
 
-  constructor() {}
+  constructor(private readonly secretService: SecretService) {}
 
   async gameStart(steamIds: number[], matchId: number) {
     for (const steamId of steamIds) {
@@ -41,8 +42,10 @@ export class AnalyticsService {
     for (const player of gameEnd.players) {
       if (player.steamId === 0) {
         // 暂且不统计电脑数据
+        logger.debug('skip computer player', player);
         continue;
       }
+      logger.debug('send game_end event for player', player);
       const event = {
         name: 'game_end',
         params: {
@@ -60,6 +63,7 @@ export class AnalyticsService {
           hero_name: player.heroName,
           points: player.points,
           is_disconnect: player.isDisconnect,
+          steam_id: player.steamId,
         },
       };
 
@@ -67,8 +71,8 @@ export class AnalyticsService {
     }
   }
 
-  private async sendEvent(userId: string, event: Event) {
-    const apiSecret = GetSecretValue(SECRET.GA4_API_SECRET);
+  async sendEvent(userId: string, event: Event) {
+    const apiSecret = this.secretService.getSecretValue(SECRET.GA4_API_SECRET);
 
     const payload = {
       client_id: userId,

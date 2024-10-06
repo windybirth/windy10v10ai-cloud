@@ -19,6 +19,7 @@ import { PlayerModule } from './player/player.module';
 import { PlayerCountModule } from './player-count/player-count.module';
 import { PlayerPropertyModule } from './player-property/player-property.module';
 import { TestModule } from './test/test.module';
+import { SecretModule } from './util/secret/secret.module';
 
 const ENVIRONMENT = process.env.ENVIRONMENT ?? 'local';
 
@@ -51,6 +52,7 @@ const ENVIRONMENT = process.env.ENVIRONMENT ?? 'local';
     EventRewardsModule,
     MatchModule,
     AnalyticsModule,
+    SecretModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -112,6 +112,10 @@ export class GameController {
     @Headers('x-api-key') apiKey: string,
     @Body() gameEnd: GameEndDto,
   ): Promise<string> {
+    // FIXME 从游戏中传递过来的steamId是string类型，需要转换为number
+    gameEnd.players.forEach((player) => {
+      player.steamId = parseInt(player.steamId as any);
+    });
     logger.debug(`[Game End] ${JSON.stringify(gameEnd)}`);
     this.gameService.validateApiKey(apiKey, 'Game End');
 
