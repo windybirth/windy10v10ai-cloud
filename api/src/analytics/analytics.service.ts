@@ -60,6 +60,7 @@ export class AnalyticsService {
           hero_name: player.heroName,
           points: player.points,
           is_disconnect: player.isDisconnect,
+          steamId: player.steamId,
         },
       };
 
