@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { BaseFirestoreRepository } from 'fireorm';
 import { InjectRepository } from 'nestjs-fireorm';
 
-import { GameEnd } from '../game/dto/game-end.request.body';
+import { GameEndDto } from '../game/dto/game-end.request.body';
 
 import { Match } from './entities/match.entity';
 
@@ -16,7 +16,7 @@ export class MatchService {
   /**
    * 游戏结束后记录比赛信息
    */
-  async recordMatch(gameInfo: GameEnd) {
+  async recordMatch(gameInfo: GameEndDto) {
     const match = new Match();
     match.id = gameInfo.matchId.toString();
     match.version = gameInfo.version;

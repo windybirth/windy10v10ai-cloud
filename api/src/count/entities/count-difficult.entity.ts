@@ -1,6 +1,6 @@
 import { Collection } from 'fireorm';
 
-import { GameEnd } from '../../game/dto/game-end.request.body';
+import { GameEndDto } from '../../game/dto/game-end.request.body';
 
 @Collection()
 export class CountDifficult {
@@ -24,7 +24,7 @@ export class CountDifficult {
     return this;
   }
 
-  add(gameEnd: GameEnd) {
+  add(gameEnd: GameEndDto) {
     this.matchTotal++;
     const playerCount = gameEnd.players.filter((p) => p.steamId != 0).length;
     this.playerTotal += playerCount;
