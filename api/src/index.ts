@@ -6,7 +6,7 @@ import { defineSecret } from 'firebase-functions/params';
 import { onRequest } from 'firebase-functions/v2/https';
 
 import { AppModule } from './app.module';
-import { SECRET } from './util/secrets';
+import { SECRET } from './util/secret/secret.service';
 import { AppGlobalSettings } from './util/settings';
 
 // NestJS app
