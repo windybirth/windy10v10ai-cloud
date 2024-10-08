@@ -22,10 +22,17 @@ describe('AnalyticsService', () => {
             getSecretValue: jest.fn().mockReturnValue('GA_MEASUREMENT_ID'),
           },
         },
+        {
+          provide: 'AnalyticsRepository',
+          useValue: {},
+        },
       ],
     }).compile();
 
     service = module.get<AnalyticsService>(AnalyticsService);
+
+    jest.spyOn(service, 'getSessionNumber').mockResolvedValue(1);
+    jest.spyOn(service, 'updateSessionNumber').mockResolvedValue(2);
   });
 
   it('should be defined', () => {

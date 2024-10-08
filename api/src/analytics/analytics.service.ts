@@ -1,15 +1,27 @@
 import { Injectable } from '@nestjs/common';
 import { logger } from 'firebase-functions/v1';
+import { BaseFirestoreRepository } from 'fireorm';
+import { InjectRepository } from 'nestjs-fireorm';
 
 import { GameEndDto } from '../game/dto/game-end.request.body';
 import { SECRET, SecretService } from '../util/secret/secret.service';
+
+import { Analytics } from './entities/analytics.entity';
 
 interface Event {
   name: string;
   params: {
     [key: string]: number | string | boolean;
-    session_id?: number;
-    engagement_time_msec?: number;
+    session_id: number | string;
+    session_number: number | string;
+    engagement_time_msec: number | string;
+    debug_mode?: boolean;
+  };
+}
+
+interface UserProperties {
+  country?: {
+    value: string;
   };
 }
 
@@ -19,20 +31,25 @@ export class AnalyticsService {
     'https://www.google-analytics.com/mp/collect';
   private readonly measurementId = process.env.GA_MEASUREMENT_ID;
 
-  constructor(private readonly secretService: SecretService) {}
+  constructor(
+    private readonly secretService: SecretService,
+    @InjectRepository(Analytics)
+    private readonly analyticsRepository: BaseFirestoreRepository<Analytics>,
+  ) {}
 
   async gameStart(steamIds: number[], matchId: number) {
     for (const steamId of steamIds) {
-      const event = {
-        name: 'game_start',
-        params: {
+      const event = await this.buildEvent(
+        'game_start',
+        steamId,
+        matchId,
+        {
           method: 'steam',
-          session_id: matchId,
+          steam_id: steamId,
           match_id: matchId,
-          debug_mode: process.env.ENVIRONMENT === 'local',
-          engagement_time_msec: 1000,
         },
-      };
+        true,
+      );
 
       await this.sendEvent(steamId.toString(), event);
     }
@@ -46,32 +63,86 @@ export class AnalyticsService {
         continue;
       }
       logger.debug('send game_end event for player', player);
-      const event = {
-        name: 'game_end',
-        params: {
+      const event = await this.buildEvent(
+        'game_end',
+        player.steamId,
+        gameEnd.matchId,
+        {
           method: 'steam',
-          // game info
-          session_id: gameEnd.matchId,
-          match_id: gameEnd.matchId,
-          debug_mode: process.env.ENVIRONMENT === 'local',
+          steam_id: player.steamId,
+          matchId: gameEnd.matchId,
           engagement_time_msec: gameEnd.gameTimeMsec,
           difficulty: gameEnd.gameOption.gameDifficulty,
           version: gameEnd.version,
-          // player info
-          is_winner: gameEnd.winnerTeamId === 2,
+          is_winner: gameEnd.winnerTeamId === player.teamId,
           team_id: player.teamId,
           hero_name: player.heroName,
           points: player.points,
           is_disconnect: player.isDisconnect,
-          steam_id: player.steamId,
         },
-      };
+      );
 
       await this.sendEvent(player.steamId.toString(), event);
     }
   }
 
-  async sendEvent(userId: string, event: Event) {
+  async buildEvent(
+    eventName: string,
+    steamId: number,
+    matchId: number,
+    eventParams: { [key: string]: number | string | boolean },
+    isNewSession: boolean = false,
+  ) {
+    const sessionNumber = isNewSession
+      ? await this.updateSessionNumber(steamId)
+      : await this.getSessionNumber(steamId);
+    const event: Event = {
+      name: eventName,
+      params: {
+        ...eventParams,
+        session_id: `${steamId}-${matchId}`,
+        session_number: sessionNumber,
+        engagement_time_msec:
+          (eventParams.engagement_time_msec as number | string) || 1000,
+        debug_mode: process.env.ENVIRONMENT === 'local',
+      },
+    };
+
+    return event;
+  }
+
+  async getSessionNumber(steamId: number): Promise<number> {
+    const analytics = await this.analyticsRepository.findById(
+      steamId.toString(),
+    );
+    if (!analytics) {
+      return this.updateSessionNumber(steamId);
+    }
+    return analytics.sessionNumber;
+  }
+
+  async updateSessionNumber(steamId: number): Promise<number> {
+    const analytics = await this.analyticsRepository.findById(
+      steamId.toString(),
+    );
+    if (!analytics) {
+      const newAnalytics = new Analytics();
+      newAnalytics.id = steamId.toString();
+      newAnalytics.sessionNumber = 1;
+      await this.analyticsRepository.create(newAnalytics);
+      return 1;
+    } else {
+      analytics.sessionNumber++;
+      await this.analyticsRepository.update(analytics);
+      return analytics.sessionNumber;
+    }
+  }
+
+  async sendEvent(
+    userId: string,
+    event: Event,
+    userProperties?: UserProperties,
+  ) {
     const apiSecret = this.secretService.getSecretValue(SECRET.GA4_API_SECRET);
 
     const payload = {
@@ -79,6 +150,7 @@ export class AnalyticsService {
       user_id: userId,
       non_personalized_ads: false,
       events: [event],
+      user_properties: userProperties,
     };
 
     const response = await fetch(
