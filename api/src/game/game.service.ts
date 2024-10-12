@@ -158,6 +158,7 @@ export class GameService {
     return pointInfoDtos;
   }
 
+  // 重置玩家属性
   async resetPlayerProperty(
     gameResetPlayerProperty: GameResetPlayerProperty,
   ): Promise<void> {

@@ -26,15 +26,17 @@ export class GameOption {
   towerEndure: number;
 }
 
-export class GameEnd {
+export class GameEndDto {
   @ApiProperty({ type: [PlayerGameEnd] })
   players: PlayerGameEnd[];
   @ApiProperty()
   winnerTeamId: number;
   @ApiProperty()
-  matchId: string;
+  matchId: number;
   @ApiProperty()
   version: string;
+  @ApiProperty()
+  gameTimeMsec: number;
   @ApiProperty()
   gameOption?: GameOption;
 }

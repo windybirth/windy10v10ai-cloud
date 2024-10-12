@@ -6,7 +6,7 @@ import { defineSecret } from 'firebase-functions/params';
 import { onRequest } from 'firebase-functions/v2/https';
 
 import { AppModule } from './app.module';
-import { SECRET } from './util/secrets';
+import { SECRET } from './util/secret/secret.service';
 import { AppGlobalSettings } from './util/settings';
 
 // NestJS app
@@ -25,6 +25,7 @@ const clientSecrets = [
   defineSecret(SECRET.SERVER_APIKEY),
   defineSecret(SECRET.SERVER_APIKEY_TEST),
   defineSecret(SECRET.AFDIAN_TOKEN),
+  defineSecret(SECRET.GA4_API_SECRET),
 ];
 
 export const client = onRequest(

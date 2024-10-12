@@ -5,6 +5,7 @@ import { FireormModule } from 'nestjs-fireorm';
 
 import { AdminModule } from './admin/admin.module';
 import { AfdianModule } from './afdian/afdian.module';
+import { AnalyticsModule } from './analytics/analytics.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { CountModule } from './count/count.module';
@@ -18,6 +19,7 @@ import { PlayerModule } from './player/player.module';
 import { PlayerCountModule } from './player-count/player-count.module';
 import { PlayerPropertyModule } from './player-property/player-property.module';
 import { TestModule } from './test/test.module';
+import { SecretModule } from './util/secret/secret.module';
 
 const ENVIRONMENT = process.env.ENVIRONMENT ?? 'local';
 
@@ -49,6 +51,8 @@ const ENVIRONMENT = process.env.ENVIRONMENT ?? 'local';
     AdminModule,
     EventRewardsModule,
     MatchModule,
+    AnalyticsModule,
+    SecretModule,
   ],
   controllers: [AppController],
   providers: [AppService],
