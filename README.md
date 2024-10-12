@@ -21,7 +21,7 @@ Backend for [Windy 10v10ai](https://github.com/windybirth/windy10v10ai) with Fir
 - Firebase
   - Hosting
   - Functions
-  - Realtime Database
+  - Firestore Database
 - NextJS
 
 # Get Start
@@ -36,6 +36,7 @@ Backend for [Windy 10v10ai](https://github.com/windybirth/windy10v10ai) with Fir
 # firebase setting
 npm install -g firebase-tools
 firebase login
+firebase use windy10v10ai
 
 # setup package
 npm install
